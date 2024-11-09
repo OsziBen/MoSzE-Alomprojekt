@@ -1,0 +1,11 @@
+# Szöveges fájlok
+*.meta text eol=lf
+*.txt text eol=lf
+*.json text eol=lf
+*.vsconfig text eol=lf
+
+# Unity fájlok
+*.asset text eol=lf
+*.prefab text eol=lf
+*.unity text eol=lf
+*.scenetemplate text eol=lf
