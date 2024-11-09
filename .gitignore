@@ -16,6 +16,7 @@ Logs/
 # Ignore user-specific settings
 .idea/
 .vscode/
+.vsconfig
 
 # Ignore the Unity-generated files that are not needed for version control
 *.csproj
