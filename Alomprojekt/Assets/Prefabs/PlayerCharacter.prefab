@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 395890536178728854}
   - component: {fileID: 2998784399132732186}
   - component: {fileID: 2495013396380952890}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: PlayerCharacter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,3 +223,57 @@ MonoBehaviour:
       m_Action: Move
       m_Flags: 8
     m_Flags: 0
+  speed: 3
+  maxHealth: 5
+  timeInvincible: 2
+  projectilePrefab: {fileID: 2095479738982829241, guid: 5433b71e89061654aa207f2c787b1844, type: 3}
+  launchAction:
+    m_Name: Launch
+    m_Type: 0
+    m_ExpectedControlType: Vector2
+    m_Id: 5c1cb7a1-be46-4522-a44f-9bd8d7fcfb72
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 2D Vector
+      m_Id: 1600a76a-998c-4bcb-a8fb-139104a76432
+      m_Path: 2DVector
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Launch
+      m_Flags: 4
+    - m_Name: up
+      m_Id: 14b3b6b1-5b76-43cc-a3aa-61907d8ece9b
+      m_Path: <Keyboard>/upArrow
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Launch
+      m_Flags: 8
+    - m_Name: down
+      m_Id: cc8ed2d1-a615-4b6e-899f-63b1746bebbc
+      m_Path: <Keyboard>/downArrow
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Launch
+      m_Flags: 8
+    - m_Name: left
+      m_Id: df368ba0-bcab-4a75-90db-888ddc7f5aef
+      m_Path: <Keyboard>/leftArrow
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Launch
+      m_Flags: 8
+    - m_Name: right
+      m_Id: 2d2f4106-9fca-4718-bde9-f735b9e74b70
+      m_Path: <Keyboard>/rightArrow
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Launch
+      m_Flags: 8
+    m_Flags: 0
+  shotTravelSpeed: 300
