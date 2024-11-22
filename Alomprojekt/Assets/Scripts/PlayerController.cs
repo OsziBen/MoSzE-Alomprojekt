@@ -22,16 +22,13 @@ public class PlayerController : Assets.Scripts.Character
     float remainingAttackCooldown;              // Az aktív támadási visszatöltõdési idõ hátralévõ ideje (másodpercekben)
     Vector2 attackDirection;                    // A támadás irányát tároló változó (2D vektor)
 
-    EnemyController[] enemies;                  // A játékban lévõ ellenségek listáját tároló tömb
-
 
     /// <summary>
     /// Komponenesek
     /// </summary>
     public InputAction MoveAction;            // A karakter mozgását vezérlõ bemeneti akció (például billentyûzet vagy kontroller mozgás)
     public InputAction launchAction;          // A lövedék indítását vezérlõ bemeneti akció (például billentyû vagy gomb lenyomás)
-    public GameObject projectilePrefab;       // A lövedék prefab, amely a lövedékek létrehozásához használható (a lövedék modellje és viselkedése)
-
+    public ObjectPoolForProjectiles objectPool; // A lövedékeket kezelõ ObjectPoolForProjectiles komponens
 
     /// <summary>
     /// Getterek és setterek
@@ -46,22 +43,52 @@ public class PlayerController : Assets.Scripts.Character
 
     /// <summary>
     /// Inicializálja a bemeneti akciókat, összegyûjti az ellenségeket a játékban,
-    /// és feliratkozik az eseményekre a játék megfelelõ mûködéséhez.
+    /// és feliratkozik a szükséges eseményekre a megfelelõ mûködés biztosítása érdekében.
     /// </summary>
     void Start()
     {
         MoveAction.Enable();
-        launchAction.Enable();
 
-        enemies = FindObjectsOfType<EnemyController>();
+        objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
+        EnemyController[] enemies = FindObjectsOfType<EnemyController>();
 
         foreach (var enemy in enemies)
         {
             enemy.OnPlayerCollision += ChangeHealth;
+            enemy.OnEnemyDeath += StopListeningToEnemy;
         }
 
+        launchAction.Enable();
         launchAction.performed += Attack;
         OnPlayerDeath += GameOver;
+    }
+
+
+    /// <summary>
+    /// Leiratkozik az adott ellenséghez tartozó eseményekrõl.
+    /// Ezáltal megszünteti az ellenséggel való interakciót, például a játékos egészségének módosítását
+    /// és az ellenség halálára vonatkozó események kezelést.
+    /// </summary>
+    /// <param name="enemy">Az ellenség, akivel a hallgatókat eltávolítjuk.</param>
+    void StopListeningToEnemy(GameObject enemy)
+    {
+        if (enemy.TryGetComponent<EnemyController>(out var deadEnemy))
+        {
+            deadEnemy.OnPlayerCollision -= ChangeHealth;
+            deadEnemy.OnEnemyDeath -= StopListeningToEnemy;
+        }
+    }
+
+
+    /// <summary>
+    /// Visszaadja a jelenlegi sebzés értékét.
+    /// A metódus kiírja a konzolra a jelenlegi sebzést, majd visszaadja azt.
+    /// </summary>
+    /// <returns>Jelenlegi sebzés (CurrentDMG) értéke.</returns>
+    float CalculateDMG()
+    {
+        Debug.Log("CURENTDMG: " + CurrentDMG);
+        return CurrentDMG;
     }
 
 
@@ -107,6 +134,7 @@ public class PlayerController : Assets.Scripts.Character
     }
 
 
+
     /// <summary>
     /// A karakter életerõ-változását kezeli, figyelembe véve a sebezhetetlenségi idõt.
     /// Ha a karakter éppen sebezhetetlen, a változás nem történik meg.
@@ -122,6 +150,7 @@ public class PlayerController : Assets.Scripts.Character
         damageCooldown = timeInvincible;
         base.ChangeHealth(amount);
     }
+
 
 
     /// <summary>
@@ -150,7 +179,10 @@ public class PlayerController : Assets.Scripts.Character
 
         if (isAbleToAttack)
         {
-            GameObject projectileObject = Instantiate(projectilePrefab, attackDirection, Quaternion.identity);
+            // objectpool in start
+            GameObject projectileObject = objectPool
+                .GetProjectile(attackDirection, Quaternion.identity, CalculateDMG());
+
             Projectile projectile = projectileObject.GetComponent<Projectile>();
             projectile.Launch(launchAction.ReadValue<Vector2>(), shotTravelSpeed);      // shottravespeed kiszervezése!
             remainingAttackCooldown = CurrentAttackCooldown;
@@ -158,7 +190,6 @@ public class PlayerController : Assets.Scripts.Character
             isAbleToAttack = false;
             return;
         }
-
     }
 
 
@@ -179,11 +210,7 @@ public class PlayerController : Assets.Scripts.Character
     {
         Debug.Log("GAME OVER");
         OnPlayerDeath -= GameOver;
-
-        foreach (var enemy in enemies)
-        {
-            enemy.OnPlayerCollision -= ChangeHealth;
-        }
     }
+
 
 }
