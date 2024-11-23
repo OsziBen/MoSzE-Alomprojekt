@@ -32,6 +32,13 @@ namespace Assets.Scripts
         protected float additionalAttackCooldown = 0f;  // Karakter hozzáadott támadás-visszatöltõdési ideje
         protected float _currentAttackCooldown; // Karakter aktuális támadás-visszatöltõdési ideje
 
+        protected float baseCriticalHitChance = 0.05f;  // Karakter alap kritikussebzés esélye (%)
+        protected float additionalCriticalHitChance = 0.2f; // Karakter hozzáadott kritikussebzés esélye (%)
+        protected float _currentCriticalHitChance;  // Karakter aktuális kritikussebzés esélye (%)
+
+        protected float basePercentageBasedDMG = 0f;    // Karakter alap százalékos sebzésértéke (%)
+        protected float additionalPercentageBasedDMG = 0.07f;   // Karakter hozzáadott százalékos sebzésértéke (%)
+        protected float _currentPercentageBasedDMG; // Karakter aktuális százalékos sebzésértéke (%)
 
         /// <summary>
         /// Komponenesek
@@ -78,6 +85,19 @@ namespace Assets.Scripts
             set { _currentAttackCooldown = value; }
         }
 
+        public float CurrentCriticalHitChance   // Aktuális kritikussebzés esély (5)
+        {
+            get { return _currentCriticalHitChance; }
+            set { _currentCriticalHitChance = value; }
+        }
+
+        public float CurrentPercentageBasedDMG  // Aktuális százalékos sebzésérték (%)
+        {
+            get { return _currentPercentageBasedDMG; }
+            set { _currentPercentageBasedDMG = value; }
+        }
+
+
 
         /// <summary>
         /// Események
@@ -97,8 +117,10 @@ namespace Assets.Scripts
             CurrentMovementSpeed = baseMovementSpeed + additionalMovementSpeed;
             CurrentDMG = baseDMG + addtionalDMG;
             CurrentAttackCooldown = baseAttackCooldown + additionalAttackCooldown;
+            CurrentCriticalHitChance = baseCriticalHitChance + additionalCriticalHitChance;
+            CurrentPercentageBasedDMG = basePercentageBasedDMG + additionalPercentageBasedDMG;
 
-            // esemény feliratkozások
+            // event subscriptions
             OnDeath += Die;
         }
 
