@@ -83,12 +83,32 @@ public class PlayerController : Assets.Scripts.Character
     /// <summary>
     /// Visszaadja a jelenlegi sebzés értékét.
     /// A metódus kiírja a konzolra a jelenlegi sebzést, majd visszaadja azt.
+    /// Ha a lövés kritikus találat, akkor a sebzés értéke megduplázódik.
     /// </summary>
-    /// <returns>Jelenlegi sebzés (CurrentDMG) értéke.</returns>
+    /// <returns>Jelenlegi sebzés (CurrentDMG) értéke, esetleg megduplázva kritikus találat esetén.</returns>
     float CalculateDMG()
     {
         Debug.Log("CURENTDMG: " + CurrentDMG);
-        return CurrentDMG;
+        return IsCriticalHit() ? CurrentDMG * 2 : CurrentDMG;
+    }
+
+
+    /// <summary>
+    /// Ellenõrzi, hogy a lövés kritikus találatot eredményezett-e.
+    /// A kritikus találat esélye a 'CurrentCriticalHitChance' értéktõl függ.
+    /// </summary>
+    /// <returns>True, ha a lövés kritikus találat, false egyébként.</returns>
+    bool IsCriticalHit()
+    {
+        System.Random random = new System.Random();
+        int chance = random.Next(1, 101);
+        if (chance <= CurrentCriticalHitChance * 100)
+        {
+            Debug.Log("*CRITICAL HIT!*");
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -155,8 +175,9 @@ public class PlayerController : Assets.Scripts.Character
 
     /// <summary>
     /// A karakter támadását kezeli a bemeneti akció alapján, meghatározza a támadás irányát és elindítja a lövedéket.
+    /// A támadás irányát a bemeneti vezérlõ (nyílgombok) alapján állítja be.
     /// </summary>
-    /// <param name="context">A bemeneti akció kontextusa, amely tartalmazza az aktuális irányt és a vezérlõt</param>
+    /// <param name="context">A bemeneti akció kontextusa, amely tartalmazza az aktuális irányt és a vezérlõt.</param>
     void Attack(InputAction.CallbackContext context)
     {
         switch (context.control.name)
@@ -179,9 +200,8 @@ public class PlayerController : Assets.Scripts.Character
 
         if (isAbleToAttack)
         {
-            // objectpool in start
             GameObject projectileObject = objectPool
-                .GetProjectile(attackDirection, Quaternion.identity, CalculateDMG());
+                .GetProjectile(attackDirection, Quaternion.identity, CalculateDMG(), CurrentPercentageBasedDMG);
 
             Projectile projectile = projectileObject.GetComponent<Projectile>();
             projectile.Launch(launchAction.ReadValue<Vector2>(), shotTravelSpeed);      // shottravespeed kiszervezése!
@@ -190,6 +210,7 @@ public class PlayerController : Assets.Scripts.Character
             isAbleToAttack = false;
             return;
         }
+
     }
 
 
