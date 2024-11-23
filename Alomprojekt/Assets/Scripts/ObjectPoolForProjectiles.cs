@@ -16,6 +16,10 @@ namespace Assets.Scripts
         public int poolSize = 25;   // A pool maximális mérete, amely meghatározza, hány lövedék lehet egyszerre az objektumpoolban.
         private Queue<GameObject> pool; // A lövedékek tárolására használt queue (sor), amely a rendelkezésre álló és visszaadott lövedékeket tartalmazza.
 
+        public int projectileMarkEveryNth = 4;  // n értéke, ahol minden n-edik lövedéket megjelöljük; TODO:clamp 1-x    -> player attribute
+        public bool isMarkingEnabled;   // lövedékjelölés ki- és bekapcsolása
+        private int fireCounter = 0;    // lövedékszámláló a jelöléshez
+
 
         /// <summary>
         /// Komponenesek
@@ -37,11 +41,14 @@ namespace Assets.Scripts
         /// <summary>
         /// Inicializálja a lövedékek pool-ját az elõre meghatározott méret alapján.
         /// A 'poolSize' változó határozza meg, hogy hány lövedék fér el a poolban.
+        /// A 'pool' változó egy Queue típusú adatstruktúra, amely a lövedékek kezelésére szolgál.
+        /// A 'EnableMarking' metódus itt kerül meghívásra, hogy engedélyezze a jelölést.
         /// </summary>
         private void Awake()
         {
             pool = new Queue<GameObject>(poolSize);
 
+            EnableMarking(true);
         }
 
 
@@ -63,13 +70,14 @@ namespace Assets.Scripts
 
         /// <summary>
         /// Lekér egy lövedéket a poolból, vagy létrehoz egy újat, ha nincs elérhetõ inaktív lövedék.
-        /// Beállítja a lövedék pozícióját, forgását és a sebzés értékét, majd aktiválja azt.
+        /// Beállítja a lövedék pozícióját, forgatását és a sebzés értékét, majd aktiválja azt.
         /// </summary>
         /// <param name="position">A lövedék kívánt pozíciója.</param>
         /// <param name="rotation">A lövedék kívánt forgatása (orientációja).</param>
         /// <param name="damageValue">A lövedék által okozott sebzés mértéke.</param>
+        /// <param name="percentageDMGValue">A sebzéshez tartozó százalékos érték, amely esetleg módosíthatja a sebzést.</param>
         /// <returns>A lekért vagy létrehozott lövedék GameObject-je.</returns>
-        public GameObject GetProjectile(Vector2 position, Quaternion rotation, float damageValue)
+        public GameObject GetProjectile(Vector2 position, Quaternion rotation, float damageValue, float percentageDMGValue)
         {
 
             foreach (var projectile in pool)
@@ -79,7 +87,7 @@ namespace Assets.Scripts
                     projectile.transform.position = position;
                     projectile.transform.rotation = rotation;
 
-                    UpdateProjectileProperties(projectile, damageValue);
+                    UpdateProjectileProperties(projectile, damageValue, percentageDMGValue);
 
                     projectile.SetActive(true);
                     OnProjectileActivated?.Invoke(projectile);
@@ -90,7 +98,7 @@ namespace Assets.Scripts
             GameObject newProjectile = Instantiate(projectilePrefab, position, rotation);
             pool.Enqueue(newProjectile);
 
-            UpdateProjectileProperties(newProjectile, damageValue);
+            UpdateProjectileProperties(newProjectile, damageValue, percentageDMGValue);
 
             OnProjectileActivated?.Invoke(newProjectile);
 
@@ -101,15 +109,58 @@ namespace Assets.Scripts
 
         /// <summary>
         /// Frissíti a lövedék tulajdonságait, például a sebzés értékét.
-        /// Beállítja a lövedék sebzését a megadott 'damageValue' alapján.
+        /// Beállítja a lövedék sebzését a megadott 'damageValue' és 'percentageDMGValue' alapján.
         /// </summary>
         /// <param name="projectile">A frissítendõ lövedék GameObject-je.</param>
         /// <param name="damageValue">A lövedék új sebzés értéke.</param>
-        private void UpdateProjectileProperties(GameObject projectile, float damageValue)
+        /// <param name="percentageDMGValue">A lövedékhez tartozó százalékos sebzés érték.</param>
+        private void UpdateProjectileProperties(GameObject projectile, float damageValue, float percentageDMGValue)
         {
+            fireCounter++;
+
             Projectile proj = projectile.GetComponent<Projectile>();
             proj.ProjectileDMG = damageValue;
+            proj.PercentageDMGValue = percentageDMGValue;
 
+            if (isMarkingEnabled)
+            {
+                MarkProjectile(proj);
+            }
+
+        }
+
+
+        /// <summary>
+        /// Beállítja, hogy a lövedék jelölve legyen-e, a 'fireCounter' és a 'projectileMarkEveryNth' alapján.
+        /// Ha a lövések száma eléri a beállított intervallumot, a lövedék jelölve lesz.
+        /// </summary>
+        /// <param name="projectile">A lövedék, amelynek a jelölését frissítjük.</param>
+        void MarkProjectile(Projectile projectile)
+        {
+            if (fireCounter % projectileMarkEveryNth == 0)
+            {
+                projectile.IsMarked = true;
+                fireCounter = 0;
+            }
+            else
+            {
+                projectile.IsMarked = false;
+            }
+        }
+
+
+        /// <summary>
+        /// Engedélyezi vagy letiltja a lövedékek jelölését.
+        /// Ha a jelölés le van tiltva, a lövések számlálója (fireCounter) visszaállítódik.
+        /// </summary>
+        /// <param name="enable">Ha igaz (true), engedélyezi a jelölést, ha hamis (false), letiltja azt.</param>
+        public void EnableMarking(bool enable)
+        {
+            isMarkingEnabled = enable;
+            if (!isMarkingEnabled)
+            {
+                fireCounter = 0;
+            }
         }
 
 
@@ -123,6 +174,7 @@ namespace Assets.Scripts
             projectile.SetActive(false);
             Projectile proj = projectile.GetComponent<Projectile>();
             proj.ProjectileDMG = 0f;
+            proj.IsMarked = false;
             OnProjectileDeactivated?.Invoke(projectile);
         }
 

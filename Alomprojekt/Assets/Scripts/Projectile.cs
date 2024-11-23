@@ -12,7 +12,8 @@ public class Projectile : MonoBehaviour
     private float _projectileDMG;           // A lövedék sebzésértéke
     public float deleteDistance = 25.0f;    // A lövedék maximálisan megtehetõ távolsága, amely után törlésre kerül
     public int force = 3;                   // Az alkalmazott erõ, amely meghatározza a lövedék indításának intenzitását
-
+    private float _percentageDMGValue;      // Százalékos sebzésérték
+    private bool _isMarked;     // lövedék megjelöltsége [igen/nem]
 
 
     /// <summary>
@@ -29,6 +30,18 @@ public class Projectile : MonoBehaviour
     {
         get { return _projectileDMG; }
         set { _projectileDMG = value; }
+    }
+
+    public float PercentageDMGValue // Lövedék százalékos sebzésértéke
+    {
+        get { return _percentageDMGValue; }
+        set { _percentageDMGValue = value; }
+    }
+
+    public bool IsMarked    // Lövedék megjelöltsége
+    {
+        get { return _isMarked; }
+        set { _isMarked = value; }
     }
 
 
@@ -94,11 +107,18 @@ public class Projectile : MonoBehaviour
     /// <param name="trigger">A collider, amely aktiválta az ütközést, valószínûleg egy ellenség.</param>
     private void OnTriggerEnter2D(Collider2D trigger)
     {
-
         if (trigger.gameObject.TryGetComponent<EnemyController>(out var enemy))
         {
-            OnEnemyHit?.Invoke(trigger.gameObject, -ProjectileDMG);
-
+            if (IsMarked)
+            {
+                Debug.Log("MARKED!");
+                OnEnemyHit?.Invoke(trigger.gameObject, -ProjectileDMG
+                    - enemy.GetComponent<EnemyController>().MaxHealth * PercentageDMGValue);
+            }
+            else
+            {
+                OnEnemyHit?.Invoke(trigger.gameObject, -ProjectileDMG);
+            }
 
         }
 
