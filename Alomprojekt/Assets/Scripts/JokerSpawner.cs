@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class JokerSpawner : Assets.Scripts.SpawnerBase
 {
-    public GameObject obstacle;
-    public EnemyController enemy;
+    public EnemySpawner enemySpawner;
+    public ObstacleSpawner obstacleSpawner;
 
     // Start is called before the first frame update
     void Start()
     {
-        //for (int i = 0; i < numberOfSpawned; i++)
-        //{
-        //    Place();
-        //}
-        //Destroy(gameObject);
+        
     }
 
     // Update is called once per frame
@@ -23,17 +19,15 @@ public class JokerSpawner : Assets.Scripts.SpawnerBase
         
     }
 
-    public override void Place()
+    public void SelectSpawner()
     {
         bool isHeads = Random.Range(0, 2) == 0;
-        base.Place();
         if(isHeads)
         {
-            Instantiate(obstacle, spawnPosition, Quaternion.identity);
-        } 
-        else
+            Instantiate(enemySpawner,transform.position,Quaternion.identity);
+        } else
         {
-            Instantiate(enemy, spawnPosition, Quaternion.identity);
+            Instantiate(obstacleSpawner, transform.position, Quaternion.identity);
         }
     }
 
