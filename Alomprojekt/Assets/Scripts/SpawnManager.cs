@@ -7,6 +7,7 @@ public class SpawnManager : MonoBehaviour
 {
     private List<EnemySpawner> enemySpawners; // A manager-hez tartozó ellenség spawnerek listája.
     private List<ObstacleSpawner> obstacleSpawners; // A manager-hez tartozó obstacle spawnerek listája.
+    private List<PlayerSpawner> playerSpawners; // A manager-hez tartozó player spawnerek listája.
     public List<EnemyController> spawnableEnemies; // A spawnolható ellenségek listája. GameStateManager-ig placeholder.
 
     public int numOfObstacleSpawners; // Ennyi obstacle-t fogunk elhelyezni a pályán.
@@ -34,6 +35,7 @@ public class SpawnManager : MonoBehaviour
         // Begyűjtük listákba a SpawnManager gyermekeit.
         enemySpawners = new List<EnemySpawner>(GetComponentsInChildren<EnemySpawner>());
         obstacleSpawners = new List<ObstacleSpawner>(GetComponentsInChildren<ObstacleSpawner>());
+        playerSpawners = new List<PlayerSpawner>(GetComponentsInChildren<PlayerSpawner>());
 
         // Megadjuk a spawnolandó ellenségeket, illetve számukat. A lista mérete egyben az aktiválandó spawnerek száma. GameStateManager-ig placeholder.
         List<SpawnPlan> enemySpawnPlans = new List<SpawnPlan>
@@ -78,6 +80,14 @@ public class SpawnManager : MonoBehaviour
 
             obstacleSpawners.Remove(selectedSpawner); // Használat után a spawnert töröljük a listából.
         }
+
+        // A játékos elhelyezése a player spawnerek egyikén.
+        int randomPlayerSpawnerIndex = Random.Range(0, playerSpawners.Count);
+        PlayerSpawner selectedPlayerSpawner = playerSpawners[randomPlayerSpawnerIndex];
+
+        selectedPlayerSpawner.Activate();
+
+        playerSpawners.Remove(selectedPlayerSpawner);
     }
 
     /// <summary>
@@ -92,6 +102,10 @@ public class SpawnManager : MonoBehaviour
         foreach(EnemySpawner ens in enemySpawners)
         {
             Destroy(ens.gameObject);
+        }
+        foreach(PlayerSpawner pls in playerSpawners)
+        {
+            Destroy(pls.gameObject);
         }
     }
 }
