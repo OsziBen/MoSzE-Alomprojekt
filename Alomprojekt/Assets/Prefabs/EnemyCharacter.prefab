@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8806503241587089184}
   - component: {fileID: 162048820890800235}
   - component: {fileID: 4952149793170091642}
+  - component: {fileID: 3830059035659017838}
+  - component: {fileID: 203574436219418284}
   m_Layer: 0
   m_Name: EnemyCharacter
   m_TagString: Untagged
@@ -145,5 +147,38 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9b069f52a5090547a000fcafba39504, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  detectionRange: 3
+  player: {fileID: 0}
+  currentBehaviour: {fileID: 0}
+  passiveBehaviour: {fileID: 3830059035659017838}
+  hostileBehaviour: {fileID: 203574436219418284}
+--- !u!114 &3830059035659017838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2607720801064932103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dce4980c79fbff340b0996b2b057b119, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberOfWaypoints: 5
+  patrolOffset: {x: 3, y: 2}
+  patrolSpeed: 2
+  stoppingDistance: 0.2
+--- !u!114 &203574436219418284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2607720801064932103}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f2c15b71dd958443bc7fb3f00135138, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
