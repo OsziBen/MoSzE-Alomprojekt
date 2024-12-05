@@ -9,48 +9,52 @@ using UnityEngine.TextCore.Text;
 public class PlayerController : Assets.Scripts.Character
 {
     /// <summary>
-    /// Változók
+    /// VÃ¡ltozÃ³k
     /// </summary>
-    Vector2 move;                               // A karakter mozgásirányát tároló változó (2D vektor)
+    Vector2 move;                               // A karakter mozgÃ¡sirÃ¡nyÃ¡t tÃ¡rolÃ³ vÃ¡ltozÃ³ (2D vektor)
 
-    public float timeInvincible = 2.0f;         // Az idõ, ameddig a karakter sebezhetetlen (másodpercekben)
-    bool isInvincible;                          // A karakter sebezhetetlenségének állapotát tároló változó (true, ha sebezhetetlen)
-    float damageCooldown;                       // A sebzés utáni visszatöltõdési idõ, amely megakadályozza a túl gyors újratámadást
+    public float timeInvincible = 2.0f;         // Az idÃµ, ameddig a karakter sebezhetetlen (mÃ¡sodpercekben)
+    bool isInvincible;                          // A karakter sebezhetetlensÃ©gÃ©nek Ã¡llapotÃ¡t tÃ¡rolÃ³ vÃ¡ltozÃ³ (true, ha sebezhetetlen)
+    float damageCooldown;                       // A sebzÃ©s utÃ¡ni visszatÃ¶ltÃµdÃ©si idÃµ, amely megakadÃ¡lyozza a tÃºl gyors ÃºjratÃ¡madÃ¡st
 
-    public float shotTravelSpeed = 300.0f;      // A lövedékek utazási sebessége
+    public float shotTravelSpeed = 300.0f;      // A lÃ¶vedÃ©kek utazÃ¡si sebessÃ©ge
 
-    bool isAbleToAttack = true;                 // A karakter támadási képességét tároló változó (true, ha támadhat)
-    float remainingAttackCooldown;              // Az aktív támadási visszatöltõdési idõ hátralévõ ideje (másodpercekben)
-    Vector2 attackDirection;                    // A támadás irányát tároló változó (2D vektor)
-
+    bool isAbleToAttack = true;                 // A karakter tÃ¡madÃ¡si kÃ©pessÃ©gÃ©t tÃ¡rolÃ³ vÃ¡ltozÃ³ (true, ha tÃ¡madhat)
+    float remainingAttackCooldown;              // Az aktÃ­v tÃ¡madÃ¡si visszatÃ¶ltÃµdÃ©si idÃµ hÃ¡tralÃ©vÃµ ideje (mÃ¡sodpercekben)
+    Vector2 attackDirection;                    // A tÃ¡madÃ¡s irÃ¡nyÃ¡t tÃ¡rolÃ³ vÃ¡ltozÃ³ (2D vektor)
+    
+    List<EnemyController> enemyList;
+    
     Vector2 movementBoundsMin;
     Vector2 movementBoundsMax;
-    List<EnemyController> enemyList;
+    
+
+
 
 
     /// <summary>
     /// Komponenesek
     /// </summary>
-    public InputAction MoveAction;            // A karakter mozgását vezérlõ bemeneti akció (például billentyûzet vagy kontroller mozgás)
-    public InputAction launchAction;          // A lövedék indítását vezérlõ bemeneti akció (például billentyû vagy gomb lenyomás)
-    public ObjectPoolForProjectiles objectPool; // A lövedékeket kezelõ ObjectPoolForProjectiles komponens
+    public InputAction MoveAction;            // A karakter mozgÃ¡sÃ¡t vezÃ©rlÃµ bemeneti akciÃ³ (pÃ©ldÃ¡ul billentyÃ»zet vagy kontroller mozgÃ¡s)
+    public InputAction launchAction;          // A lÃ¶vedÃ©k indÃ­tÃ¡sÃ¡t vezÃ©rlÃµ bemeneti akciÃ³ (pÃ©ldÃ¡ul billentyÃ» vagy gomb lenyomÃ¡s)
+    public ObjectPoolForProjectiles objectPool; // A lÃ¶vedÃ©keket kezelÃµ ObjectPoolForProjectiles komponens
 
     public SpriteRenderer sr;
 
     /// <summary>
-    /// Getterek és setterek
+    /// Getterek Ã©s setterek
     /// </summary>
 
 
     /// <summary>
-    /// Események
+    /// EsemÃ©nyek
     /// </summary>
-    public event Action OnPlayerDeath;    // Esemény, amely akkor hívódik meg, amikor a játékos meghal
+    public event Action OnPlayerDeath;    // EsemÃ©ny, amely akkor hÃ­vÃ³dik meg, amikor a jÃ¡tÃ©kos meghal
 
 
     /// <summary>
-    /// Inicializálja a bemeneti akciókat, összegyûjti az ellenségeket a játékban,
-    /// és feliratkozik a szükséges eseményekre a megfelelõ mûködés biztosítása érdekében.
+    /// InicializÃ¡lja a bemeneti akciÃ³kat, Ã¶sszegyÃ»jti az ellensÃ©geket a jÃ¡tÃ©kban,
+    /// Ã©s feliratkozik a szÃ¼ksÃ©ges esemÃ©nyekre a megfelelÃµ mÃ»kÃ¶dÃ©s biztosÃ­tÃ¡sa Ã©rdekÃ©ben.
     /// </summary>
     void Start()
     {
@@ -58,18 +62,18 @@ public class PlayerController : Assets.Scripts.Character
 
         sr = GameObject.Find("Background").GetComponent<SpriteRenderer>();
 
-        // Sprite méretének kiszámítása világkoordinátákban
-        Vector2 spriteSize = sr.bounds.size; // A sprite szélessége és magassága világkoordinátában
-        Vector2 position = sr.transform.position; // A sprite középpontjának pozíciója világkoordinátában
+        // Sprite mÃ©retÃ©nek kiszÃ¡mÃ­tÃ¡sa vilÃ¡gkoordinÃ¡tÃ¡kban
+        Vector2 spriteSize = sr.bounds.size; // A sprite szÃ©lessÃ©ge Ã©s magassÃ¡ga vilÃ¡gkoordinÃ¡tÃ¡ban
+        Vector2 position = sr.transform.position; // A sprite kÃ¶zÃ©ppontjÃ¡nak pozÃ­ciÃ³ja vilÃ¡gkoordinÃ¡tÃ¡ban
 
-        // Bal felsõ sarok koordinátája
+        // Bal felsÃµ sarok koordinÃ¡tÃ¡ja
         Vector2 topLeft = new Vector2(position.x - spriteSize.x / 2, position.y + spriteSize.y / 2);
 
-        // Jobb alsó sarok koordinátája
+        // Jobb alsÃ³ sarok koordinÃ¡tÃ¡ja
         Vector2 bottomRight = new Vector2(position.x + spriteSize.x / 2, position.y - spriteSize.y / 2);
 
-        //Debug.Log($"Bal felsõ sarok: {topLeft}");
-        //Debug.Log($"Jobb alsó sarok: {bottomRight}");
+        //Debug.Log($"Bal felsÃµ sarok: {topLeft}");
+        //Debug.Log($"Jobb alsÃ³ sarok: {bottomRight}");
 
 
         movementBoundsMin = new Vector2(topLeft.x + 0.5f, bottomRight.y + 0.5f);
@@ -91,11 +95,11 @@ public class PlayerController : Assets.Scripts.Character
 
 
     /// <summary>
-    /// Leiratkozik az adott ellenséghez tartozó eseményekrõl.
-    /// Ezáltal megszünteti az ellenséggel való interakciót, például a játékos egészségének módosítását
-    /// és az ellenség halálára vonatkozó események kezelést.
+    /// Leiratkozik az adott ellensÃ©ghez tartozÃ³ esemÃ©nyekrÃµl.
+    /// EzÃ¡ltal megszÃ¼nteti az ellensÃ©ggel valÃ³ interakciÃ³t, pÃ©ldÃ¡ul a jÃ¡tÃ©kos egÃ©szsÃ©gÃ©nek mÃ³dosÃ­tÃ¡sÃ¡t
+    /// Ã©s az ellensÃ©g halÃ¡lÃ¡ra vonatkozÃ³ esemÃ©nyek kezelÃ©st.
     /// </summary>
-    /// <param name="enemy">Az ellenség, akivel a hallgatókat eltávolítjuk.</param>
+    /// <param name="enemy">Az ellensÃ©g, akivel a hallgatÃ³kat eltÃ¡volÃ­tjuk.</param>
     void StopListeningToEnemy(GameObject enemy)
     {
         if (enemy.TryGetComponent<EnemyController>(out var deadEnemy))
@@ -107,11 +111,11 @@ public class PlayerController : Assets.Scripts.Character
 
 
     /// <summary>
-    /// Visszaadja a jelenlegi sebzés értékét.
-    /// A metódus kiírja a konzolra a jelenlegi sebzést, majd visszaadja azt.
-    /// Ha a lövés kritikus találat, akkor a sebzés értéke megduplázódik.
+    /// Visszaadja a jelenlegi sebzÃ©s Ã©rtÃ©kÃ©t.
+    /// A metÃ³dus kiÃ­rja a konzolra a jelenlegi sebzÃ©st, majd visszaadja azt.
+    /// Ha a lÃ¶vÃ©s kritikus talÃ¡lat, akkor a sebzÃ©s Ã©rtÃ©ke megduplÃ¡zÃ³dik.
     /// </summary>
-    /// <returns>Jelenlegi sebzés (CurrentDMG) értéke, esetleg megduplázva kritikus találat esetén.</returns>
+    /// <returns>Jelenlegi sebzÃ©s (CurrentDMG) Ã©rtÃ©ke, esetleg megduplÃ¡zva kritikus talÃ¡lat esetÃ©n.</returns>
     float CalculateDMG()
     {
         Debug.Log("CURENTDMG: " + CurrentDMG);
@@ -120,10 +124,10 @@ public class PlayerController : Assets.Scripts.Character
 
 
     /// <summary>
-    /// Ellenõrzi, hogy a lövés kritikus találatot eredményezett-e.
-    /// A kritikus találat esélye a 'CurrentCriticalHitChance' értéktõl függ.
+    /// EllenÃµrzi, hogy a lÃ¶vÃ©s kritikus talÃ¡latot eredmÃ©nyezett-e.
+    /// A kritikus talÃ¡lat esÃ©lye a 'CurrentCriticalHitChance' Ã©rtÃ©ktÃµl fÃ¼gg.
     /// </summary>
-    /// <returns>True, ha a lövés kritikus találat, false egyébként.</returns>
+    /// <returns>True, ha a lÃ¶vÃ©s kritikus talÃ¡lat, false egyÃ©bkÃ©nt.</returns>
     bool IsCriticalHit()
     {
         System.Random random = new System.Random();
@@ -139,8 +143,8 @@ public class PlayerController : Assets.Scripts.Character
 
 
     /// <summary>
-    /// Minden frissítéskor végrehajtódik, kezeli a karakter mozgását, sebezhetetlenségi idõt, 
-    /// és támadási visszatöltõdési idõt. A bemeneti akciók értékeit frissíti, és csökkenti a visszatöltõdési idõket.
+    /// Minden frissÃ­tÃ©skor vÃ©grehajtÃ³dik, kezeli a karakter mozgÃ¡sÃ¡t, sebezhetetlensÃ©gi idÃµt, 
+    /// Ã©s tÃ¡madÃ¡si visszatÃ¶ltÃµdÃ©si idÃµt. A bemeneti akciÃ³k Ã©rtÃ©keit frissÃ­ti, Ã©s csÃ¶kkenti a visszatÃ¶ltÃµdÃ©si idÃµket.
     /// </summary>
     void Update()
     {
@@ -170,23 +174,23 @@ public class PlayerController : Assets.Scripts.Character
 
 
     /// <summary>
-    /// A fizikai frissítéshez tartozó metódus, amely minden fix idõintervallumban végrehajtódik.
-    /// A karakter mozgását kezeli a Rigidbody2D komponens segítségével a meghatározott sebesség és irány alapján.
+    /// A fizikai frissÃ­tÃ©shez tartozÃ³ metÃ³dus, amely minden fix idÃµintervallumban vÃ©grehajtÃ³dik.
+    /// A karakter mozgÃ¡sÃ¡t kezeli a Rigidbody2D komponens segÃ­tsÃ©gÃ©vel a meghatÃ¡rozott sebessÃ©g Ã©s irÃ¡ny alapjÃ¡n.
     /// </summary>
     void FixedUpdate()
     {
         Vector2 position = (Vector2)rigidbody2d.position + move * CurrentMovementSpeed * Time.deltaTime;
 
-        // Ellenõrizd, hogy az új pozíció kívül van-e a tartományon
+        // EllenÃµrizd, hogy az Ãºj pozÃ­ciÃ³ kÃ­vÃ¼l van-e a tartomÃ¡nyon
         if (position.x < movementBoundsMin.x || position.x > movementBoundsMax.x)
         {
-            // Ha az X komponens kívül van a határokon, állítsd vissza az eredeti értékre
+            // Ha az X komponens kÃ­vÃ¼l van a hatÃ¡rokon, Ã¡llÃ­tsd vissza az eredeti Ã©rtÃ©kre
             position.x = Mathf.Clamp(position.x, movementBoundsMin.x, movementBoundsMax.x);
         }
 
         if (position.y < movementBoundsMin.y || position.y > movementBoundsMax.y)
         {
-            // Ha az Y komponens kívül van a határokon, állítsd vissza az eredeti értékre
+            // Ha az Y komponens kÃ­vÃ¼l van a hatÃ¡rokon, Ã¡llÃ­tsd vissza az eredeti Ã©rtÃ©kre
             position.y = Mathf.Clamp(position.y, movementBoundsMin.y, movementBoundsMax.y);
         }
 
@@ -196,10 +200,10 @@ public class PlayerController : Assets.Scripts.Character
 
 
     /// <summary>
-    /// A karakter életerõ-változását kezeli, figyelembe véve a sebezhetetlenségi idõt.
-    /// Ha a karakter éppen sebezhetetlen, a változás nem történik meg.
+    /// A karakter Ã©leterÃµ-vÃ¡ltozÃ¡sÃ¡t kezeli, figyelembe vÃ©ve a sebezhetetlensÃ©gi idÃµt.
+    /// Ha a karakter Ã©ppen sebezhetetlen, a vÃ¡ltozÃ¡s nem tÃ¶rtÃ©nik meg.
     /// </summary>
-    /// <param name="amount">Az életerõ változása; pozitív érték gyógyulást, negatív érték sebzést jelent</param>
+    /// <param name="amount">Az Ã©leterÃµ vÃ¡ltozÃ¡sa; pozitÃ­v Ã©rtÃ©k gyÃ³gyulÃ¡st, negatÃ­v Ã©rtÃ©k sebzÃ©st jelent</param>
     public override void ChangeHealth(float amount)
     {
         if (isInvincible)
@@ -214,10 +218,10 @@ public class PlayerController : Assets.Scripts.Character
 
 
     /// <summary>
-    /// A karakter támadását kezeli a bemeneti akció alapján, meghatározza a támadás irányát és elindítja a lövedéket.
-    /// A támadás irányát a bemeneti vezérlõ (nyílgombok) alapján állítja be.
+    /// A karakter tÃ¡madÃ¡sÃ¡t kezeli a bemeneti akciÃ³ alapjÃ¡n, meghatÃ¡rozza a tÃ¡madÃ¡s irÃ¡nyÃ¡t Ã©s elindÃ­tja a lÃ¶vedÃ©ket.
+    /// A tÃ¡madÃ¡s irÃ¡nyÃ¡t a bemeneti vezÃ©rlÃµ (nyÃ­lgombok) alapjÃ¡n Ã¡llÃ­tja be.
     /// </summary>
-    /// <param name="context">A bemeneti akció kontextusa, amely tartalmazza az aktuális irányt és a vezérlõt.</param>
+    /// <param name="context">A bemeneti akciÃ³ kontextusa, amely tartalmazza az aktuÃ¡lis irÃ¡nyt Ã©s a vezÃ©rlÃµt.</param>
     void Attack(InputAction.CallbackContext context)
     {
         switch (context.control.name)
@@ -244,7 +248,7 @@ public class PlayerController : Assets.Scripts.Character
                 .GetProjectile(attackDirection, Quaternion.identity, CalculateDMG(), CurrentPercentageBasedDMG);
 
             Projectile projectile = projectileObject.GetComponent<Projectile>();
-            projectile.Launch(launchAction.ReadValue<Vector2>(), shotTravelSpeed);      // shottravespeed kiszervezése!
+            projectile.Launch(launchAction.ReadValue<Vector2>(), shotTravelSpeed);      // shottravespeed kiszervezÃ©se!
             remainingAttackCooldown = CurrentAttackCooldown;
             //Debug.Log(remainingAttackCooldown);
             isAbleToAttack = false;
@@ -255,7 +259,7 @@ public class PlayerController : Assets.Scripts.Character
 
 
     /// <summary>
-    /// A játékos halálát kezeli, és az eseményt továbbítja, majd törli a játékos GameObject-jét.
+    /// A jÃ¡tÃ©kos halÃ¡lÃ¡t kezeli, Ã©s az esemÃ©nyt tovÃ¡bbÃ­tja, majd tÃ¶rli a jÃ¡tÃ©kos GameObject-jÃ©t.
     /// </summary>
     protected override void Die()
     {
@@ -265,7 +269,7 @@ public class PlayerController : Assets.Scripts.Character
 
 
     /// <summary>
-    /// A játék végét kezeli, kiírja a "GAME OVER" üzenetet és leiratkozik az eseményekrõl.
+    /// A jÃ¡tÃ©k vÃ©gÃ©t kezeli, kiÃ­rja a "GAME OVER" Ã¼zenetet Ã©s leiratkozik az esemÃ©nyekrÃµl.
     /// </summary>
     void GameOver()
     {
