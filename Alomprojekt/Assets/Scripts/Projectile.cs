@@ -10,10 +10,14 @@ public class Projectile : MonoBehaviour
     /// Változók
     /// </summary>
     private float _projectileDMG;           // A lövedék sebzésértéke
-    public float deleteDistance = 25.0f;    // A lövedék maximálisan megtehetõ távolsága, amely után törlésre kerül
+    //public float deleteDistance = 25.0f;    // A lövedék maximálisan megtehetõ távolsága, amely után törlésre kerül
+    public float deleteTime = 5f;
+    private float timer = 0f;
     public int force = 3;                   // Az alkalmazott erõ, amely meghatározza a lövedék indításának intenzitását
     private float _percentageDMGValue;      // Százalékos sebzésérték
     private bool _isMarked;     // lövedék megjelöltsége [igen/nem]
+
+    private bool isSubscribedForPlayerDeath;
 
 
     /// <summary>
@@ -22,6 +26,7 @@ public class Projectile : MonoBehaviour
     Rigidbody2D rigidbody2d;    // Lövedékhez kapcsolódó Rigidbody2D komponens
     private ObjectPoolForProjectiles objectPool;    // A lövedékeket kezelõ ObjectPoolForProjectiles komponens
 
+    private PlayerController player;
 
     /// <summary>
     /// Getterek és Setterek
@@ -59,7 +64,15 @@ public class Projectile : MonoBehaviour
     void Awake()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
+    }
+
+    private void Start()
+    {
         objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
+        player = FindAnyObjectByType<PlayerController>();
+        player.OnPlayerDeath += DestroyProjectile;
+        Debug.Log("UP");
+        isSubscribedForPlayerDeath = true;
     }
 
 
@@ -69,9 +82,31 @@ public class Projectile : MonoBehaviour
     /// </summary>
     void Update()
     {
-        if (transform.position.magnitude > deleteDistance)
+        timer += Time.deltaTime;
+
+        if (timer >= deleteTime)
         {
             DestroyProjectile();
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (player && !isSubscribedForPlayerDeath)
+        {
+            Debug.Log("UP");
+            player.OnPlayerDeath += DestroyProjectile;
+            isSubscribedForPlayerDeath = true;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (player && isSubscribedForPlayerDeath)
+        {
+            Debug.Log("DOWN");
+            player.OnPlayerDeath -= DestroyProjectile;
+            isSubscribedForPlayerDeath = false;
         }
     }
 
@@ -133,6 +168,7 @@ public class Projectile : MonoBehaviour
     void DestroyProjectile()
     {
         objectPool.ReturnProjectile(gameObject);
+        timer = 0f;
     }
 
 }
