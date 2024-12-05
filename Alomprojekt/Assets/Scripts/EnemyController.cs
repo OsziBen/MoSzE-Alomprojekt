@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
+using Assets.Scripts.EnemyBehaviours;
 
 public class EnemyController : Assets.Scripts.Character
 {
@@ -10,13 +11,18 @@ public class EnemyController : Assets.Scripts.Character
     /// Változók
     /// </summary>
     private List<Projectile> activeProjectiles = new List<Projectile>();    // Az aktívan megfigyelt lövedékek (Projectile) listája
-
+    public float detectionRange;
+    private bool hasDetectedPlayer = false;
 
     /// <summary>
     /// Komponenesek
     /// </summary>
     private ObjectPoolForProjectiles objectPool;  // A lövedékek kezelésére szolgáló ObjectPool objektum
+    public PlayerController player;
 
+    public EnemyBehaviour currentBehaviour;
+    public PassiveEnemyBehaviour passiveBehaviour;
+    public HostileEnemyBehaviour hostileBehaviour;
 
     /// <summary>
     /// Getterek és Setterek
@@ -29,6 +35,20 @@ public class EnemyController : Assets.Scripts.Character
     public event Action<float> OnPlayerCollision; // Játékossal való ütközés
     public event Action<GameObject> OnEnemyDeath;   // Ellenség halála
 
+    public event Action<GameObject> OnBehaviourChange;
+    public event Action<GameObject> OnPlayerInRange;
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    protected override void Awake()
+    {
+        base.Awake();
+        OnBehaviourChange += HandleBehaviourChange;
+        OnPlayerInRange += HandleBehaviourChange;
+        SetBehaviour(passiveBehaviour);
+    }
 
     /// <summary>
     /// Inicializálja az objektumpool-t és feliratkozik az eseményekre a lövedékek kezeléséhez.
@@ -37,10 +57,25 @@ public class EnemyController : Assets.Scripts.Character
     private void Start()
     {
         objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
+        player = FindObjectOfType<PlayerController>();
 
         // event subscriptions
         objectPool.OnProjectileActivated += StartProjectileDetection;
         objectPool.OnProjectileDeactivated += StopProjectileDetection;
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void Update()
+    {
+        currentBehaviour.ExecuteBehaviour(this);
+
+        if (player && !hasDetectedPlayer && IsPlayerInRange())
+        {
+            OnPlayerInRange?.Invoke(gameObject);
+        }
     }
 
 
@@ -58,6 +93,47 @@ public class EnemyController : Assets.Scripts.Character
             Debug.Log(BaseDMG);
             OnPlayerCollision?.Invoke(-BaseDMG);
         }
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="gameObject"></param>
+    void HandleBehaviourChange(GameObject targetGameObject)
+    {
+        if (gameObject == targetGameObject)
+        {
+            hasDetectedPlayer = true;
+            OnBehaviourChange -= HandleBehaviourChange;
+            OnPlayerInRange -= HandleBehaviourChange;
+            Debug.Log("DETECTED");
+            SetBehaviour(hostileBehaviour);
+        }
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="newEnemyBehaviour"></param>
+    public void SetBehaviour(EnemyBehaviour newEnemyBehaviour)
+    {
+        currentBehaviour?.StopBehaviour(this);
+        currentBehaviour = newEnemyBehaviour;
+        currentBehaviour?.StartBehaviour(this);
+
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    bool IsPlayerInRange()
+    {
+        float distance = Vector2.Distance(transform.position, player.transform.position);   // kifagy, ha a játékos meghal
+        return distance <= detectionRange;
     }
 
     /// <summary>
@@ -106,6 +182,7 @@ public class EnemyController : Assets.Scripts.Character
         if (gameObject == enemyHitByProjectile)
         {
             ChangeHealth(damageAmount);
+            OnBehaviourChange?.Invoke(gameObject);
         }
 
     }
@@ -118,7 +195,9 @@ public class EnemyController : Assets.Scripts.Character
     protected override void Die()
     {
         base.Die();
+        currentBehaviour.StopBehaviour(this);
         OnEnemyDeath?.Invoke(gameObject);
+        OnBehaviourChange?.Invoke(gameObject);
     }
 
 
