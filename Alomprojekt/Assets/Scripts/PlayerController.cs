@@ -1,5 +1,6 @@
 using Assets.Scripts;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
@@ -22,6 +23,10 @@ public class PlayerController : Assets.Scripts.Character
     float remainingAttackCooldown;              // Az aktív támadási visszatöltõdési idõ hátralévõ ideje (másodpercekben)
     Vector2 attackDirection;                    // A támadás irányát tároló változó (2D vektor)
 
+    Vector2 movementBoundsMin;
+    Vector2 movementBoundsMax;
+    List<EnemyController> enemyList;
+
 
     /// <summary>
     /// Komponenesek
@@ -29,6 +34,8 @@ public class PlayerController : Assets.Scripts.Character
     public InputAction MoveAction;            // A karakter mozgását vezérlõ bemeneti akció (például billentyûzet vagy kontroller mozgás)
     public InputAction launchAction;          // A lövedék indítását vezérlõ bemeneti akció (például billentyû vagy gomb lenyomás)
     public ObjectPoolForProjectiles objectPool; // A lövedékeket kezelõ ObjectPoolForProjectiles komponens
+
+    public SpriteRenderer sr;
 
     /// <summary>
     /// Getterek és setterek
@@ -49,10 +56,29 @@ public class PlayerController : Assets.Scripts.Character
     {
         MoveAction.Enable();
 
-        objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
-        EnemyController[] enemies = FindObjectsOfType<EnemyController>();
+        sr = GameObject.Find("Background").GetComponent<SpriteRenderer>();
 
-        foreach (var enemy in enemies)
+        // Sprite méretének kiszámítása világkoordinátákban
+        Vector2 spriteSize = sr.bounds.size; // A sprite szélessége és magassága világkoordinátában
+        Vector2 position = sr.transform.position; // A sprite középpontjának pozíciója világkoordinátában
+
+        // Bal felsõ sarok koordinátája
+        Vector2 topLeft = new Vector2(position.x - spriteSize.x / 2, position.y + spriteSize.y / 2);
+
+        // Jobb alsó sarok koordinátája
+        Vector2 bottomRight = new Vector2(position.x + spriteSize.x / 2, position.y - spriteSize.y / 2);
+
+        //Debug.Log($"Bal felsõ sarok: {topLeft}");
+        //Debug.Log($"Jobb alsó sarok: {bottomRight}");
+
+
+        movementBoundsMin = new Vector2(topLeft.x + 0.5f, bottomRight.y + 0.5f);
+        movementBoundsMax = new Vector2(bottomRight.x - 0.5f, topLeft.y - 0.5f);
+
+        objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
+        enemyList = new List<EnemyController>(FindObjectsOfType<EnemyController>());
+
+        foreach (var enemy in enemyList)
         {
             enemy.OnPlayerCollision += ChangeHealth;
             enemy.OnEnemyDeath += StopListeningToEnemy;
@@ -150,6 +176,20 @@ public class PlayerController : Assets.Scripts.Character
     void FixedUpdate()
     {
         Vector2 position = (Vector2)rigidbody2d.position + move * CurrentMovementSpeed * Time.deltaTime;
+
+        // Ellenõrizd, hogy az új pozíció kívül van-e a tartományon
+        if (position.x < movementBoundsMin.x || position.x > movementBoundsMax.x)
+        {
+            // Ha az X komponens kívül van a határokon, állítsd vissza az eredeti értékre
+            position.x = Mathf.Clamp(position.x, movementBoundsMin.x, movementBoundsMax.x);
+        }
+
+        if (position.y < movementBoundsMin.y || position.y > movementBoundsMax.y)
+        {
+            // Ha az Y komponens kívül van a határokon, állítsd vissza az eredeti értékre
+            position.y = Mathf.Clamp(position.y, movementBoundsMin.y, movementBoundsMax.y);
+        }
+
         rigidbody2d.MovePosition(position);
     }
 
@@ -230,6 +270,7 @@ public class PlayerController : Assets.Scripts.Character
     void GameOver()
     {
         Debug.Log("GAME OVER");
+        launchAction.performed -= Attack;
         OnPlayerDeath -= GameOver;
     }
 
