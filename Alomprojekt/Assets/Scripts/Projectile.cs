@@ -71,7 +71,6 @@ public class Projectile : MonoBehaviour
         objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
         player = FindAnyObjectByType<PlayerController>();
         player.OnPlayerDeath += DestroyProjectile;
-        Debug.Log("UP");
         isSubscribedForPlayerDeath = true;
     }
 
@@ -94,7 +93,6 @@ public class Projectile : MonoBehaviour
     {
         if (player && !isSubscribedForPlayerDeath)
         {
-            Debug.Log("UP");
             player.OnPlayerDeath += DestroyProjectile;
             isSubscribedForPlayerDeath = true;
         }
@@ -104,7 +102,6 @@ public class Projectile : MonoBehaviour
     {
         if (player && isSubscribedForPlayerDeath)
         {
-            Debug.Log("DOWN");
             player.OnPlayerDeath -= DestroyProjectile;
             isSubscribedForPlayerDeath = false;
         }
