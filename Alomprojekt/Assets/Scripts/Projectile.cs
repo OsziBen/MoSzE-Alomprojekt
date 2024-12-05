@@ -17,6 +17,8 @@ public class Projectile : MonoBehaviour
     private float _percentageDMGValue;      // Százalékos sebzésérték
     private bool _isMarked;     // lövedék megjelöltsége [igen/nem]
 
+    private bool isSubscribedForPlayerDeath;
+
 
     /// <summary>
     /// Komponenesek
@@ -24,6 +26,7 @@ public class Projectile : MonoBehaviour
     Rigidbody2D rigidbody2d;    // Lövedékhez kapcsolódó Rigidbody2D komponens
     private ObjectPoolForProjectiles objectPool;    // A lövedékeket kezelõ ObjectPoolForProjectiles komponens
 
+    private PlayerController player;
 
     /// <summary>
     /// Getterek és Setterek
@@ -61,7 +64,15 @@ public class Projectile : MonoBehaviour
     void Awake()
     {
         rigidbody2d = GetComponent<Rigidbody2D>();
+    }
+
+    private void Start()
+    {
         objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
+        player = FindAnyObjectByType<PlayerController>();
+        player.OnPlayerDeath += DestroyProjectile;
+        Debug.Log("UP");
+        isSubscribedForPlayerDeath = true;
     }
 
 
@@ -76,6 +87,26 @@ public class Projectile : MonoBehaviour
         if (timer >= deleteTime)
         {
             DestroyProjectile();
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (player && !isSubscribedForPlayerDeath)
+        {
+            Debug.Log("UP");
+            player.OnPlayerDeath += DestroyProjectile;
+            isSubscribedForPlayerDeath = true;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (player && isSubscribedForPlayerDeath)
+        {
+            Debug.Log("DOWN");
+            player.OnPlayerDeath -= DestroyProjectile;
+            isSubscribedForPlayerDeath = false;
         }
     }
 

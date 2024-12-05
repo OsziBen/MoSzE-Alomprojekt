@@ -110,7 +110,7 @@ namespace Assets.Scripts
         /// Inicializálja a GameObject változóit és komponenseit, valamint feliratkozik a szükséges eseményekre.
         /// Ez a metódus akkor kerül meghívásra, amikor a szkript elõször betöltõdik vagy példányosul, jellemzõen a játék elején.
         /// </summary>
-        void Awake()
+        protected virtual void Awake()
         {
             rigidbody2d = GetComponent<Rigidbody2D>();
             CurrentHealth = maxHealth + additionalHealth;
