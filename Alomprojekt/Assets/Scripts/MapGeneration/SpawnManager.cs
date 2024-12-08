@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static SpawnManager;
@@ -10,7 +11,14 @@ public class SpawnManager : MonoBehaviour
     private List<PlayerSpawner> playerSpawners; // A manager-hez tartozó player spawnerek listája.
     public List<EnemyController> spawnableEnemies; // A spawnolható ellenségek listája. GameStateManager-ig placeholder.
 
+    public int currentLevel = 1; // A jelenlegi pálya, LevelManager-ig placeholder.
     public int numOfObstacleSpawners; // Ennyi obstacle-t fogunk elhelyezni a pályán.
+
+    // System.Random használata Unity.Random helyett.
+    private System.Random random = new System.Random();
+
+    // Eventek
+    public event Action OnLevelGenerationFinished;
 
     /// <summary>
     /// Itt adjuk meg a manager-nek, hogy melyik ellenségtípusból mennyit rakjon le. A GameStateManager-ig placeholder.
@@ -47,7 +55,11 @@ public class SpawnManager : MonoBehaviour
 
         SpawnEntities(enemySpawnPlans); // A megadott SpawnPlan lista alapján végrehajtjuk a spawnokat.
         Cleanup(); // Kitöröljük a spawnereket, mivel már nincs szükség rájuk.
+        
+        OnLevelGenerationFinished?.Invoke(); // Event a sikeres generálásról
+
         Destroy(gameObject); // Magát a SpawnManager-t is töröljük.
+
     }
 
     /// <summary>
@@ -59,21 +71,21 @@ public class SpawnManager : MonoBehaviour
         // Végigiterálunk a SpawnPlan listán, ez az ellenség spawnereket kezeli.
         foreach (var plan in enemySpawnPlans)
         {
-            int enemiesToSpawn = Random.Range(plan.minCount, plan.maxCount + 1); // A plan-ben megadott értékek alapján megadjuk a spawnolandó mennyiséget.
-            int randomSpawnerIndex = Random.Range(0, enemySpawners.Count); // Választunk egy random indexet a spawnerlistából.
+            int enemiesToSpawn = random.Next(plan.minCount, plan.maxCount + 1); // A plan-ben megadott értékek alapján megadjuk a spawnolandó mennyiséget.
+            int randomSpawnerIndex = random.Next(0, enemySpawners.Count); // Választunk egy random indexet a spawnerlistából.
             EnemySpawner selectedSpawner = enemySpawners[randomSpawnerIndex]; // Kiválasztjuk az adott indexen lévő spawnert a listából.
 
             selectedSpawner.enemy = plan.enemyType; // Megadjuk a spawnernek a plan-ben szereplő ellenségtípust.
             selectedSpawner.numberOfSpawned = enemiesToSpawn; // Megadjuk a spawnernek a spawnolandó mennyiséget.
-            selectedSpawner.Activate(); // Aktiváljuk a spawnert, elhelyezi a paraméterek alapján az ellenségeket.
+            selectedSpawner.Activate(currentLevel); // Aktiváljuk a spawnert, elhelyezi a paraméterek alapján az ellenségeket.
 
             enemySpawners.RemoveAt(randomSpawnerIndex); // Használat után a spawnert töröljük a listából.
         }
 
         // Az obstacle spawnereket kezeli, ez egyelőre egyszerűbb.
-        for (int i = 0;i < numOfObstacleSpawners; i++)
+        for (int i = 0; i < numOfObstacleSpawners; i++)
         {
-            int randomObstacleIndex = Random.Range(0, obstacleSpawners.Count); // Választunk egy random indexet a spawner listából.
+            int randomObstacleIndex = random.Next(0, obstacleSpawners.Count); // Választunk egy random indexet a spawner listából.
 
             ObstacleSpawner selectedSpawner = obstacleSpawners[randomObstacleIndex]; // Kiválasztjuk az adott indexen lévő spawnert a listából.
             selectedSpawner.Place(); // Aktiváljuk a spawnert, elhelyez egy obstacle-t.
@@ -82,7 +94,7 @@ public class SpawnManager : MonoBehaviour
         }
 
         // A játékos elhelyezése a player spawnerek egyikén.
-        int randomPlayerSpawnerIndex = Random.Range(0, playerSpawners.Count);
+        int randomPlayerSpawnerIndex = random.Next(0, playerSpawners.Count);
         PlayerSpawner selectedPlayerSpawner = playerSpawners[randomPlayerSpawnerIndex];
 
         selectedPlayerSpawner.Activate();
@@ -99,11 +111,11 @@ public class SpawnManager : MonoBehaviour
         {
             Destroy(obs.gameObject);
         }
-        foreach(EnemySpawner ens in enemySpawners)
+        foreach (EnemySpawner ens in enemySpawners)
         {
             Destroy(ens.gameObject);
         }
-        foreach(PlayerSpawner pls in playerSpawners)
+        foreach (PlayerSpawner pls in playerSpawners)
         {
             Destroy(pls.gameObject);
         }
