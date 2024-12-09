@@ -1,9 +1,11 @@
 using Assets.Scripts;
+using log4net.Core;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
+using static Cinemachine.DocumentationSortingAttribute;
 
 
 public class PlayerController : Assets.Scripts.Character
@@ -37,9 +39,9 @@ public class PlayerController : Assets.Scripts.Character
     /// </summary>
     public InputAction MoveAction;            // A karakter mozgását vezérlõ bemeneti akció (például billentyûzet vagy kontroller mozgás)
     public InputAction launchAction;          // A lövedék indítását vezérlõ bemeneti akció (például billentyû vagy gomb lenyomás)
-    public ObjectPoolForProjectiles objectPool; // A lövedékeket kezelõ ObjectPoolForProjectiles komponens
+    private ObjectPoolForProjectiles objectPool; // A lövedékeket kezelõ ObjectPoolForProjectiles komponens
 
-    public SpriteRenderer sr;
+    private SpriteRenderer spriteRenderer;
 
     /// <summary>
     /// Getterek és setterek
@@ -59,12 +61,12 @@ public class PlayerController : Assets.Scripts.Character
     void Start()
     {
         MoveAction.Enable();
-
-        sr = GameObject.Find("Background").GetComponent<SpriteRenderer>();
+        rigidbody2d = GetComponent<Rigidbody2D>();
+        spriteRenderer = GameObject.Find("Background").GetComponent<SpriteRenderer>();
 
         // Sprite méretének kiszámítása világkoordinátákban
-        Vector2 spriteSize = sr.bounds.size; // A sprite szélessége és magassága világkoordinátában
-        Vector2 position = sr.transform.position; // A sprite középpontjának pozíciója világkoordinátában
+        Vector2 spriteSize = spriteRenderer.bounds.size; // A sprite szélessége és magassága világkoordinátában
+        Vector2 position = spriteRenderer.transform.position; // A sprite középpontjának pozíciója világkoordinátában
 
         // Bal felsõ sarok koordinátája
         Vector2 topLeft = new Vector2(position.x - spriteSize.x / 2, position.y + spriteSize.y / 2);
@@ -93,6 +95,27 @@ public class PlayerController : Assets.Scripts.Character
         OnPlayerDeath += GameOver;
     }
 
+#nullable enable
+    public void InitPlayerStats(int level, string? data = null)
+    {
+        //SetCurrentSpriteByLevel(level);
+        Debug.Log(level);
+        if (data != null)
+        {
+            Debug.Log("LOAD DATA");
+            return;
+        }
+
+        CurrentHealth = Mathf.Clamp(maxHealth + additionalHealth, minHealthValue, maxHealthValue);
+        CurrentMovementSpeed = Mathf.Clamp(baseMovementSpeed + additionalMovementSpeed, minMovementSpeedValue, maxMovementSpeedValue);
+        CurrentDMG = Mathf.Clamp(baseDMG + additionalDMG, minDMGValue, maxDMGValue);
+        CurrentAttackCooldown = Mathf.Clamp(baseAttackCooldown + attackCooldownReduction, minAttackCooldownValue, maxAttackCooldownValue);
+        CurrentCriticalHitChance = Mathf.Clamp(baseCriticalHitChance + additionalCriticalHitChance, minCriticalHitChanceValue, maxCriticalHitChanceValue);
+        CurrentPercentageBasedDMG = Mathf.Clamp(basePercentageBasedDMG + additionalPercentageBasedDMG, minPercentageBasedDMGValue, maxPercentageBasedDMGValue);
+
+
+    }
+#nullable disable
 
     /// <summary>
     /// Leiratkozik az adott ellenséghez tartozó eseményekrõl.
@@ -100,7 +123,7 @@ public class PlayerController : Assets.Scripts.Character
     /// és az ellenség halálára vonatkozó események kezelést.
     /// </summary>
     /// <param name="enemy">Az ellenség, akivel a hallgatókat eltávolítjuk.</param>
-    void StopListeningToEnemy(GameObject enemy)
+    void StopListeningToEnemy(EnemyController enemy)
     {
         if (enemy.TryGetComponent<EnemyController>(out var deadEnemy))
         {
@@ -273,7 +296,7 @@ public class PlayerController : Assets.Scripts.Character
     /// </summary>
     void GameOver()
     {
-        Debug.Log("GAME OVER");
+        //Debug.Log("GAME OVER");
         launchAction.performed -= Attack;
         OnPlayerDeath -= GameOver;
     }
