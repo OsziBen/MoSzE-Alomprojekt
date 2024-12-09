@@ -4,39 +4,76 @@ using System;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using Assets.Scripts.EnemyBehaviours;
+using static Cinemachine.DocumentationSortingAttribute;
 
 public class EnemyController : Assets.Scripts.Character
 {
+    [Header("Point Value")]
+    [SerializeField]
+    private int basePointValue;
+    private int _currentPointValue;
+
+    private int minPointValue = 10;
+    private int maxPointValue = 1000;
+
+    [Header("Scale Factors")]
+    [SerializeField, Range(1f, 2f)]
+    private float maxHealthScaleFactor;
+    [SerializeField, Range(1f, 2f)]
+    private float baseMovementSpeedScaleFactor;
+    [SerializeField, Range(1f, 2f)]
+    private float baseDMGScaleFactor;
+    [SerializeField, Range(1f, 2f)]
+    private float baseAttackCooldownScaleFactor;
+    [SerializeField, Range(1f, 2f)]
+    private float baseCriticalHitChanceScaleFactor;
+    [SerializeField, Range(1f, 2f)]
+    private float basePercentageBasedDMGScaleFactor;
+    [SerializeField, Range(1f, 2f)]
+    private float pointValueScaleFactor;
+
+    // TODO: IsMarkingOn implementálása
+
+
     /// <summary>
     /// Változók
     /// </summary>
     private List<Projectile> activeProjectiles = new List<Projectile>();    // Az aktívan megfigyelt lövedékek (Projectile) listája
-    public float detectionRange;
     private bool hasDetectedPlayer = false;
 
     /// <summary>
     /// Komponenesek
     /// </summary>
     private ObjectPoolForProjectiles objectPool;  // A lövedékek kezelésére szolgáló ObjectPool objektum
-    public PlayerController player;
+    private PlayerController player;
 
-    public EnemyBehaviour currentBehaviour;
-    public PassiveEnemyBehaviour passiveBehaviour;
-    public HostileEnemyBehaviour hostileBehaviour;
+    private EnemyBehaviour currentBehaviour;
+    [Header("Enemy Behaviour")]
+    [SerializeField]
+    private float detectionRange;
+    [SerializeField]
+    private PassiveEnemyBehaviour passiveBehaviour;
+    [SerializeField]
+    private HostileEnemyBehaviour hostileBehaviour;
 
     /// <summary>
     /// Getterek és Setterek
     /// </summary>
+    public int CurrentPointValue  // Aktuális pontérték
+    {
+        get { return _currentPointValue; }
+        set { _currentPointValue = value; }
+    }
 
 
     /// <summary>
     /// Események
     /// </summary>
     public event Action<float> OnPlayerCollision; // Játékossal való ütközés
-    public event Action<GameObject> OnEnemyDeath;   // Ellenség halála
+    public event Action<EnemyController> OnEnemyDeath;   // Ellenség halála
 
-    public event Action<GameObject> OnBehaviourChange;
-    public event Action<GameObject> OnPlayerInRange;
+    public event Action<EnemyController> OnBehaviourChange;
+    public event Action<EnemyController> OnPlayerInRange;
 
 
     /// <summary>
@@ -49,6 +86,33 @@ public class EnemyController : Assets.Scripts.Character
         OnPlayerInRange += HandleBehaviourChange;
         SetBehaviour(passiveBehaviour);
     }
+
+    public void InitEnemyByLevel(int level)
+    {
+        SetCurrentSpriteByLevel(level);
+        SetCurrentEnemyStatsByLevel(level);
+    }
+
+    public void SetCurrentEnemyStatsByLevel(int level)
+    {
+        // ellenség maximális életerejének beállítása szint alapján
+        MaxHealth = Math.Clamp(maxHealth * (float)Math.Pow(maxHealthScaleFactor, level), minHealthValue, maxHealthValue);
+        CurrentHealth = maxHealth;
+        // ellenség mozgási sebességének beállítása szint alapján
+        CurrentMovementSpeed = Math.Clamp(baseMovementSpeed * (float)Math.Pow(baseMovementSpeedScaleFactor, level), minMovementSpeedValue, maxMovementSpeedValue);
+        // ellenség sebzésértékének beállítása szint alapján
+        CurrentDMG = Math.Clamp(baseDMG * (float)Math.Pow(baseDMGScaleFactor, level), minDMGValue, maxDMGValue);
+        // ellenség sebzés-visszatöltõdési idejének beállítása szint alapján
+        CurrentAttackCooldown = Math.Clamp(baseAttackCooldown / (float)Math.Pow(baseAttackCooldownScaleFactor, level), minAttackCooldownValue, maxAttackCooldownValue);
+        // ellenség kritikus sebzés esélyének beállítása szint alapján
+        CurrentCriticalHitChance = Math.Clamp(baseCriticalHitChance * (float)Math.Pow(baseCriticalHitChanceScaleFactor, level), minCriticalHitChanceValue, maxCriticalHitChanceValue);
+        // ellenség százalékos sebzésértékének beálítása szint alapján
+        CurrentPercentageBasedDMG = Math.Clamp(basePercentageBasedDMG * (float)Math.Pow(basePercentageBasedDMGScaleFactor, level), minPercentageBasedDMGValue, maxPercentageBasedDMGValue);
+
+        // ellenség pontértékének beállítása szint alapján
+        CurrentPointValue = (int)Math.Clamp(basePointValue * Math.Pow(pointValueScaleFactor, level), minPointValue, maxPointValue);
+    }
+
 
     /// <summary>
     /// Inicializálja az objektumpool-t és feliratkozik az eseményekre a lövedékek kezeléséhez.
@@ -74,7 +138,7 @@ public class EnemyController : Assets.Scripts.Character
 
         if (player && !hasDetectedPlayer && IsPlayerInRange())
         {
-            OnPlayerInRange?.Invoke(gameObject);
+            OnPlayerInRange?.Invoke(this);
         }
     }
 
@@ -100,9 +164,9 @@ public class EnemyController : Assets.Scripts.Character
     /// 
     /// </summary>
     /// <param name="gameObject"></param>
-    void HandleBehaviourChange(GameObject targetGameObject)
+    void HandleBehaviourChange(EnemyController targetGameObject)
     {
-        if (gameObject == targetGameObject)
+        if (this == targetGameObject)
         {
             hasDetectedPlayer = true;
             OnBehaviourChange -= HandleBehaviourChange;
@@ -176,13 +240,12 @@ public class EnemyController : Assets.Scripts.Character
     /// </summary>
     /// <param name="enemyHitByProjectile">Az ellenség, amelyet a lövedék eltalált.</param>
     /// <param name="damageAmount">A sebzés mértéke, amelyet a lövedék okozott.</param>
-    void HandleEnemyHit(GameObject enemyHitByProjectile, float damageAmount)
+    void HandleEnemyHit(EnemyController enemyHitByProjectile, float damageAmount)
     {
-
-        if (gameObject == enemyHitByProjectile)
+        if (this == enemyHitByProjectile)
         {
             ChangeHealth(damageAmount);
-            OnBehaviourChange?.Invoke(gameObject);
+            OnBehaviourChange?.Invoke(this);
         }
 
     }
@@ -196,8 +259,8 @@ public class EnemyController : Assets.Scripts.Character
     {
         base.Die();
         currentBehaviour.StopBehaviour(this);
-        OnEnemyDeath?.Invoke(gameObject);
-        OnBehaviourChange?.Invoke(gameObject);
+        OnEnemyDeath?.Invoke(this);
+        OnBehaviourChange?.Invoke(this);
     }
 
 
