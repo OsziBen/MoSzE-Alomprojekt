@@ -54,7 +54,7 @@ public class Projectile : MonoBehaviour
     /// Események
     /// </summary>
     /// </summary>
-    public event Action<GameObject, float> OnEnemyHit;  // Esemény, amely akkor hívódik meg, amikor a lövedék eltalál egy ellenséges karaktert
+    public event Action<EnemyController, float> OnEnemyHit;  // Esemény, amely akkor hívódik meg, amikor a lövedék eltalál egy ellenséges karaktert
 
 
     /// <summary>
@@ -141,17 +141,13 @@ public class Projectile : MonoBehaviour
     {
         if (trigger.gameObject.TryGetComponent<EnemyController>(out var enemy))
         {
-            if (IsMarked)
-            {
-                Debug.Log("MARKED!");
-                OnEnemyHit?.Invoke(trigger.gameObject, -ProjectileDMG
-                    - enemy.GetComponent<EnemyController>().MaxHealth * PercentageDMGValue);
-            }
-            else
-            {
-                OnEnemyHit?.Invoke(trigger.gameObject, -ProjectileDMG);
-            }
+            float damage = IsMarked
+                ? -ProjectileDMG - enemy.MaxHealth * PercentageDMGValue
+                : -ProjectileDMG;
 
+            Debug.Log(IsMarked ? "MARKED!" : "UNMARKED!");
+
+            OnEnemyHit?.Invoke(enemy, damage);
         }
 
         DestroyProjectile();
