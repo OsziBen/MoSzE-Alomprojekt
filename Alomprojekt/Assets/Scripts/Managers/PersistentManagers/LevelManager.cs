@@ -30,6 +30,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
     List<EnemyController> enemies;
     public PlayerController player;
 
+    int levelNum = 2;
 
     public event Action<bool> OnLevelCompleted; // true: success; flase: faliure
 
@@ -48,7 +49,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
         {
             Debug.LogError("ADATHIBA");
         }
-        bool success = await LoadNewLevel(1);
+        bool success = await LoadNewLevel(Math.Clamp(levelNum, 1, 4));
         if (!success)
         {
             Debug.LogError("FAIL");
@@ -146,7 +147,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
 
         // CharacterSetupManager meghívása
-        bool charactersSetup = await characterSetupManager.LoadCharactersAsync(1);
+        bool charactersSetup = await characterSetupManager.LoadCharactersAsync(levelNumber);
         if (!charactersSetup)
         {
             Debug.Log("Character setup failed.");
