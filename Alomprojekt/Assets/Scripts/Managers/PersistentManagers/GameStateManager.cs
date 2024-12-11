@@ -49,23 +49,35 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         levelmanager.OnLevelCompleted += IsActualLevelCompleted;
     }
 
-    void IsActualLevelCompleted(bool isCompleted)
+    async void IsActualLevelCompleted(bool isCompleted)
     {
         levelmanager.OnLevelCompleted -= IsActualLevelCompleted;
 
-        if (isCompleted)
+        try
         {
-            Debug.Log("UPGRADES!!!");
-            // change gameState
-        }
-        else
-        {
-            Debug.Log("GAME OVER!!!");
-            // change gameState
-        }
+            if (isCompleted)
+            {
+                Debug.Log("UPGRADES!!!");
+                // change gameState
+            }
+            else
+            {
+                Debug.Log("GAME OVER!!!");
+                // change gameState
+            }
 
-        gameSceneManager.LoadUtilityScene("ManagersTestScene");
+            bool sceneLoaded = await gameSceneManager.LoadUtilityScene("ManagersTestScene");
+            if (!sceneLoaded)
+            {
+                Debug.LogError("Level load failed!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Hiba történt az IsActualLevelCompleted metódusban: {ex.Message}");
+        }
     }
+
 
     public void SetState(GameState newState)
     {
