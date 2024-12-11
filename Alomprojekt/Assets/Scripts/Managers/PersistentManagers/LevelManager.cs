@@ -120,7 +120,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
     public async Task<bool> LoadNewLevel(int levelNumber)
     {
         // SCENEMANAGER hívás
-        bool sceneLoaded = await gameSceneManager.LoadRandomSceneByLevelAsync(1);
+        bool sceneLoaded = await gameSceneManager.LoadRandomSceneByLevel(1);
         if (!sceneLoaded)
         {
             Debug.Log("Scene loading failed.");
