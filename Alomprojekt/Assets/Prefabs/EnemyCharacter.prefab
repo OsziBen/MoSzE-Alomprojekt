@@ -149,9 +149,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9b069f52a5090547a000fcafba39504, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 5
+  baseMovementSpeed: 3
+  baseDMG: 1
+  baseAttackCooldown: 0.5
+  baseCriticalHitChance: 0.05
+  basePercentageBasedDMG: 0
+  minHealthValue: 5
+  maxHealthValue: 10
+  minMovementSpeedValue: 1
+  maxMovementSpeedValue: 10
+  minDMGValue: 1
+  maxDMGValue: 10
+  minAttackCooldownValue: 0.5
+  maxAttackCooldownValue: 5
+  LevelSpritePairs: []
+  basePointValue: 0
+  maxHealthScaleFactor: 1.2
+  baseMovementSpeedScaleFactor: 1.2
+  baseDMGScaleFactor: 1.2
+  baseAttackCooldownScaleFactor: 1.2
+  baseCriticalHitChanceScaleFactor: 1.2
+  basePercentageBasedDMGScaleFactor: 1.2
+  pointValueScaleFactor: 1.2
   detectionRange: 3
-  player: {fileID: 0}
-  currentBehaviour: {fileID: 0}
   passiveBehaviour: {fileID: 3830059035659017838}
   hostileBehaviour: {fileID: 203574436219418284}
 --- !u!114 &3830059035659017838

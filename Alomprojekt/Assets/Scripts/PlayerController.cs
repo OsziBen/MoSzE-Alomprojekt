@@ -92,7 +92,6 @@ public class PlayerController : Assets.Scripts.Character
 
         launchAction.Enable();
         launchAction.performed += Attack;
-        OnPlayerDeath += GameOver;
     }
 
 #nullable enable
@@ -247,6 +246,8 @@ public class PlayerController : Assets.Scripts.Character
     /// <param name="context">A bemeneti akció kontextusa, amely tartalmazza az aktuális irányt és a vezérlõt.</param>
     void Attack(InputAction.CallbackContext context)
     {
+        if (rigidbody2d == null) return;
+
         switch (context.control.name)
         {
             case "upArrow":
@@ -286,20 +287,14 @@ public class PlayerController : Assets.Scripts.Character
     /// </summary>
     protected override void Die()
     {
+        MoveAction.Disable();
+        launchAction.Disable();
+        launchAction.performed -= Attack;
+
         OnPlayerDeath?.Invoke();
         Destroy(gameObject);
     }
 
-
-    /// <summary>
-    /// A játék végét kezeli, kiírja a "GAME OVER" üzenetet és leiratkozik az eseményekrõl.
-    /// </summary>
-    void GameOver()
-    {
-        //Debug.Log("GAME OVER");
-        launchAction.performed -= Attack;
-        OnPlayerDeath -= GameOver;
-    }
 
 
 }

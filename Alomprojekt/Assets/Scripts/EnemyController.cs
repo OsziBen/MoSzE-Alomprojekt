@@ -96,21 +96,21 @@ public class EnemyController : Assets.Scripts.Character
     public void SetCurrentEnemyStatsByLevel(int level)
     {
         // ellenség maximális életerejének beállítása szint alapján
-        MaxHealth = Math.Clamp(maxHealth * (float)Math.Pow(maxHealthScaleFactor, level), minHealthValue, maxHealthValue);
+        MaxHealth = Math.Clamp(maxHealth * (float)Math.Pow(maxHealthScaleFactor, level - 1), minHealthValue, maxHealthValue);
         CurrentHealth = maxHealth;
         // ellenség mozgási sebességének beállítása szint alapján
-        CurrentMovementSpeed = Math.Clamp(baseMovementSpeed * (float)Math.Pow(baseMovementSpeedScaleFactor, level), minMovementSpeedValue, maxMovementSpeedValue);
+        CurrentMovementSpeed = Math.Clamp(baseMovementSpeed * (float)Math.Pow(baseMovementSpeedScaleFactor, level - 1), minMovementSpeedValue, maxMovementSpeedValue);
         // ellenség sebzésértékének beállítása szint alapján
-        CurrentDMG = Math.Clamp(baseDMG * (float)Math.Pow(baseDMGScaleFactor, level), minDMGValue, maxDMGValue);
+        CurrentDMG = Math.Clamp(baseDMG * (float)Math.Pow(baseDMGScaleFactor, level - 1), minDMGValue, maxDMGValue);
         // ellenség sebzés-visszatöltõdési idejének beállítása szint alapján
-        CurrentAttackCooldown = Math.Clamp(baseAttackCooldown / (float)Math.Pow(baseAttackCooldownScaleFactor, level), minAttackCooldownValue, maxAttackCooldownValue);
+        CurrentAttackCooldown = Math.Clamp(baseAttackCooldown / (float)Math.Pow(baseAttackCooldownScaleFactor, level - 1), minAttackCooldownValue, maxAttackCooldownValue);
         // ellenség kritikus sebzés esélyének beállítása szint alapján
-        CurrentCriticalHitChance = Math.Clamp(baseCriticalHitChance * (float)Math.Pow(baseCriticalHitChanceScaleFactor, level), minCriticalHitChanceValue, maxCriticalHitChanceValue);
+        CurrentCriticalHitChance = Math.Clamp(baseCriticalHitChance * (float)Math.Pow(baseCriticalHitChanceScaleFactor, level - 1), minCriticalHitChanceValue, maxCriticalHitChanceValue);
         // ellenség százalékos sebzésértékének beálítása szint alapján
-        CurrentPercentageBasedDMG = Math.Clamp(basePercentageBasedDMG * (float)Math.Pow(basePercentageBasedDMGScaleFactor, level), minPercentageBasedDMGValue, maxPercentageBasedDMGValue);
+        CurrentPercentageBasedDMG = Math.Clamp(basePercentageBasedDMG * (float)Math.Pow(basePercentageBasedDMGScaleFactor, level - 1), minPercentageBasedDMGValue, maxPercentageBasedDMGValue);
 
         // ellenség pontértékének beállítása szint alapján
-        CurrentPointValue = (int)Math.Clamp(basePointValue * Math.Pow(pointValueScaleFactor, level), minPointValue, maxPointValue);
+        CurrentPointValue = (int)Math.Clamp(basePointValue * Math.Pow(pointValueScaleFactor, level - 1), minPointValue, maxPointValue);
     }
 
 
