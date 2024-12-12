@@ -59,18 +59,29 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
             {
                 Debug.Log("UPGRADES!!!");
                 // change gameState
+                bool victorySceneLoaded = await gameSceneManager.LoadUtilityScene("Victory");
+                if (!victorySceneLoaded)
+                {
+                    Debug.LogError("Level load failed!");
+                }
             }
             else
             {
                 Debug.Log("GAME OVER!!!");
                 // change gameState
+                bool defeatSceneLoaded = await gameSceneManager.LoadUtilityScene("Defeat");
+                if (!defeatSceneLoaded)
+                {
+                    Debug.LogError("Level load failed!");
+                }
             }
-
+            /*
             bool sceneLoaded = await gameSceneManager.LoadUtilityScene("ManagersTestScene");
             if (!sceneLoaded)
             {
                 Debug.LogError("Level load failed!");
             }
+            */
         }
         catch (Exception ex)
         {

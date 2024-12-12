@@ -15,8 +15,6 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
     List<EnemyData.EnemySpawnInfo> spawnManagerData = new List<EnemyData.EnemySpawnInfo>();
 
-    public event Action<bool> OnLoadCompleted;
-
     private bool isLoadSuccessful = false;
 
 
@@ -49,6 +47,12 @@ public class LevelManager : BasePersistentManager<LevelManager>
         {
             Debug.LogError("ADATHIBA");
         }
+        bool loadCutscene = await gameSceneManager.LoadUtilityScene("Cutscene");
+        if (!loadCutscene)
+        {
+            Debug.LogError("HIBA");
+        }
+        await Task.Delay(10000);
         bool success = await LoadNewLevel(Math.Clamp(levelNum, 1, 4));
         if (!success)
         {
@@ -82,7 +86,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
         return spawnManagerData;
     }
 
-
+    // JAVÍTÁS!!!
     async Task<bool> LoadAllLevelData()
     {
         await Task.Delay(1000);
@@ -98,22 +102,23 @@ public class LevelManager : BasePersistentManager<LevelManager>
     
     private void OnLoadComplete(AsyncOperationHandle<IList<LevelData>> handle)
     {
+        Debug.Log("ASD: " + handle.Status + " " + AsyncOperationStatus.Succeeded);
         if (handle.Status == AsyncOperationStatus.Succeeded)
         {
             Debug.Log("All levels loaded successfully!");
-            OnLoadCompleted?.Invoke(true);
             isLoadSuccessful = true;
         }
         else
         {
             Debug.LogError("Failed to load levels!");
-            OnLoadCompleted?.Invoke(false);
         }
 
         foreach (var level in allLevels)
         {
             Debug.Log($"Level in list: {level.levelNumber}");
         }
+
+        Debug.Log("QWERTY: " + isLoadSuccessful);
     }
     
     // ASYNC !!!
