@@ -1,0 +1,73 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: PlayerUpgradesData
+  m_EditorClassIdentifier: 
+  m_GroupName: PlayerUpgradesData
+  m_Data:
+    m_SerializedData: []
+  m_GUID: e59d367d4c1670f4aa7b6f6be42df937
+  m_SerializeEntries:
+  - m_GUID: 09acfc4f469df97418e4f5ee209b5f4f
+    m_Address: Assets/ScriptableObjects/PlayerUpgradeData/PlayerUpgradeData1.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Upgrades
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 09dacafa99346ec4f860ff81cc30ea93
+    m_Address: Assets/ScriptableObjects/PlayerUpgradeData/PlayerUpgradeData3.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Upgrades
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 200b36d81f4edcc4faa2bb7f415f677f
+    m_Address: Assets/ScriptableObjects/PlayerUpgradeData/PlayerUpgradeData4.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Upgrades
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 42bf78d0c4233c54baf992095bf2126f
+    m_Address: Assets/ScriptableObjects/PlayerUpgradeData/PlayerUpgradeData7.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Upgrades
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 79a5eb03e835c964e899f9a8da04e108
+    m_Address: Assets/ScriptableObjects/PlayerUpgradeData/PlayerUpgradeData6.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Upgrades
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a431d4c52eb8354492e4f4bf289e8eb
+    m_Address: Assets/ScriptableObjects/PlayerUpgradeData/PlayerUpgradeData5.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Upgrades
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8d4aac7e74106ff40861db9033641be4
+    m_Address: Assets/ScriptableObjects/PlayerUpgradeData/Healing.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Upgrades
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 98b4fd1019d626d49ba20cd95b8c8c2e
+    m_Address: Assets/ScriptableObjects/PlayerUpgradeData/PlayerUpgradeData2.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Upgrades
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: b498c0c05bb2f694f87fb2fc34aebe42, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 95a4a806278901e40ad8198c5a2ab05f, type: 2}
+    - {fileID: 11400000, guid: b6c8d4ce8997a1d4684e9c52852e833b, type: 2}

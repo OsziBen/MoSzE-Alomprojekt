@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36362019ab5a2f049b3d381f91fb3406, type: 3}
+  m_Name: PlayerUpgradeData3
+  m_EditorClassIdentifier: 
+  upgradeName: Test3
+  isHealing: 0
+  customDescription: 'Upgrade \name increases \m[0].type by \m[0].baseValue at level
+    \currentUpgradeLevel.
+
+    \m[0].value.  \price
+
+    \minUpgradeLevel - \currentUpgradeLevel
+
+'
+  description: 'Upgrade Test3 increases CriticalHitChance by 0,1 at level 3.
+
+    0,1. 
+    40
+
+    3 - 3
+
+'
+  showOutputInConsole: 0
+  minUpgradeLevel: 3
+  maxUpgradeLevel: 4
+  currentUpgradeLevel: 3
+  basePrice: 40
+  priceScaleFactor: 1.5
+  modifiers:
+  - type: 4
+    baseValue: 0.1
+    scaleFactor: 1.2
+  - type: 2
+    baseValue: 25
+    scaleFactor: 1.2

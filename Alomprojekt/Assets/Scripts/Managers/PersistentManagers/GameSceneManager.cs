@@ -132,7 +132,7 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
     /// </summary>
     /// <param name="levelNum">A szint száma, amely alapján véletlenszerűen választunk egy scene-t</param>
     /// <returns>Visszaadja, hogy a scene sikeresen betöltődött-e (true, ha betöltődött, false, ha nem)</returns>
-    public async Task<bool> LoadRandomSceneByLevel(int levelNum)
+    public async Task<bool> LoadRandomSceneByLevelAsync(int levelNum)
     {
         // Ellenőrizzük, hogy létezik-e scene a megadott szinten
         if (levelScenes.ContainsKey(levelNum))
@@ -177,7 +177,7 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
     /// </summary>
     /// <param name="sceneKey">A keresett utility scene kulcsa (pl. "MainMenu", "Settings", stb.)</param>
     /// <returns>Visszaadja, hogy a scene sikeresen betöltődött-e (true, ha betöltődött, false, ha nem)</returns>
-    public async Task<bool> LoadUtilityScene(string sceneKey)
+    public async Task<bool> LoadUtilitySceneAsync(string sceneKey)
     {
         // Ellenőrizzük, hogy létezik-e a megadott kulcs a utilityScenes Dictionary-ben
         if (utilityScenes.ContainsKey(sceneKey))

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO: ellenség halálakor eventre feliratkozni, pontok számolása (-> mentés)
 public class GameStateManager : BasePersistentManager<GameStateManager>
 {
     /// <summary>
@@ -59,7 +60,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
             {
                 Debug.Log("UPGRADES!!!");
                 // change gameState
-                bool victorySceneLoaded = await gameSceneManager.LoadUtilityScene("Victory");
+                bool victorySceneLoaded = await gameSceneManager.LoadUtilitySceneAsync("Victory");
                 if (!victorySceneLoaded)
                 {
                     Debug.LogError("Level load failed!");
@@ -69,7 +70,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
             {
                 Debug.Log("GAME OVER!!!");
                 // change gameState
-                bool defeatSceneLoaded = await gameSceneManager.LoadUtilityScene("Defeat");
+                bool defeatSceneLoaded = await gameSceneManager.LoadUtilitySceneAsync("Defeat");
                 if (!defeatSceneLoaded)
                 {
                     Debug.LogError("Level load failed!");
