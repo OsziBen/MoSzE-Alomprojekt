@@ -29,8 +29,8 @@ public class PlayerController : Assets.Scripts.Character
     
     Vector2 movementBoundsMin;
     Vector2 movementBoundsMax;
-    
 
+    System.Random random = new System.Random();
 
 
 
@@ -152,7 +152,6 @@ public class PlayerController : Assets.Scripts.Character
     /// <returns>True, ha a lövés kritikus találat, false egyébként.</returns>
     bool IsCriticalHit()
     {
-        System.Random random = new System.Random();
         int chance = random.Next(1, 101);
         if (chance <= CurrentCriticalHitChance * 100)
         {
