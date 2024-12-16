@@ -15,9 +15,9 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
     List<EnemyData.EnemySpawnInfo> spawnManagerData = new List<EnemyData.EnemySpawnInfo>();
 
-    private bool isLoadSuccessful = false;
+    private bool isLoadSuccessful;
 
-
+    System.Random rand = new System.Random();
 
     GameSceneManager gameSceneManager;
     SpawnManager spawnManager;  // létrehozás
@@ -42,18 +42,18 @@ public class LevelManager : BasePersistentManager<LevelManager>
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
 
 
-        bool dataLoaded = await LoadAllLevelData();
-        if (!dataLoaded)
+        isLoadSuccessful = await LoadAllLevelDataAsync();
+        if (!isLoadSuccessful)
         {
             Debug.LogError("ADATHIBA");
         }
-        bool loadCutscene = await gameSceneManager.LoadUtilityScene("Cutscene");
+        bool loadCutscene = await gameSceneManager.LoadUtilitySceneAsync("Cutscene");
         if (!loadCutscene)
         {
             Debug.LogError("HIBA");
         }
         await Task.Delay(10000);
-        bool success = await LoadNewLevel(Math.Clamp(levelNum, 1, 4));
+        bool success = await LoadNewLevelAsync(Math.Clamp(levelNum, 1, 4));
         if (!success)
         {
             Debug.LogError("FAIL");
@@ -72,8 +72,6 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
         List<EnemyData.EnemySpawnInfo> allEnemyInfos = currentLevel.enemyData.enemyInfos;  // List of all possible enemy data
 
-        System.Random rand = new System.Random();
-
         for (int i = 0; i < activeZoneCount; i++)
         {
             // Véletlenszerű index kiválasztása a lehetséges ellenségek listájából
@@ -86,46 +84,69 @@ public class LevelManager : BasePersistentManager<LevelManager>
         return spawnManagerData;
     }
 
-    // JAVÍTÁS!!!
-    async Task<bool> LoadAllLevelData()
+
+    /// <summary>
+    /// Aszinkron metódus, amely betölti az összes szint adatot az Addressables rendszerből.
+    /// A metódus a 'Levels' címkét tartalmazó LevelData objektumokat tölti be.
+    /// A betöltés befejezése után egy TaskCompletionSource segítségével visszaadja a sikeresség eredményét.
+    /// </summary>
+    /// <returns>Visszatérési érték: bool - true, ha a betöltés sikeres volt, különben false.</returns>
+    async Task<bool> LoadAllLevelDataAsync()
     {
-        await Task.Delay(1000);
-        Addressables.LoadAssetsAsync<LevelData>("Levels", OnLevelDataLoaded).Completed += OnLoadComplete;
-        return true;
+        // TaskCompletionSource létrehozása a betöltési folyamat aszinkron befejezésének kezelésére.
+        var taskCompletionSource = new TaskCompletionSource<bool>();
+
+        // Az Addressables rendszer segítségével betölti a 'Levels' címkét tartalmazó LevelData objektumokat.
+        // Az OnLevelDataLoaded metódus hívódik meg minden egyes betöltött adat objektum esetén.
+        var handle = Addressables.LoadAssetsAsync<LevelData>("Levels", (levelData) =>
+        {
+            // Minden betöltött adatot az OnLevelDataLoaded metódus dolgoz fel.
+            OnLevelDataLoaded(levelData);
+        });
+
+        // A betöltési folyamat befejeződése után a 'Completed' eseménykezelő hívódik meg.
+        handle.Completed += (operation) =>
+        {
+            // Ellenőrzi, hogy a betöltési folyamat sikeresen befejeződött-e.
+            if (operation.Status == AsyncOperationStatus.Succeeded)
+            {
+                // Ha a betöltés sikeres volt, akkor a megfelelő üzenetet jeleníti meg, és a TaskCompletionSource-t sikeresen befejezi.
+                Debug.Log($"All levels loaded successfully ({allLevels.Count})");
+                taskCompletionSource.SetResult(true); // Sikeres betöltés
+            }
+            else
+            {
+                // Ha a betöltés nem sikerült, hibaüzenetet ír ki és a TaskCompletionSource-t hibás eredménnyel zárja le.
+                Debug.LogError("Failed to load levels");
+                taskCompletionSource.SetResult(false); // Hibás betöltés
+            }
+        };
+
+        // Várakozik a TaskCompletionSource eredményére (visszaadja a végső sikerességi értéket: true vagy false).
+        return await taskCompletionSource.Task;
     }
 
+
+    /// <summary>
+    /// Az OnLevelDataLoaded metódus feldolgozza a betöltött LevelData objektumokat.
+    /// A betöltött adatokat hozzáadja az allLevels listához.
+    /// </summary>
+    /// <param name="levelData">A betöltött LevelData objektum, amely tartalmazza az aktuális szint adatokat.</param>
     private void OnLevelDataLoaded(LevelData levelData)
     {
+        // Hozzáadjuk a betöltött szintet az allLevels listához.
         allLevels.Add(levelData);
+
+        // Debug üzenet, amely tájékoztatja, hogy egy új szint adatot sikerült betölteni.
         Debug.Log($"Level {levelData.levelNumber} loaded.");
     }
-    
-    private void OnLoadComplete(AsyncOperationHandle<IList<LevelData>> handle)
-    {
-        Debug.Log("ASD: " + handle.Status + " " + AsyncOperationStatus.Succeeded);
-        if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
-            Debug.Log("All levels loaded successfully!");
-            isLoadSuccessful = true;
-        }
-        else
-        {
-            Debug.LogError("Failed to load levels!");
-        }
 
-        foreach (var level in allLevels)
-        {
-            Debug.Log($"Level in list: {level.levelNumber}");
-        }
 
-        Debug.Log("QWERTY: " + isLoadSuccessful);
-    }
-    
     // ASYNC !!!
-    public async Task<bool> LoadNewLevel(int levelNumber)
+    public async Task<bool> LoadNewLevelAsync(int levelNumber)
     {
         // SCENEMANAGER hívás
-        bool sceneLoaded = await gameSceneManager.LoadRandomSceneByLevel(1);
+        bool sceneLoaded = await gameSceneManager.LoadRandomSceneByLevelAsync(1);
         if (!sceneLoaded)
         {
             Debug.Log("Scene loading failed.");
