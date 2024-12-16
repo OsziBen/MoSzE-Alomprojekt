@@ -5,9 +5,11 @@
     <type fullname="EnemyController" preserve="all" />
     <type fullname="EnemyData" preserve="all" />
     <type fullname="LevelData" preserve="all" />
+    <type fullname="PlayerUpgradeData" preserve="all" />
     <type fullname="SpawnZoneData" preserve="all" />
     <type fullname="EnemyData/EnemySpawnInfo" preserve="nothing" serialized="true" />
     <type fullname="SpawnZoneData/SpawnZoneInfo" preserve="nothing" serialized="true" />
+    <type fullname="PlayerUpgradeData/StatModifier" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
     <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
