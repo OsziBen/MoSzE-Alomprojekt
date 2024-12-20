@@ -278,5 +278,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
             Debug.Log($"    Enemy Prefab: {enemyInfo.enemyPrefab.name}, Min: {enemyInfo.minNum}, Max: {enemyInfo.maxNum}");
         }
     }
+    
+
 
 }
