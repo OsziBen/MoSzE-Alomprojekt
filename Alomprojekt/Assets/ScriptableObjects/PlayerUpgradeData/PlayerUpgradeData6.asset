@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36362019ab5a2f049b3d381f91fb3406, type: 3}
   m_Name: PlayerUpgradeData6
   m_EditorClassIdentifier: 
+  uniqueID: 171a71fd-8009-4b9b-8a7c-6735badd54ac
   upgradeName: Test6
   isHealing: 0
   customDescription: 'Upgrade \name increases \m[0].type by \m[0].baseValue at level

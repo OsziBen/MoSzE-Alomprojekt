@@ -6,8 +6,18 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerUpgradeData", menuName = "Game/PlayerUpgradeData")]
 public class PlayerUpgradeData : ScriptableObject
 {
-    // Általános információk a fejlesztésrõl
+    /// <summary>
+    /// Változók
+    /// </summary>
     [Header("General Info")]
+    [SerializeField]
+    private string uniqueID;
+    [ContextMenu("Generate guid for ID")]
+    private void GenerateGuid()
+    {
+        uniqueID = System.Guid.NewGuid().ToString();
+    }
+
     public string upgradeName;   // A fejlesztés neve
     //public Sprite icon;         // A fejlesztés ikonjának helye
     public bool isHealing = false;  // Gyógyítás-e
@@ -64,6 +74,15 @@ public class PlayerUpgradeData : ScriptableObject
 
 
     /// <summary>
+    /// Getterek és setterek
+    /// </summary>
+    public string ID
+    {
+        get { return uniqueID; }
+    }
+
+
+    /// <summary>
     /// A fejlesztés érvényesítése az editorban végrehajtott módosítások után.
     /// Leellenõrzi a módosítókat és a szintbeállításokat.
     /// </summary>
@@ -72,10 +91,16 @@ public class PlayerUpgradeData : ScriptableObject
         ValidateModifiers();  // Ellenõrzi a módosítók egyediségét
         ValidateUpgradeLevels();     // Ellenõrzi, hogy a szintek helyesen vannak beállítva
         currentUpgradeLevel = minUpgradeLevel;  // Alapértelmezés szerint a minimális szintre állítja
-
+        ValidateUniqueID();
         UpdateDescription();
     }
-
+    private void ValidateUniqueID()
+    {
+        if (string.IsNullOrEmpty(uniqueID))
+        {
+            Debug.LogError("Unique ID is empty! Please generate or assign a unique ID.", this);
+        }
+    }
 
     /// <summary>
     /// Frissíti az objektum leírását az aktuális `customDescription` alapján,

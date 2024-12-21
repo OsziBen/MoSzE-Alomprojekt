@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36362019ab5a2f049b3d381f91fb3406, type: 3}
   m_Name: PlayerUpgradeData4
   m_EditorClassIdentifier: 
+  uniqueID: 074adc26-ef14-4f99-b017-fa7d928f7a1a
   upgradeName: Test4
   isHealing: 0
   customDescription: 'Upgrade \name increases \m[0].type by \m[0].baseValue at level
@@ -22,9 +23,9 @@ MonoBehaviour:
     \minUpgradeLevel - \currentUpgradeLevel
 
 '
-  description: 'Upgrade Test4 increases PercentageBasedDMG by 0,07 at level 2.
+  description: 'Upgrade Test4 increases PercentageBasedDMG by 0.07 at level 2.
 
-    0,07. 
+    0.07. 
     100
 
     2 - 2

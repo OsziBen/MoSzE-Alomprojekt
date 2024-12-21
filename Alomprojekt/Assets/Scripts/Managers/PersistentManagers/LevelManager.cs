@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.TextCore.Text;
 using static SpawnZoneData;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class LevelManager : BasePersistentManager<LevelManager>
 {
@@ -26,21 +28,74 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
     // szint vége ellenőrzés
     List<EnemyController> enemies;
-    public PlayerController player;
+    List<ObstacleController> obstacles;
+    PlayerController player;
 
     int levelNum = 2;
 
-    public event Action<bool> OnLevelCompleted; // true: success; flase: faliure
+    /// <summary>
+    /// Események
+    /// </summary>
+    public event Action<bool, float> OnLevelCompleted; // true: success; false: failure // player HP %: 0 or ]0;100]
+    public event Action<int> OnPointsAdded;
 
-
-    private async void Start()
+    protected override void Initialize()
     {
-        // manager-ek összeszedése változókba!
+        base.Initialize();
         gameSceneManager = FindObjectOfType<GameSceneManager>();
         spawnManager = FindObjectOfType<SpawnManager>();
         characterSetupManager = FindObjectOfType<CharacterSetupManager>();
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
 
+        saveLoadManager.OnSaveRequested += Save;
+    }
+
+    void Save(SaveData saveData)
+    {
+        foreach (var enemy in enemies)
+        {
+            saveData.spawnerSaveData.prefabsData.Add(GetPrefabSaveData(enemy.gameObject));
+        }
+
+        saveData.spawnerSaveData.prefabsData.Add(GetPrefabSaveData(player.gameObject));
+
+        obstacles = new List<ObstacleController>(FindObjectsOfType<ObstacleController>());
+        foreach (var obstacle in obstacles)
+        {
+            saveData.spawnerSaveData.prefabsData.Add(GetPrefabSaveData(obstacle.gameObject));
+        }
+    }
+
+    PrefabSaveData GetPrefabSaveData(GameObject gameObject)
+    {
+        PrefabSaveData prefabSaveData = new PrefabSaveData();
+
+        if (gameObject.TryGetComponent<EnemyController>(out EnemyController ec))
+        {
+            prefabSaveData.prefabID = ec.ID;
+            prefabSaveData.prefabPosition = (Vector2)ec.transform.position;
+        }
+        else if (gameObject.TryGetComponent<PlayerController>(out PlayerController pc))
+        {
+            prefabSaveData.prefabID = pc.ID;
+            prefabSaveData.prefabPosition = (Vector2)pc.transform.position;
+        }
+        else if (gameObject.TryGetComponent<ObstacleController>(out ObstacleController oc))
+        {
+            prefabSaveData.prefabID = oc.ID;
+            prefabSaveData.prefabPosition = (Vector2)oc.transform.position;
+        }
+
+        return prefabSaveData;
+    }
+
+    private void OnDestroy()
+    {
+        saveLoadManager.OnSaveRequested -= Save;
+    }
+
+    private async void Start()
+    {
 
         isLoadSuccessful = await LoadAllLevelDataAsync();
         if (!isLoadSuccessful)
@@ -58,11 +113,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
         {
             Debug.LogError("FAIL");
         }
-
-
     }
-
-
 
     List<EnemyData.EnemySpawnInfo> GetSpawnManagerDataByLevel(int level)
     {
@@ -180,14 +231,6 @@ public class LevelManager : BasePersistentManager<LevelManager>
             return false;
         }
 
-        // SaveLoadManager
-        bool saved = await saveLoadManager.SaveStateAsync(1);
-        if (!saved)
-        {
-            Debug.Log("Saving level state failed.");
-            return false;
-        }
-
         Debug.Log("CHECKING LEVEL CONDITIONS...");
         bool eventSubscription = await SubscribeForCharacterEvents();
         if (!eventSubscription)
@@ -195,6 +238,15 @@ public class LevelManager : BasePersistentManager<LevelManager>
             Debug.Log("Event subscription has failed.");
             return false;
         }
+
+        // SaveLoadManager
+        bool saved = await saveLoadManager.SaveGame();
+        if (!saved)
+        {
+            Debug.Log("Saving level state failed.");
+            return false;
+        }
+
         Debug.Log("PLAY TIME!");
 
         return true;
@@ -224,7 +276,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
             enemy.OnEnemyDeath -= EnemyKilled;
         }
 
-        OnLevelCompleted?.Invoke(false);
+        OnLevelCompleted?.Invoke(false, 0f);
     }
 
     void EnemyKilled(EnemyController enemy)
@@ -234,7 +286,8 @@ public class LevelManager : BasePersistentManager<LevelManager>
         if (enemies.Count == 0)
         {
             player.OnPlayerDeath -= PlayerKilled;
-            OnLevelCompleted?.Invoke(true);
+            float playerHealthPercentage = player.CurrentHealth / player.MaxHealth;
+            OnLevelCompleted?.Invoke(true, playerHealthPercentage);
         }
     }
 

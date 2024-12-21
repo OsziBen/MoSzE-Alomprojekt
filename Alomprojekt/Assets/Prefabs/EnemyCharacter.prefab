@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9b069f52a5090547a000fcafba39504, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabID: ef51fb37-a7d3-4feb-843a-30251e29b8d4
   maxHealth: 5
   baseMovementSpeed: 3
   baseDMG: 1

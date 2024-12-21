@@ -59,6 +59,27 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         Például a vásárlási képernyőn egy "Gyógyulási esély: 65%" felirat segíthet.
      */
 
+    protected override void Initialize()
+    {
+        base.Initialize();
+        saveLoadManager = FindObjectOfType<SaveLoadManager>();
+        saveLoadManager.OnSaveRequested += Save;
+    }
+
+    void Save(SaveData saveData)
+    {
+        foreach (var playerUpgrade in purchasedPlayerUpgrades)
+        {
+            saveData.playerSaveData.upgradeIDs.Add(playerUpgrade.ID);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        saveLoadManager.OnSaveRequested -= Save;
+    }
+
+
 
     /// <summary>
     /// Ez a metódus a játékos fejlesztéseinek betöltésére és vásárlására szolgál. Aszinkron módon működik,
@@ -506,8 +527,8 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         // Ellenőrzi, hogy a fejlesztés nem gyógyító típusú-e.
         if (!playerUpgrade.isHealing)
         {
-            // Ellenőrzi a megvásárolt fejlesztés és korábban megvásárolt fejlesztések nevének egyezését (már megvásárolt fejlesztés azonosítása).
-            var match = purchasedPlayerUpgrades.Find(x => x.upgradeName == playerUpgrade.upgradeName);
+            // Ellenőrzi a megvásárolt fejlesztés és korábban megvásárolt fejlesztések ID egyezését (már megvásárolt fejlesztés azonosítása).
+            var match = purchasedPlayerUpgrades.Find(x => x.ID == playerUpgrade.ID);
 
             if (match == null)
             {
@@ -515,7 +536,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
                 purchasedPlayerUpgrades.Add(playerUpgrade);
 
                 // Az összes elérhető fejlesztést összesítő listából eltávolítja az adott fejlesztést.
-                allPlayerUpgrades.Remove(allPlayerUpgrades.Find(x => x.upgradeName == playerUpgrade.upgradeName));
+                allPlayerUpgrades.Remove(allPlayerUpgrades.Find(x => x.ID == playerUpgrade.ID));
             }
             else
             {

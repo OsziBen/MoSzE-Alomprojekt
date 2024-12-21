@@ -45,5 +45,16 @@ public class EnemyData : ScriptableObject
             }
         }
     }
-
+    public EnemyController GetEnemyPrefabByID(string enemyID)
+    {
+        foreach (var info in enemyInfos)
+        {
+            if (info.enemyPrefab != null && info.enemyPrefab.ID == enemyID)
+            {
+                return info.enemyPrefab;
+            }
+        }
+        Debug.LogError($"Enemy prefab with name '{enemyID}' not found!");
+        return null;
+    }
 }

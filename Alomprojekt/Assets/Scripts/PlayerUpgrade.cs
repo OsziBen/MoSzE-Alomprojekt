@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 using static PlayerUpgradeData;
 
 [System.Serializable]
 public class PlayerUpgrade
 {
+    /// <summary>
+    /// Változók
+    /// </summary>
+    private string _uniqueID;
     public string upgradeName;  // A fejlesztés neve
     public bool isHealing;  // Ha igaz, a fejlesztés gyógyító jellegû
     public string description;  // A fejlesztés leírása
@@ -36,6 +41,7 @@ public class PlayerUpgrade
             return;
         }
 
+        _uniqueID = upgrade.ID;
         upgradeName = upgrade.upgradeName;
         isHealing = upgrade.isHealing;
         description = upgrade.description;
@@ -73,6 +79,14 @@ public class PlayerUpgrade
         this.basePrice = original.basePrice;
         this.priceScaleFactor = original.priceScaleFactor;
         this.modifiers = new List<StatModifierData>(original.modifiers);
+    }
+
+    /// <summary>
+    /// Getterek és setterek
+    /// </summary>
+    public string ID
+    {
+        get { return _uniqueID; }
     }
 
 
