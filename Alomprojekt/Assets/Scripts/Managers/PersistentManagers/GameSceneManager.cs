@@ -22,11 +22,36 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
 
     private readonly System.Random random = new System.Random();
 
+    SaveLoadManager saveLoadManager;
 
     /// <summary>
     /// Események
     /// </summary>
     //public event Action<bool> OnSceneLoaded;  // -> invoke() !
+
+    protected override void Initialize()
+    {
+        base.Initialize();
+        LoadScenesFromBuildSettings();
+        saveLoadManager = FindObjectOfType<SaveLoadManager>();
+        saveLoadManager.OnSaveRequested += Save;
+    }
+
+    void Save(SaveData saveData)
+    {
+        saveData.gameData.levelLayoutName = GetCurrentSceneName();
+    }
+
+    string GetCurrentSceneName()
+    {
+        return SceneManager.GetActiveScene().name;
+    }
+
+    private void OnDestroy()
+    {
+        saveLoadManager.OnSaveRequested -= Save;
+    }
+
 
 
     /// <summary>
@@ -35,7 +60,7 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
     /// </summary>
     private void Start()
     {
-        LoadScenesFromBuildSettings();  // A szintek betöltése a Build Settings-ből
+        //LoadScenesFromBuildSettings();  // A szintek betöltése a Build Settings-ből
 
         //DebugLevelScenes();             // Tesztelés: Szintek
         //DebugUtilityScenes();           // Tesztelés: Nem szint scene-ek

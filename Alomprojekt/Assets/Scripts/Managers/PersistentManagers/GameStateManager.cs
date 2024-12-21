@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 // TODO: ellenség halálakor eventre feliratkozni, pontok számolása (-> mentés)
@@ -9,6 +10,12 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     /// <summary>
     /// Változók
     /// </summary>
+    private int _points = 0;
+    private float _playerHealthPercentage = 100f;
+    private int _currentLevel = 1;
+    private int _totalLevels = 4;
+
+
     public enum GameState
     {
         MainMenu,
@@ -25,9 +32,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     /// </summary>
     LevelManager levelmanager;
     GameSceneManager gameSceneManager;
-
-    //private int currentLevel = 1;
-    //private int totalLevels = 4;
+    SaveLoadManager saveLoadManager;
 
 
     /// <summary>
@@ -47,12 +52,38 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         base.Initialize();
         levelmanager = FindObjectOfType<LevelManager>();
         gameSceneManager = FindObjectOfType<GameSceneManager>();
-        levelmanager.OnLevelCompleted += IsActualLevelCompleted;
+        saveLoadManager = FindObjectOfType<SaveLoadManager>();
+        levelmanager.OnLevelCompleted += IsActualLevelCompleted;    // ezt újra aktiválni kell majd!!!
+        saveLoadManager.OnSaveRequested += Save;
+        levelmanager.OnPointsAdded += AddPoints;
     }
 
-    async void IsActualLevelCompleted(bool isCompleted)
+
+    void Save(SaveData saveData)
+    {
+        saveData.gameData.gameLevel = _currentLevel;
+        saveData.gameData.points = _points;
+        saveData.playerSaveData.currentHealtPercentage = _playerHealthPercentage;
+    }
+
+    private void OnDestroy()
+    {
+        saveLoadManager.OnSaveRequested -= Save;
+    }
+
+    public void AddPoints(int points)
+    {
+        this._points += points;
+        Debug.Log("PONTOK, LACIKÁM: " + this._points);
+    }
+
+    async void IsActualLevelCompleted(bool isCompleted, float playerHealthPercentage)
     {
         levelmanager.OnLevelCompleted -= IsActualLevelCompleted;
+        levelmanager.OnPointsAdded -= AddPoints;
+
+        this._playerHealthPercentage = playerHealthPercentage;
+        Debug.Log(this._playerHealthPercentage);
 
         try
         {

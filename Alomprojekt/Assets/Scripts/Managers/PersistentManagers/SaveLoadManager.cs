@@ -101,22 +101,5 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
         Debug.Log(Application.persistentDataPath);
         return true;
     }
-    public async Task<bool> SaveStateAsync(int level)
-    {
-        try
-        {
-            await Task.Delay(1000);  // Szimuláljuk a betöltési idõt
-            Debug.Log($"The data of Level {level} has been saved.");
-            return true;
-        }
-        catch (Exception ex)
-        {
-            Debug.Log($"Error saving data: {ex.Message}");
-            return false;
-        }
-    }
-
-
-
 }
 
