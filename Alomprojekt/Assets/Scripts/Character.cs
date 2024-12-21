@@ -17,6 +17,17 @@ namespace Assets.Scripts
         /// <summary>
         /// Változók
         /// </summary>
+        [Header("Prefab ID")]
+        [SerializeField]
+        protected string prefabID;
+
+        [ContextMenu("Generate guid for ID")]
+        private void GenerateGuid()
+        {
+            prefabID = System.Guid.NewGuid().ToString();
+        }
+
+
         [Header("Base Stats")]
         [SerializeField]
         protected float maxHealth = 5f;    // Karakter maximális életereje
@@ -89,11 +100,15 @@ namespace Assets.Scripts
 
         private Dictionary<int, Sprite> levelSpriteDictionary;
 
-
-
         /// <summary>
         /// Getterek és Setterek
         /// </summary>
+        /// 
+        public string ID
+        {
+            get { return prefabID; }
+        }
+
         public float CurrentHealth  // Aktuális életerõ
         {
             get { return _currentHealth; }
@@ -199,6 +214,7 @@ namespace Assets.Scripts
         private void OnValidate()
         {
             ValidateUniqueLevels();
+            ValidateUniqueID();
         }
 
 
@@ -217,6 +233,13 @@ namespace Assets.Scripts
             }
         }
 
+        private void ValidateUniqueID()
+        {
+            if (string.IsNullOrEmpty(prefabID))
+            {
+                Debug.LogError("Prefab ID is empty! Please generate or assign a unique ID.", this);
+            }
+        }
 
         /// <summary>
         /// 
