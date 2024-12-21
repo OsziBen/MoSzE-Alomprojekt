@@ -347,8 +347,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56a895238f09ac94a8e4af6aad1f1c5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fileName: savefile.game
-  useEncryption: 0
+  _fileName: savefile.game
+  _useEncryption: 1
 --- !u!1 &1676278256
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,7 +440,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   allLevels: []
   currentLevel: {fileID: 0}
-  player: {fileID: 0}
 --- !u!4 &1690708462
 Transform:
   m_ObjectHideFlags: 0
