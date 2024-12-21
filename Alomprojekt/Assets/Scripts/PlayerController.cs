@@ -293,7 +293,4 @@ public class PlayerController : Assets.Scripts.Character
         OnPlayerDeath?.Invoke();
         Destroy(gameObject);
     }
-
-
-
 }
