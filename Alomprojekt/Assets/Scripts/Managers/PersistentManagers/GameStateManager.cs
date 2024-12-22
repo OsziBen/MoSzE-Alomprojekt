@@ -38,6 +38,12 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     /// <summary>
     /// Getterek és Setterek
     /// </summary>
+    public float PlayerHealtPercenatge
+    {
+        get { return _playerHealthPercentage; }
+        set { _playerHealthPercentage = value; }
+    }
+
     public GameState CurrentState { get; private set; } = GameState.MainMenu;
 
 

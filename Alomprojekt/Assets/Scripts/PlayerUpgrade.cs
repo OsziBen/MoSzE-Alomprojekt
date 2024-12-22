@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml;
 using UnityEngine;
 using static PlayerUpgradeData;
+using StatValuePair = System.Collections.Generic.KeyValuePair<PlayerUpgradeData.StatType, float>;
 
 [System.Serializable]
 public class PlayerUpgrade
@@ -53,7 +53,7 @@ public class PlayerUpgrade
         priceScaleFactor = upgrade.priceScaleFactor;
 
         modifiers = new List<StatModifierData>();
-        Debug.Log("IDÁIG...");
+
         foreach (var modifier in upgrade.modifiers)
         {
             // A módosítók másolása
@@ -176,9 +176,9 @@ public class PlayerUpgrade
     /// Az értékek a szint függvényében skálázódnak.
     /// </summary>
     /// <returns>A statisztikai módosítók aktuális értékei</returns>
-    public List<KeyValuePair<StatType, float>> GetCurrentValues()
+    public List<StatValuePair> GetCurrentValues()
     {
-        List<KeyValuePair<StatType, float>> values = new List<KeyValuePair<StatType, float>>();  // Az eredmények tárolására egy lista
+        List<StatValuePair> values = new List<StatValuePair>();  // Az eredmények tárolására egy lista
 
         // Végigiterálunk a módosítókon
         foreach (var modifier in modifiers)
@@ -186,7 +186,7 @@ public class PlayerUpgrade
             // Az aktuális érték kiszámítása a baseValue és a scaleFactor segítségével
             float scaledValue = modifier.baseValue * Mathf.Pow(modifier.scaleFactor, currentUpgradeLevel - minUpgradeLevel);
             // A típus és a kiszámított érték párosát hozzáadjuk az eredményeket tartalmazó listához
-            values.Add(new KeyValuePair<StatType, float>(modifier.type, scaledValue));
+            values.Add(new StatValuePair(modifier.type, scaledValue));
         }
 
         return values;  // Visszaadjuk az összegyûjtött értékeket

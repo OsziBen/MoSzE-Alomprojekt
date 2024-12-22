@@ -49,6 +49,14 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
     SaveLoadManager saveLoadManager;
     LevelManager levelManager;
 
+    /// <summary>
+    /// Getterek és Setterek
+    /// </summary>
+    public List<PlayerUpgrade> PurchasedPlayerUpgrades
+    {
+        get { return purchasedPlayerUpgrades; }
+    }
+
     // TODO:
     // shopUpgrades kiválasztás algoritmus ->UIManager...
     // FONTOS: max hp növelés esetén a current hp %-os aránya megmarad!!! ->charactersetupmanager
@@ -100,7 +108,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         {
             Debug.LogError("HIBÁS ADATBETÖLTÉS"); // Hibás adatbetöltés, ha az adatok nem töltődtek be.
         }
-
+        /*
         // TESZT KEZDETE
         // A boltban elérhető játékos fejlesztéseinek betöltése egy adott szinten és szorzóval. Ha nem sikerül, hibát loggolunk.
         bool shopUpgrades = await GetShopPlayerUpgradesByLevel(1, 0.55f);
@@ -164,6 +172,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
             Debug.LogError("NEW GAME FAILED!"); // Hibás új játék indítás, ha nem sikerül a lista visszaállítása.
         }
         // TESZT VÉGE
+        */
     }
 
 

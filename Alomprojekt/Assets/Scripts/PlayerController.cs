@@ -6,7 +6,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
 using static Cinemachine.DocumentationSortingAttribute;
-
+using static PlayerUpgradeData;
+using StatValuePair = System.Collections.Generic.KeyValuePair<PlayerUpgradeData.StatType, float>;
 
 public class PlayerController : Assets.Scripts.Character
 {
@@ -41,6 +42,7 @@ public class PlayerController : Assets.Scripts.Character
     public InputAction launchAction;          // A lövedék indítását vezérlõ bemeneti akció (például billentyû vagy gomb lenyomás)
     private ObjectPoolForProjectiles objectPool; // A lövedékeket kezelõ ObjectPoolForProjectiles komponens
 
+    public CharacterSetupManager characterSetupManager;
     private SpriteRenderer spriteRenderer;
 
     /// <summary>
@@ -54,67 +56,121 @@ public class PlayerController : Assets.Scripts.Character
     public event Action OnPlayerDeath;    // Esemény, amely akkor hívódik meg, amikor a játékos meghal
 
 
+    protected override void Awake()
+    {
+        base.Awake();
+        // Komponensek inicializálása
+        rigidbody2d = GetComponent<Rigidbody2D>();
+        characterSetupManager = FindObjectOfType<CharacterSetupManager>();
+        spriteRenderer = GameObject.Find("Background").GetComponent<SpriteRenderer>();
+        objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
+        // Mozgási határok beállítása
+        Vector2 spriteSize = spriteRenderer.bounds.size;
+        Vector2 position = spriteRenderer.transform.position;
+        Vector2 topLeft = new Vector2(position.x - spriteSize.x / 2, position.y + spriteSize.y / 2);
+        Vector2 bottomRight = new Vector2(position.x + spriteSize.x / 2, position.y - spriteSize.y / 2);
+        movementBoundsMin = new Vector2(topLeft.x + 0.5f, bottomRight.y + 0.5f);
+        movementBoundsMax = new Vector2(bottomRight.x - 0.5f, topLeft.y - 0.5f);
+        
+        characterSetupManager.OnSetPlayerAttributes += SetPlayerAttributes;
+    }
+
+
+
     /// <summary>
     /// Inicializálja a bemeneti akciókat, összegyûjti az ellenségeket a játékban,
     /// és feliratkozik a szükséges eseményekre a megfelelõ mûködés biztosítása érdekében.
     /// </summary>
     void Start()
     {
+        // Bemeneti akciók engedélyezése
         MoveAction.Enable();
-        rigidbody2d = GetComponent<Rigidbody2D>();
-        spriteRenderer = GameObject.Find("Background").GetComponent<SpriteRenderer>();
+        launchAction.Enable();
 
-        // Sprite méretének kiszámítása világkoordinátákban
-        Vector2 spriteSize = spriteRenderer.bounds.size; // A sprite szélessége és magassága világkoordinátában
-        Vector2 position = spriteRenderer.transform.position; // A sprite középpontjának pozíciója világkoordinátában
-
-        // Bal felsõ sarok koordinátája
-        Vector2 topLeft = new Vector2(position.x - spriteSize.x / 2, position.y + spriteSize.y / 2);
-
-        // Jobb alsó sarok koordinátája
-        Vector2 bottomRight = new Vector2(position.x + spriteSize.x / 2, position.y - spriteSize.y / 2);
-
-        //Debug.Log($"Bal felsõ sarok: {topLeft}");
-        //Debug.Log($"Jobb alsó sarok: {bottomRight}");
-
-
-        movementBoundsMin = new Vector2(topLeft.x + 0.5f, bottomRight.y + 0.5f);
-        movementBoundsMax = new Vector2(bottomRight.x - 0.5f, topLeft.y - 0.5f);
-
-        objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
+        // Ellenségek összegyűjtése és eseményekhez való csatlakozás
         enemyList = new List<EnemyController>(FindObjectsOfType<EnemyController>());
-
         foreach (var enemy in enemyList)
         {
             enemy.OnPlayerCollision += ChangeHealth;
             enemy.OnEnemyDeath += StopListeningToEnemy;
         }
 
-        launchAction.Enable();
+        // Események hozzáadása
         launchAction.performed += Attack;
     }
 
-#nullable enable
-    public void InitPlayerStats(int level, string? data = null)
+
+
+    public void SetPlayerAttributes(int level, List<StatValuePair> statValues, float currentHealthPercentage)
     {
         //SetCurrentSpriteByLevel(level);
-        Debug.Log(level);
-        if (data != null)
+        if (statValues.Count == 0)
         {
-            Debug.Log("LOAD DATA");
-            return;
+            SetDefaultPlayerAttributes(currentHealthPercentage);
+        }
+        else
+        {
+            ApplyPlayerUpgradeStats(statValues, currentHealthPercentage);
+        }
+        characterSetupManager.OnSetPlayerAttributes -= SetPlayerAttributes;
+    }
+
+    void SetDefaultPlayerAttributes(float currentHealthPercentage)
+    {
+        CurrentHealth = MaxHealth * currentHealthPercentage;
+        CurrentMovementSpeed = ClampStat(baseMovementSpeed, additionalMovementSpeed, minMovementSpeedValue, maxMovementSpeedValue);
+        CurrentDMG = ClampStat(baseDMG, additionalDMG, minDMGValue, maxDMGValue);
+        CurrentAttackCooldown = ClampStat(baseAttackCooldown, attackCooldownReduction, minAttackCooldownValue, maxAttackCooldownValue);
+        CurrentCriticalHitChance = ClampStat(baseCriticalHitChance, additionalCriticalHitChance, minCriticalHitChanceValue, maxCriticalHitChanceValue);
+        CurrentPercentageBasedDMG = ClampStat(basePercentageBasedDMG, additionalPercentageBasedDMG, minPercentageBasedDMGValue, maxPercentageBasedDMGValue);
+    }
+
+    void ApplyPlayerUpgradeStats(List<StatValuePair> playerUpgradeStatValues, float currentHealthPercentage)
+    {
+        currentHealthPercentage = Mathf.Clamp01(currentHealthPercentage);
+
+        foreach (var statValue in playerUpgradeStatValues)
+        {
+            switch (statValue.Key)
+            {
+                case StatType.Health:
+                    additionalHealth += statValue.Value;
+                    MaxHealth = ClampStat(maxHealth, additionalHealth, minHealthValue, maxHealthValue);
+                    CurrentHealth = MaxHealth * currentHealthPercentage;
+                    break;
+                case StatType.MovementSpeed:
+                    additionalMovementSpeed += statValue.Value;
+                    CurrentMovementSpeed = ClampStat(baseMovementSpeed, additionalMovementSpeed, minMovementSpeedValue, maxMovementSpeedValue);
+                    break;
+                case StatType.Damage:
+                    additionalDMG += statValue.Value;
+                    CurrentDMG = ClampStat(baseDMG, additionalDMG, minDMGValue, maxDMGValue);
+                    break;
+                case StatType.AttackCooldownReduction:
+                    attackCooldownReduction += statValue.Value;
+                    CurrentAttackCooldown = ClampStat(baseAttackCooldown, attackCooldownReduction, minAttackCooldownValue, maxAttackCooldownValue);
+                    break;
+                case StatType.CriticalHitChance:
+                    additionalCriticalHitChance += statValue.Value;
+                    CurrentCriticalHitChance = ClampStat(baseCriticalHitChance, additionalCriticalHitChance, minCriticalHitChanceValue, maxCriticalHitChanceValue);
+                    break;
+                case StatType.PercentageBasedDMG:
+                    additionalPercentageBasedDMG += statValue.Value;
+                    CurrentPercentageBasedDMG = ClampStat(basePercentageBasedDMG, additionalPercentageBasedDMG, minPercentageBasedDMGValue, maxPercentageBasedDMGValue);
+                    break;
+                default:
+                    Debug.LogWarning($"Unhandled stat type: {statValue.Key}");
+                    break;
+            }
         }
 
-        CurrentHealth = Mathf.Clamp(maxHealth + additionalHealth, minHealthValue, maxHealthValue);
-        CurrentMovementSpeed = Mathf.Clamp(baseMovementSpeed + additionalMovementSpeed, minMovementSpeedValue, maxMovementSpeedValue);
-        CurrentDMG = Mathf.Clamp(baseDMG + additionalDMG, minDMGValue, maxDMGValue);
-        CurrentAttackCooldown = Mathf.Clamp(baseAttackCooldown + attackCooldownReduction, minAttackCooldownValue, maxAttackCooldownValue);
-        CurrentCriticalHitChance = Mathf.Clamp(baseCriticalHitChance + additionalCriticalHitChance, minCriticalHitChanceValue, maxCriticalHitChanceValue);
-        CurrentPercentageBasedDMG = Mathf.Clamp(basePercentageBasedDMG + additionalPercentageBasedDMG, minPercentageBasedDMGValue, maxPercentageBasedDMGValue);
-
-
     }
-#nullable disable
+
+    private float ClampStat(float baseValue, float additionalValue, float minValue, float maxValue)
+    {
+        return Mathf.Clamp(baseValue + additionalValue, minValue, maxValue);
+    }
+
 
     /// <summary>
     /// Leiratkozik az adott ellenséghez tartozó eseményekrõl.
@@ -201,7 +257,7 @@ public class PlayerController : Assets.Scripts.Character
     void FixedUpdate()
     {
         Vector2 position = (Vector2)rigidbody2d.position + move * CurrentMovementSpeed * Time.deltaTime;
-
+        Debug.Log("KKKKKKKKKKKKK "+ CurrentMovementSpeed);
         // Ellenõrizd, hogy az új pozíció kívül van-e a tartományon
         if (position.x < movementBoundsMin.x || position.x > movementBoundsMax.x)
         {

@@ -16,8 +16,8 @@ namespace Assets.Scripts
         public int poolSize = 25;   // A pool maximális mérete, amely meghatározza, hány lövedék lehet egyszerre az objektumpoolban.
         private Queue<GameObject> pool; // A lövedékek tárolására használt queue (sor), amely a rendelkezésre álló és visszaadott lövedékeket tartalmazza.
 
-        public int projectileMarkEveryNth = 4;  // n értéke, ahol minden n-edik lövedéket megjelöljük; TODO:clamp 1-x    -> player attribute
-        public bool isMarkingEnabled;   // lövedékjelölés ki- és bekapcsolása
+        public int projectileMarkEveryNth = 4;  // n értéke, ahol minden n-edik lövedéket megjelöljük; TODO:clamp 1-x
+        private bool isMarkingEnabled;   // lövedékjelölés ki- és bekapcsolása
         private int fireCounter = 0;    // lövedékszámláló a jelöléshez
 
 
@@ -29,7 +29,10 @@ namespace Assets.Scripts
         /// <summary>
         /// Getterek és Setterek
         /// </summary>
-
+        public bool IsMarkingEnabled {
+            get { return isMarkingEnabled; }
+            set { isMarkingEnabled = value; }
+        }
 
         /// <summary>
         /// Események
@@ -48,7 +51,7 @@ namespace Assets.Scripts
         {
             pool = new Queue<GameObject>(poolSize);
 
-            EnableMarking(true);
+            //EnableMarking(true);
         }
 
 
@@ -156,7 +159,7 @@ namespace Assets.Scripts
         /// <param name="enable">Ha igaz (true), engedélyezi a jelölést, ha hamis (false), letiltja azt.</param>
         public void EnableMarking(bool enable)
         {
-            isMarkingEnabled = enable;
+            IsMarkingEnabled = enable;
             if (!isMarkingEnabled)
             {
                 fireCounter = 0;

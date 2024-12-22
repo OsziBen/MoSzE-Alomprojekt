@@ -30,7 +30,7 @@ namespace Assets.Scripts
 
         [Header("Base Stats")]
         [SerializeField]
-        protected float maxHealth = 5f;    // Karakter maximális életereje
+        protected float maxHealth;    // Karakter maximális életereje
         protected float additionalHealth = 0f; // Karakter hozzáadott életereje
         protected float _currentHealth;   // Karakter aktuális életereje
         [SerializeField]
@@ -60,7 +60,7 @@ namespace Assets.Scripts
         [SerializeField]
         protected float maxHealthValue = 10f;
         [SerializeField]
-        protected float minMovementSpeedValue = 1.0f;
+        protected float minMovementSpeedValue = 3.0f;
         [SerializeField]
         protected float maxMovementSpeedValue = 10.0f;
         [SerializeField]
