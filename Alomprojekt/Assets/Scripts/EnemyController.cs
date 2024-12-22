@@ -46,6 +46,7 @@ public class EnemyController : Assets.Scripts.Character
     /// </summary>
     private ObjectPoolForProjectiles objectPool;  // A lövedékek kezelésére szolgáló ObjectPool objektum
     private PlayerController player;
+    private CharacterSetupManager characterSetupManager;
 
     private EnemyBehaviour currentBehaviour;
     [Header("Enemy Behaviour")]
@@ -87,30 +88,39 @@ public class EnemyController : Assets.Scripts.Character
         SetBehaviour(passiveBehaviour);
     }
 
-    public void InitEnemyByLevel(int level)
+    public void SetEnemyAttributesByLevel(int level)
     {
-        SetCurrentSpriteByLevel(level);
-        SetCurrentEnemyStatsByLevel(level);
+        //SetCurrentSpriteByLevel(level);
+        SetCurrentEnemyValuesByLevel(level);
+        characterSetupManager.OnSetEnemyAttributes -= SetEnemyAttributesByLevel;
     }
 
-    public void SetCurrentEnemyStatsByLevel(int level)
+    void SetCurrentEnemyValuesByLevel(int level)
     {
-        // ellenség maximális életerejének beállítása szint alapján
-        MaxHealth = Math.Clamp(maxHealth * (float)Math.Pow(maxHealthScaleFactor, level - 1), minHealthValue, maxHealthValue);
-        CurrentHealth = maxHealth;
-        // ellenség mozgási sebességének beállítása szint alapján
-        CurrentMovementSpeed = Math.Clamp(baseMovementSpeed * (float)Math.Pow(baseMovementSpeedScaleFactor, level - 1), minMovementSpeedValue, maxMovementSpeedValue);
-        // ellenség sebzésértékének beállítása szint alapján
-        CurrentDMG = Math.Clamp(baseDMG * (float)Math.Pow(baseDMGScaleFactor, level - 1), minDMGValue, maxDMGValue);
-        // ellenség sebzés-visszatöltõdési idejének beállítása szint alapján
-        CurrentAttackCooldown = Math.Clamp(baseAttackCooldown / (float)Math.Pow(baseAttackCooldownScaleFactor, level - 1), minAttackCooldownValue, maxAttackCooldownValue);
-        // ellenség kritikus sebzés esélyének beállítása szint alapján
-        CurrentCriticalHitChance = Math.Clamp(baseCriticalHitChance * (float)Math.Pow(baseCriticalHitChanceScaleFactor, level - 1), minCriticalHitChanceValue, maxCriticalHitChanceValue);
-        // ellenség százalékos sebzésértékének beálítása szint alapján
-        CurrentPercentageBasedDMG = Math.Clamp(basePercentageBasedDMG * (float)Math.Pow(basePercentageBasedDMGScaleFactor, level - 1), minPercentageBasedDMGValue, maxPercentageBasedDMGValue);
+        if (level <= 0)
+        {
+            Debug.LogWarning($"Invalid level: {level}. Defaulting to level 1.");
+            level = 1;
+        }
 
-        // ellenség pontértékének beállítása szint alapján
-        CurrentPointValue = (int)Math.Clamp(basePointValue * Math.Pow(pointValueScaleFactor, level - 1), minPointValue, maxPointValue);
+        MaxHealth = ScaleValue(maxHealth, maxHealthScaleFactor, level, minHealthValue, maxHealthValue);
+        CurrentHealth = MaxHealth;
+        CurrentMovementSpeed = ScaleValue(baseMovementSpeed, baseMovementSpeedScaleFactor, level, minMovementSpeedValue, maxMovementSpeedValue);
+        CurrentDMG = ScaleValue(baseDMG, baseDMGScaleFactor, level, minDMGValue, maxDMGValue);
+        CurrentAttackCooldown = ScaleValue(baseAttackCooldown, baseAttackCooldownScaleFactor, level, minAttackCooldownValue, maxAttackCooldownValue, inverse: true);
+        CurrentCriticalHitChance = ScaleValue(baseCriticalHitChance, baseCriticalHitChanceScaleFactor, level, minCriticalHitChanceValue, maxCriticalHitChanceValue);
+        CurrentPercentageBasedDMG = ScaleValue(basePercentageBasedDMG, basePercentageBasedDMGScaleFactor, level, minPercentageBasedDMGValue, maxPercentageBasedDMGValue);
+        CurrentPointValue = (int)ScaleValue(basePointValue, pointValueScaleFactor, level, minPointValue, maxPointValue);
+    }
+
+
+    float ScaleValue(float baseValue, float scaleFactor, int level, float minValue, float maxValue, bool inverse = false)
+    {
+        float scaledValue = inverse
+            ? baseValue / (float)Mathf.Pow(scaleFactor, level - 1)
+            : baseValue * (float)Mathf.Pow(scaleFactor, level - 1);
+
+        return Mathf.Clamp(scaledValue, minValue, maxValue);
     }
 
 
@@ -122,10 +132,12 @@ public class EnemyController : Assets.Scripts.Character
     {
         objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
         player = FindObjectOfType<PlayerController>();
+        characterSetupManager = FindObjectOfType<CharacterSetupManager>();
 
         // event subscriptions
         objectPool.OnProjectileActivated += StartProjectileDetection;
         objectPool.OnProjectileDeactivated += StopProjectileDetection;
+        characterSetupManager.OnSetEnemyAttributes += SetEnemyAttributesByLevel;
     }
 
 
