@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Assets.Scripts;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Pool;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.TextCore.Text;
 using static SpawnZoneData;
@@ -23,8 +25,9 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
     GameSceneManager gameSceneManager;
     SpawnManager spawnManager;  // létrehozás
-    CharacterSetupManager characterSetupManager;    // létrehozás
+    public CharacterSetupManager characterSetupManager;    // létrehozás
     SaveLoadManager saveLoadManager;
+    ObjectPoolForProjectiles objectPool;
 
     // szint vége ellenőrzés
     List<EnemyController> enemies;
@@ -44,7 +47,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
         base.Initialize();
         gameSceneManager = FindObjectOfType<GameSceneManager>();
         spawnManager = FindObjectOfType<SpawnManager>();
-        characterSetupManager = FindObjectOfType<CharacterSetupManager>();
+        //characterSetupManager = FindObjectOfType<CharacterSetupManager>();
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
 
         saveLoadManager.OnSaveRequested += Save;
@@ -222,9 +225,9 @@ public class LevelManager : BasePersistentManager<LevelManager>
             Debug.LogError("Level load failed! Cannot load new level.");
         }
 
-
+        characterSetupManager = FindObjectOfType<CharacterSetupManager>();
         // CharacterSetupManager meghívása
-        bool charactersSetup = await characterSetupManager.LoadCharactersAsync(levelNumber);
+        bool charactersSetup = await characterSetupManager.SetCharactersAsync(levelNumber);
         if (!charactersSetup)
         {
             Debug.Log("Character setup failed.");
@@ -246,6 +249,11 @@ public class LevelManager : BasePersistentManager<LevelManager>
             Debug.Log("Saving level state failed.");
             return false;
         }
+
+        // objectPool setting
+        objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
+        objectPool.EnableMarking(player.CurrentPercentageBasedDMG > 0f);
+        Debug.Log("OBJ_POOL: " + objectPool.IsMarkingEnabled);
 
         Debug.Log("PLAY TIME!");
 
@@ -282,6 +290,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
     void EnemyKilled(EnemyController enemy)
     {
         enemy.OnEnemyDeath -= EnemyKilled;
+        OnPointsAdded?.Invoke(enemy.CurrentPointValue);
         enemies.Remove(enemy);
         if (enemies.Count == 0)
         {
