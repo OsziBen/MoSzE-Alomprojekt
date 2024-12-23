@@ -105,17 +105,32 @@ public class LevelManager : BasePersistentManager<LevelManager>
         {
             Debug.LogError("ADATHIBA");
         }
-        bool loadCutscene = await gameSceneManager.LoadUtilitySceneAsync("Cutscene");
+        bool loadCutscene = await gameSceneManager.LoadUtilitySceneAsync("TestCutscene");
         if (!loadCutscene)
         {
             Debug.LogError("HIBA");
         }
+        await Task.Delay(10000);
+        loadCutscene = await gameSceneManager.LoadAnimatedCutsceneAsync("NewGame");
+        if (!loadCutscene)
+        {
+            Debug.LogError("HIBA");
+        }
+
+        await Task.Delay(10000);
+        loadCutscene = await gameSceneManager.LoadAnimatedCutsceneAsync("LevelTransition12");
+        if (!loadCutscene)
+        {
+            Debug.LogError("HIBA");
+        }
+
         await Task.Delay(10000);
         bool success = await LoadNewLevelAsync(Math.Clamp(levelNum, 1, 4));
         if (!success)
         {
             Debug.LogError("FAIL");
         }
+
     }
 
     List<EnemyData.EnemySpawnInfo> GetSpawnManagerDataByLevel(int level)
@@ -320,7 +335,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
             PrintLevelData(level);
         }
     }
-    
+
     private void PrintLevelData(LevelData level)
     {
         Debug.Log($"Level {level.levelNumber}:");
@@ -340,7 +355,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
             Debug.Log($"    Enemy Prefab: {enemyInfo.enemyPrefab.name}, Min: {enemyInfo.minNum}, Max: {enemyInfo.maxNum}");
         }
     }
-    
+
 
 
 }
