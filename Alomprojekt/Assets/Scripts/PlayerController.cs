@@ -25,9 +25,9 @@ public class PlayerController : Assets.Scripts.Character
     bool isAbleToAttack = true;                 // A karakter támadási képességét tároló változó (true, ha támadhat)
     float remainingAttackCooldown;              // Az aktív támadási visszatöltõdési idõ hátralévõ ideje (másodpercekben)
     Vector2 attackDirection;                    // A támadás irányát tároló változó (2D vektor)
-    
+
     List<EnemyController> enemyList;
-    
+
     Vector2 movementBoundsMin;
     Vector2 movementBoundsMax;
 
@@ -71,7 +71,7 @@ public class PlayerController : Assets.Scripts.Character
         Vector2 bottomRight = new Vector2(position.x + spriteSize.x / 2, position.y - spriteSize.y / 2);
         movementBoundsMin = new Vector2(topLeft.x + 0.5f, bottomRight.y + 0.5f);
         movementBoundsMax = new Vector2(bottomRight.x - 0.5f, topLeft.y - 0.5f);
-        
+
         characterSetupManager.OnSetPlayerAttributes += SetPlayerAttributes;
     }
 
@@ -257,7 +257,7 @@ public class PlayerController : Assets.Scripts.Character
     void FixedUpdate()
     {
         Vector2 position = (Vector2)rigidbody2d.position + move * CurrentMovementSpeed * Time.deltaTime;
-        Debug.Log("KKKKKKKKKKKKK "+ CurrentMovementSpeed);
+
         // Ellenõrizd, hogy az új pozíció kívül van-e a tartományon
         if (position.x < movementBoundsMin.x || position.x > movementBoundsMax.x)
         {

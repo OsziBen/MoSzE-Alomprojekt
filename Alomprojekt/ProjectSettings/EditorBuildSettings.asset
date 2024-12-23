@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/ManagersTestScene.unity
     guid: 34dc42dd1b4301541bf6b66a63ff3eb9
   - enabled: 1
-    path: Assets/Scenes/Utility/Cutscene.unity
+    path: Assets/Scenes/Utility/TestCutscene.unity
     guid: 4c603cb30558d2e42805de639701449f
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
@@ -65,5 +65,23 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Utility/Defeat.unity
     guid: abc78a9c5802e554792c53ffa7f118ac
+  - enabled: 1
+    path: Assets/Scenes/Utility/AnimatedTransitions/Cutscene_AnimatedTransition_Defeat.unity
+    guid: 484b3b33b8fd26a49964a794143faf47
+  - enabled: 1
+    path: Assets/Scenes/Utility/AnimatedTransitions/Cutscene_AnimatedTransition_NewGame.unity
+    guid: 6962e58a27b727e43ae10b7eb22d4f43
+  - enabled: 1
+    path: Assets/Scenes/Utility/AnimatedTransitions/Cutscene_AnimatedTransition_Victory.unity
+    guid: e269d4a85ed93e14f9e9ab998ac759aa
+  - enabled: 1
+    path: Assets/Scenes/Utility/AnimatedLevelTransitions/Cutscene_AnimatedLevelTransition_LevelTransition12.unity
+    guid: 6709123f8a303894b82c9d6e1596e107
+  - enabled: 1
+    path: Assets/Scenes/Utility/AnimatedLevelTransitions/Cutscene_AnimatedLevelTransition_LevelTransition23.unity
+    guid: 173f7638c23c18147a42511b438c977c
+  - enabled: 1
+    path: Assets/Scenes/Utility/AnimatedLevelTransitions/Cutscene_AnimatedLevelTransition_LevelTransition34.unity
+    guid: a6b9a079c0304a542ad521f1432baa42
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 236b75d52edc4c442902fc7caa9ac400, type: 2}
