@@ -163,7 +163,7 @@ namespace Assets.Scripts
         /// Események
         /// </summary>
         protected event Action OnDeath;    // Karakter halála
-        //public event Action<float> OnChangeHealth;  // Karakter életerejének megváltozása
+        public event Action<float> OnHealthChanged;  // Karakter életerejének megváltozása
 
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace Assets.Scripts
         public virtual void ChangeHealth(float amount)
         {
             CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, MaxHealth);
-            //OnChangeHealth?.Invoke(CurrentHealth);
+            OnHealthChanged?.Invoke(CurrentHealth);
 
             Debug.Log(CurrentHealth + " / " + MaxHealth);
             if (CurrentHealth == 0f)
