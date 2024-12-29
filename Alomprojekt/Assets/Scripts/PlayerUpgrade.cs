@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static PlayerUpgradeData;
 using StatValuePair = System.Collections.Generic.KeyValuePair<PlayerUpgradeData.StatType, float>;
 
@@ -12,6 +13,7 @@ public class PlayerUpgrade
     /// </summary>
     private string _uniqueID;
     public string upgradeName;  // A fejlesztés neve
+    public Sprite icon;         // A fejlesztés ikonjának helye
     public bool isHealing;  // Ha igaz, a fejlesztés gyógyító jellegû
     public string description;  // A fejlesztés leírása
     public string customDescription;  // Leírás, amely tartalmazhat helyettesítõ szövegeket
@@ -22,6 +24,7 @@ public class PlayerUpgrade
     public float priceScaleFactor;  // Az ár növelésének tényezõje a szint növekedésével
     private readonly int maxPrice = 150;  // A fejlesztés maximális ára
     public List<StatModifierData> modifiers;  // A fejlesztéshez tartozó statisztikai módosítók
+    public bool isTempCopy = false; // Ideiglenes másolat-e?
 
 
     [System.Serializable]
@@ -41,8 +44,9 @@ public class PlayerUpgrade
             return;
         }
 
-        _uniqueID = upgrade.ID;
+        ID = upgrade.ID;
         upgradeName = upgrade.upgradeName;
+        icon = upgrade.icon;
         isHealing = upgrade.isHealing;
         description = upgrade.description;
         customDescription = upgrade.customDescription;
@@ -51,6 +55,7 @@ public class PlayerUpgrade
         currentUpgradeLevel = upgrade.currentUpgradeLevel;
         basePrice = upgrade.basePrice;
         priceScaleFactor = upgrade.priceScaleFactor;
+        isTempCopy = false;
 
         modifiers = new List<StatModifierData>();
 
@@ -69,7 +74,9 @@ public class PlayerUpgrade
     // Konstruktor, amely egy meglévõ PlayerUpgrade másolatát hozza létre
     public PlayerUpgrade(PlayerUpgrade original)
     {
+        this.ID = original.ID;
         this.upgradeName = original.upgradeName;
+        this.icon = original.icon;
         this.isHealing = original.isHealing;
         this.description = original.description;
         this.customDescription = original.customDescription;
@@ -79,6 +86,7 @@ public class PlayerUpgrade
         this.basePrice = original.basePrice;
         this.priceScaleFactor = original.priceScaleFactor;
         this.modifiers = new List<StatModifierData>(original.modifiers);
+        this.isTempCopy = original.isTempCopy;
     }
 
     /// <summary>
@@ -87,6 +95,13 @@ public class PlayerUpgrade
     public string ID
     {
         get { return _uniqueID; }
+        set { _uniqueID = value; }
+    }
+
+    public bool IsTempCopy
+    {
+        get { return isTempCopy; }
+        set { isTempCopy = value; }
     }
 
 
