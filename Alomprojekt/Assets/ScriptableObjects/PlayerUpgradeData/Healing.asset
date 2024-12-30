@@ -14,19 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uniqueID: 2a67e9f9-7c93-4c43-a8c6-7c133744967a
   upgradeName: Healing
+  icon: {fileID: 21300000, guid: ac628682552776a4cbf1408ca065c654, type: 3}
   isHealing: 1
-  customDescription: 'Upgrade \name increases \m[0].type by \m[0].baseValue at level
-    \currentUpgradeLevel.
+  customDescription: 'Upgrade \name at level \currentUpgradeLevel.
 
-    \m[0].value.  \price
+    \price
 
-    \minUpgradeLevel - \currentUpgradeLevel
+    \minUpgradeLevel
+    - \currentUpgradeLevel
 
 '
-  description: 'Upgrade Healing increases \m[0].type by \m[0].baseValue at level
-    1.
+  description: 'Upgrade Healing at level 1.
 
-    \m[0].value.  50
+    50
 
     1 - 1
 

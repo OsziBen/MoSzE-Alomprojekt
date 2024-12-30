@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 // A PlayerUpgradeData ScriptableObject, amely lehetõvé teszi a játékos fejlesztéseinek kezelését
 [CreateAssetMenu(fileName = "PlayerUpgradeData", menuName = "Game/PlayerUpgradeData")]
@@ -19,7 +20,7 @@ public class PlayerUpgradeData : ScriptableObject
     }
 
     public string upgradeName;   // A fejlesztés neve
-    //public Sprite icon;         // A fejlesztés ikonjának helye
+    public Sprite icon;         // A fejlesztés ikonjának helye
     public bool isHealing = false;  // Gyógyítás-e
 
     [TextArea]

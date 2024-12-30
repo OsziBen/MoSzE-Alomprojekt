@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -82,6 +83,17 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
             Debug.LogError($"Exception during loading game data: {ex.Message}");
             return false;
         }
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    public bool SaveFileExists()
+    {
+        string fullPath = Path.Combine(Application.persistentDataPath, _fileName);
+        return File.Exists(fullPath);
     }
 
 

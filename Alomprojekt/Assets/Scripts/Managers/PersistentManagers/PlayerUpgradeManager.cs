@@ -108,7 +108,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         {
             Debug.LogError("HIBÁS ADATBETÖLTÉS"); // Hibás adatbetöltés, ha az adatok nem töltődtek be.
         }
-        /*
+        
         // TESZT KEZDETE
         // A boltban elérhető játékos fejlesztéseinek betöltése egy adott szinten és szorzóval. Ha nem sikerül, hibát loggolunk.
         bool shopUpgrades = await GetShopPlayerUpgradesByLevel(1, 0.55f);
@@ -116,7 +116,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         {
             Debug.LogError("HIBÁS BOLT"); // Hibás bolt, ha a fejlesztések nem töltődtek be a boltban.
         }
-
+        
         // Várakozunk 3 másodpercet, hogy biztosítsuk a folyamat befejezését.
         await Task.Delay(3000);
 
@@ -129,7 +129,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         {
             Debug.LogError("HIBÁS BOLT"); // Hibás bolt, ha a fejlesztések nem töltődtek be a boltban.
         }
-
+        /*
         // Várakozás újra 3 másodpercig.
         await Task.Delay(3000);
 
@@ -396,7 +396,9 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
             if (currentGamelevel <= playerUpgrade.maxUpgradeLevel)
             {
                 // A fejlesztés másolatának hozzáadása a valid fejlesztések listájához.
-                validPlayerUpgrades.Add(new PlayerUpgrade(playerUpgrade));
+                PlayerUpgrade copy = new PlayerUpgrade(playerUpgrade);
+                copy.IsTempCopy = true;
+                validPlayerUpgrades.Add(copy);
             }
         }
 
@@ -530,7 +532,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
     /// Kezeli egy játékos fejlesztésvásárlását, és frissíti az adatok listáját a vásárlás eredményeként.
     /// A mentési rendszeren keresztül történő kommunikáció később kerül implementálásra.
     /// </summary>
-    /// <param name="playerUpgrade">A megvásárolni kívánt fejlesztés objektuma.</param>
+    /// <param name="playerUpgrade">A megvásárolni kívánt fejlesztés objektuma.</param>         // string ID lesz a paraméter
     public void PurchasePlayerUpgrade(PlayerUpgrade playerUpgrade) // async lesz, mert a mentés rendszerrel fog kommunikálni... a bool érték is akkor kerül megfelelően visszaadásra!
     {
         // Ellenőrzi, hogy a fejlesztés nem gyógyító típusú-e.
@@ -552,6 +554,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
                 // Ha már szerepel a listában, frissíti annak szintjét és leírását.
                 match.currentUpgradeLevel = playerUpgrade.currentUpgradeLevel;
                 match.RefreshDescription();
+                match.IsTempCopy = false;
             }
 
             // Mentési művelet indítása a mentéskezelőn keresztül (későbbi implementáció).

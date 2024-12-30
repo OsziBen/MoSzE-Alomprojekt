@@ -11,9 +11,9 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     /// Változók
     /// </summary>
     private int _points = 0;
-    private float _playerHealthPercentage = 100f;
+    private float _playerHealthPercentage = 1f;
     private int _currentLevel = 1;
-    private int _totalLevels = 4;
+    //private int _totalLevels = 4;
 
 
     public enum GameState
@@ -44,6 +44,12 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         set { _playerHealthPercentage = value; }
     }
 
+    public int PlayerPoints
+    {
+        get { return _points; }
+        set { _points = value; }
+    }
+
     public GameState CurrentState { get; private set; } = GameState.MainMenu;
 
 
@@ -51,6 +57,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     /// Események
     /// </summary>
     public event Action<GameState> OnStateChanged;
+    public event Action<int> OnPointsChanged;
 
 
     protected override void Initialize()
@@ -68,8 +75,8 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     void Save(SaveData saveData)
     {
         saveData.gameData.gameLevel = _currentLevel;
-        saveData.gameData.points = _points;
-        saveData.playerSaveData.currentHealtPercentage = _playerHealthPercentage;
+        saveData.gameData.points = PlayerPoints;
+        saveData.playerSaveData.currentHealtPercentage = PlayerHealtPercenatge;
     }
 
     private void OnDestroy()
@@ -79,8 +86,9 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
 
     public void AddPoints(int points)
     {
-        this._points += points;
-        Debug.Log("PONTOK, LACIKÁM: " + this._points);
+        this.PlayerPoints += points;
+        OnPointsChanged?.Invoke(PlayerPoints);
+        Debug.Log("PONTOK, LACIKÁM: " + this.PlayerPoints);
     }
 
     async void IsActualLevelCompleted(bool isCompleted, float playerHealthPercentage)

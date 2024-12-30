@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uniqueID: b167055b-d96a-4ff4-b762-7cba685d6592
   upgradeName: Test3
+  icon: {fileID: 21300000, guid: fa17b288900b707498a41c711da07927, type: 3}
   isHealing: 0
   customDescription: 'Upgrade \name increases \m[0].type by \m[0].baseValue at level
     \currentUpgradeLevel.
@@ -23,9 +24,9 @@ MonoBehaviour:
     \minUpgradeLevel - \currentUpgradeLevel
 
 '
-  description: 'Upgrade Test3 increases CriticalHitChance by 0.1 at level 3.
+  description: 'Upgrade Test3 increases CriticalHitChance by 0,1 at level 3.
 
-    0.1. 
+    0,1. 
     40
 
     3 - 3

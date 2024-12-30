@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uniqueID: 603d3540-d033-4e6f-a43e-cafc689e81cc
   upgradeName: Test5
+  icon: {fileID: 21300000, guid: 3f89d9b0a51be5045b92ca55b0798d09, type: 3}
   isHealing: 0
   customDescription: 'Upgrade \name increases \m[0].type by \m[0].baseValue at level
     \currentUpgradeLevel.
