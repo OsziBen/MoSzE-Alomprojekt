@@ -28,6 +28,8 @@ public class LevelManager : BasePersistentManager<LevelManager>
     public CharacterSetupManager characterSetupManager;    // létrehozás
     SaveLoadManager saveLoadManager;
     ObjectPoolForProjectiles objectPool;
+    UIManager uiManager;
+    PlayerUpgradeManager playerUpgradeManager;
 
     // szint vége ellenőrzés
     List<EnemyController> enemies;
@@ -47,8 +49,10 @@ public class LevelManager : BasePersistentManager<LevelManager>
         base.Initialize();
         gameSceneManager = FindObjectOfType<GameSceneManager>();
         spawnManager = FindObjectOfType<SpawnManager>();
+        uiManager = FindObjectOfType<UIManager>();
         //characterSetupManager = FindObjectOfType<CharacterSetupManager>();
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
+        playerUpgradeManager = FindObjectOfType<PlayerUpgradeManager>();
 
         saveLoadManager.OnSaveRequested += Save;
     }
@@ -110,21 +114,22 @@ public class LevelManager : BasePersistentManager<LevelManager>
         {
             Debug.LogError("HIBA");
         }
+        /*
         await Task.Delay(10000);
         loadCutscene = await gameSceneManager.LoadAnimatedCutsceneAsync("NewGame");
         if (!loadCutscene)
         {
             Debug.LogError("HIBA");
         }
-
-        await Task.Delay(10000);
+        
+        //await Task.Delay(10000);
         loadCutscene = await gameSceneManager.LoadAnimatedCutsceneAsync("LevelTransition12");
         if (!loadCutscene)
         {
             Debug.LogError("HIBA");
         }
-
-        await Task.Delay(10000);
+        */
+        //await Task.Delay(10000);
         bool success = await LoadNewLevelAsync(Math.Clamp(levelNum, 1, 4));
         if (!success)
         {
@@ -269,6 +274,15 @@ public class LevelManager : BasePersistentManager<LevelManager>
         objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
         objectPool.EnableMarking(player.CurrentPercentageBasedDMG > 0f);
         Debug.Log("OBJ_POOL: " + objectPool.IsMarkingEnabled);
+
+
+        //UI
+        
+        bool ui = await uiManager.LoadPlayerUIAsync();
+        
+        await Task.Delay(5000);
+        ui = await uiManager.LoadUpgradesShopUIAsync(playerUpgradeManager.shopPlayerUpgrades);
+        
 
         Debug.Log("PLAY TIME!");
 
