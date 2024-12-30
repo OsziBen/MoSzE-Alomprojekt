@@ -54,6 +54,7 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
     /// <summary>
     /// Komponensek
     /// </summary>
+    [SerializeField]
     SaveLoadManager saveLoadManager;
 
     /// <summary>
@@ -85,9 +86,20 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
 
     private void OnDestroy()
     {
-        saveLoadManager.OnSaveRequested -= Save;
+        if (saveLoadManager != null)
+        {
+            saveLoadManager.OnSaveRequested -= Save;            
+        }
     }
 
+    /*
+    public bool IsCurrentSceneLevel()
+    {
+        bool b = levelScenes.Values.Any(x => x.Contains(SceneManager.GetActiveScene().name));
+        Debug.Log("LEVEL CONTAINMENT: " + b);
+        return true;
+    }
+    */
 
 
     /// <summary>
