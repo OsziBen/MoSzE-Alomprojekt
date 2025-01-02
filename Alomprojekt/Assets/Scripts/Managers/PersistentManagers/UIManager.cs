@@ -10,6 +10,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using System.Linq;
 using UnityEngine.Windows;
+using static GameStateManager;
 
 public class UIManager : BasePersistentManager<UIManager>
 {
@@ -54,7 +55,15 @@ public class UIManager : BasePersistentManager<UIManager>
 
     [Header("Main Menu")]
     [SerializeField]
+    private Button newGameButton;
+    [SerializeField]
     private Button loadGameButton;
+    [SerializeField]
+    private Button settingsButton;
+    [SerializeField]
+    private Button scoreboardButton;
+    [SerializeField]
+    private Button quitGameButton;
 
 
     [Header("UI Panels")]
@@ -80,15 +89,18 @@ public class UIManager : BasePersistentManager<UIManager>
     /// <summary>
     /// Események
     /// </summary>
-    public event Action OnStartNewGame;
-    public event Action OnLoadGame;
-    public event Action OnExitGame;
+    public event Action<GameState> OnStartNewGame;
+    public event Action<GameState> OnLoadGame;
+    public event Action<GameState> OnExitGame;
+    public event Action<GameState> OnGamePaused;
+    public event Action<GameState> OnGameResumed;
+    public event Action<GameState> OnBackToMainMenu;
 
 
     /// <summary>
     /// 
     /// </summary>
-    protected override void Initialize()
+    protected override async void Initialize()
     {
         base.Initialize();
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
@@ -101,12 +113,17 @@ public class UIManager : BasePersistentManager<UIManager>
     /// <summary>
     /// 
     /// </summary>
-    void Start()
+    void Start()        // TODO: gombok inicializálása paranccsal!!!
+                        // find the button when the scene is loaded, ...
+                        // valószínûleg egy függvényt kell meghívni startnál
+                        // és a gameStatemanagerbõl is...
     {
-        SetLoadGameButtonReference();
-        UpdateLoadGameButton();
+        //SetMainMenuButtonReferences();
+        //UpdateMainMenuButtons();
 
     }
+
+
 
 
     /// <summary>
@@ -157,14 +174,22 @@ public class UIManager : BasePersistentManager<UIManager>
             player.OnPlayerDeath += StopPlayerHealthDetection;
             player.OnHealthChanged += UpdateHealthUIText;
 
-            // Inicializáljuk a TextMeshPro refernecia-elemek szótárát
-            InitializeCanvasTextElementsDictionary(textMeshProElementReferences, playerUICanvas);
+            if (textMeshProElementReferences.Count == 0)
+            {
+                // Inicializáljuk a TextMeshPro refernecia-elemek szótárát
+                InitializeCanvasTextElementsDictionary(textMeshProElementReferences, playerUICanvas);                
+            }
 
-            // Inicializáljuk a játékos statisztikáit tartalmazó szótárat
-            InitializePlayerStatNamesDictionary(playerVariableValues, player, gameStateManager);
+            if (playerVariableValues.Count == 0)
+            {
+                // Inicializáljuk a játékos statisztikáit tartalmazó szótárat
+                InitializePlayerStatNamesDictionary(playerVariableValues, player, gameStateManager);                
+            }
+
 
             // A UI szövegek beállítása a megfelelõ értékekkel
-            SetCurrentUITextValues(textMeshProElementReferences, playerVariableValues);
+            SetCurrentUITextValues(textMeshProElementReferences, playerVariableValues);                
+
 
             return true; // A UI sikeresen betöltõdött
         }
@@ -491,7 +516,7 @@ public class UIManager : BasePersistentManager<UIManager>
             InitializePanels();
 
             // Gombok és eseménykezelõk beállítása
-            SetUpButtons();
+            SetUpShopUIButtons();
 
             // Upgrade lehetõségek feltöltése a shopban
             PopulateUpgradeOptions(shopUpgrades);
@@ -528,7 +553,7 @@ public class UIManager : BasePersistentManager<UIManager>
     /// <summary>
     /// Beállítja a gombok eseménykezelõit az upgrade shophoz.
     /// </summary>
-    private void SetUpButtons()
+    private void SetUpShopUIButtons()
     {
         // Menü gomb eseménykezelõjének beállítása
         GameObject menuButton = FindInChildrenIgnoreClone(menuButtonPanel.transform, "MenuButton");
@@ -546,9 +571,25 @@ public class UIManager : BasePersistentManager<UIManager>
     /// </summary>
     public void SetPauseMenuActive()
     {
+        OnGamePaused?.Invoke(GameState.Paused);
         pauseMenu.SetActive(true);
         // TODO: event a GameStateManagernek a 'Time.timeScale = 0' beállításához
 
+    }
+
+
+    public void ResumeGameButtonClicked()
+    {
+        // Az aktuális GameObject elrejtése
+        pauseMenu.SetActive(false);
+
+        OnGameResumed?.Invoke(GameState.Playing);
+    }
+
+
+    public void ExitToMainMenuButtonClicked()
+    {
+        OnBackToMainMenu?.Invoke(GameState.MainMenu);
     }
 
 
@@ -668,19 +709,9 @@ public class UIManager : BasePersistentManager<UIManager>
     /// <summary>
     /// 
     /// </summary>
-    public void ExitToMainMenuButton()
-    {
-        Debug.Log("Main Menu");
-    }
-
-
-    /// <summary>
-    /// 
-    /// </summary>
     public void StartNewGameButton()
     {
-        OnStartNewGame?.Invoke();
-        Debug.Log("NEW Game");
+        OnStartNewGame?.Invoke(GameState.LoadingNewGame);
     }
 
 
@@ -689,19 +720,16 @@ public class UIManager : BasePersistentManager<UIManager>
     /// </summary>
     public void LoadGameButton()
     {
-        OnLoadGame?.Invoke();
-        Debug.Log("LOAD Game");
+        OnLoadGame?.Invoke(GameState.LoadingSavedGame);
     }
 
 
     /// <summary>
     /// 
     /// </summary>
-    public void ExitGameButton()
+    public void QuitGameButton()
     {
-        OnExitGame?.Invoke();
-        Debug.Log("EXIT Game");
-        Application.Quit();
+        OnExitGame?.Invoke(GameState.Quitting);
     }
 
 
@@ -714,31 +742,32 @@ public class UIManager : BasePersistentManager<UIManager>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // Beállítjuk a "Load Game" gomb referenciáját
-        SetLoadGameButtonReference();
+        SetMainMenuButtonReferences();
 
         // Frissítjük a gomb állapotát (aktív vagy inaktív)
-        UpdateLoadGameButton();
+        UpdateMainMenuButtons();
     }
 
 
-    /// <summary>
-    /// A "Load Game" gomb referenciáját állítja be, ha az aktuális jelenet a "MainMenu" jelenet.
-    /// Ha a gomb nem található, figyelmeztetést ír ki.
-    /// </summary>
-    private void SetLoadGameButtonReference()
+    void SetMainMenuButtonReferences()
     {
-        // Ha az aktuális jelenet a "MainMenu", folytatjuk a gomb keresését
         if (IsMainMenuScene())
         {
-            // Megpróbáljuk megtalálni a "LoadGameButton" nevû gombot a jelenetben
-            loadGameButton = GameObject.Find("LoadGameButton")?.GetComponent<Button>();
-
-            // Ha nem találjuk a gombot, figyelmeztetést írunk a logba
-            if (loadGameButton == null)
-            {
-                Debug.LogWarning("Load Game Button not found in the Main Menu scene.");
-            }
+            newGameButton = GameObject.Find("NewGameButton").GetComponent<Button>();
+            loadGameButton = GameObject.Find("LoadGameButton").GetComponent<Button>();
+            settingsButton = GameObject.Find("SettingsButton").GetComponent<Button>();
+            scoreboardButton = GameObject.Find("ScoreboardButton").GetComponent<Button>();
+            quitGameButton = GameObject.Find("QuitGameButton").GetComponent<Button>();
         }
+    }
+
+    void UpdateMainMenuButtons()
+    {
+        newGameButton.onClick.AddListener(() => StartNewGameButton());
+        loadGameButton.onClick.AddListener(() => LoadGameButton());
+        UpdateLoadGameButtonAvailability();
+        // többi gomb is...
+        quitGameButton.onClick.AddListener(() => QuitGameButton());
     }
 
 
@@ -759,7 +788,7 @@ public class UIManager : BasePersistentManager<UIManager>
     /// Frissíti a "Load Game" gomb állapotát attól függõen, hogy létezik-e mentett játékfájl.
     /// Ha létezik mentett fájl, a gomb aktívvá válik, különben inaktív.
     /// </summary>
-    public void UpdateLoadGameButton()
+    public void UpdateLoadGameButtonAvailability()
     {
         // Ellenõrizzük, hogy a loadGameButton referencia nem null
         if (loadGameButton != null)
@@ -793,7 +822,10 @@ public class UIManager : BasePersistentManager<UIManager>
     /// </summary>
     private void OnDestroy()
     {
-        gameStateManager.OnPointsChanged -= UpdatePointsUIText;
+        if (gameStateManager != null)
+        {
+            gameStateManager.OnPointsChanged -= UpdatePointsUIText;            
+        }
     }
 
 }
