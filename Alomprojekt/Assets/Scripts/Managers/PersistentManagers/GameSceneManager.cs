@@ -40,11 +40,11 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
 
     [Header("Animation Settings")]
     [SerializeField]
-    private float bufferTimeBeforeFirstFade = 0.5f; // New variable for the buffer time
+    private float bufferTimeBeforeFirstFade; // New variable for the buffer time
     [SerializeField]
-    private float fadeDuration = 3f; // Duration for each image fade effect in seconds
+    private float fadeDuration; // Duration for each image fade effect in seconds
     [SerializeField]
-    private float waitDuration = 10f; // Duration to wait before starting next image fade
+    private float waitDuration; // Duration to wait before starting next image fade
     private float targetAlpha = 1f; // Set the target alpha to max (fully opaque)
 
     // System.Random
@@ -54,7 +54,6 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
     /// <summary>
     /// Komponensek
     /// </summary>
-    [SerializeField]
     SaveLoadManager saveLoadManager;
 
     /// <summary>
@@ -63,7 +62,7 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
     //public event Action<bool> OnSceneLoaded;  // -> invoke() !
 
 
-    protected override void Initialize()
+    protected override async void Initialize()
     {
         base.Initialize();
         LoadScenesFromBuildSettings();
