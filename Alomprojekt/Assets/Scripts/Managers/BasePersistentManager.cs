@@ -21,7 +21,7 @@ public abstract class BasePersistentManager<T> : MonoBehaviour where T : BasePer
     }
 
 
-    protected virtual void Initialize()
+    protected virtual async void Initialize()
     {
         Debug.Log("Hello, I am " + this.name);
     }

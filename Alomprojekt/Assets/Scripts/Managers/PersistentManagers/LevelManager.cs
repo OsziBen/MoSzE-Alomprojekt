@@ -2,12 +2,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Pool;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.TextCore.Text;
+using static GameStateManager;
 using static SpawnZoneData;
 using static UnityEngine.EventSystems.EventTrigger;
 
@@ -44,7 +46,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
     public event Action<bool, float> OnLevelCompleted; // true: success; false: failure // player HP %: 0 or ]0;100]
     public event Action<int> OnPointsAdded;
 
-    protected override void Initialize()
+    protected override async void Initialize()
     {
         base.Initialize();
         gameSceneManager = FindObjectOfType<GameSceneManager>();
@@ -55,6 +57,12 @@ public class LevelManager : BasePersistentManager<LevelManager>
         playerUpgradeManager = FindObjectOfType<PlayerUpgradeManager>();
 
         saveLoadManager.OnSaveRequested += Save;
+
+        isLoadSuccessful = await LoadAllLevelDataAsync();
+        if (!isLoadSuccessful)
+        {
+            Debug.LogError("ADATHIBA");
+        }
     }
 
     void Save(SaveData saveData)
@@ -98,22 +106,21 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
     private void OnDestroy()
     {
-        saveLoadManager.OnSaveRequested -= Save;
+        if (saveLoadManager != null)
+        {
+            saveLoadManager.OnSaveRequested -= Save;            
+        }
     }
 
     private async void Start()
     {
-
-        isLoadSuccessful = await LoadAllLevelDataAsync();
-        if (!isLoadSuccessful)
-        {
-            Debug.LogError("ADATHIBA");
-        }
+        /*
         bool loadCutscene = await gameSceneManager.LoadUtilitySceneAsync("TestCutscene");
         if (!loadCutscene)
         {
             Debug.LogError("HIBA");
         }
+        */
         /*
         await Task.Delay(10000);
         loadCutscene = await gameSceneManager.LoadAnimatedCutsceneAsync("NewGame");
@@ -130,12 +137,13 @@ public class LevelManager : BasePersistentManager<LevelManager>
         }
         */
         //await Task.Delay(10000);
+        /*
         bool success = await LoadNewLevelAsync(Math.Clamp(levelNum, 1, 4));
         if (!success)
         {
             Debug.LogError("FAIL");
         }
-
+        */
     }
 
     List<EnemyData.EnemySpawnInfo> GetSpawnManagerDataByLevel(int level)
@@ -219,14 +227,18 @@ public class LevelManager : BasePersistentManager<LevelManager>
     // ASYNC !!!
     public async Task<bool> LoadNewLevelAsync(int levelNumber)
     {
-        // SCENEMANAGER hívás
-        bool sceneLoaded = await gameSceneManager.LoadRandomSceneByLevelAsync(1);
-        if (!sceneLoaded)
+        Debug.Log(levelNumber);
+
+        bool asyncOperation;
+
+        // SceneManager - Megfelelő pálya betöltése (TEMP: random pályaválasztás kikapcsolva)
+        asyncOperation = await gameSceneManager.LoadRandomSceneByLevelAsync(levelNumber);
+        if (!asyncOperation)
         {
             Debug.Log("Scene loading failed.");
             return false;
         }
-
+        
         if (isLoadSuccessful)
         {
             currentLevel = allLevels.Find(level => level.levelNumber == levelNumber);
@@ -245,6 +257,10 @@ public class LevelManager : BasePersistentManager<LevelManager>
             Debug.LogError("Level load failed! Cannot load new level.");
         }
 
+        // rossz helyen van egyenlőre!
+        asyncOperation = await uiManager.LoadPlayerUIAsync();
+
+        /*
         characterSetupManager = FindObjectOfType<CharacterSetupManager>();
         // CharacterSetupManager meghívása
         bool charactersSetup = await characterSetupManager.SetCharactersAsync(levelNumber);
@@ -285,7 +301,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
         
 
         Debug.Log("PLAY TIME!");
-
+        */
         return true;
     }
 

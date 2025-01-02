@@ -67,34 +67,12 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         Például a vásárlási képernyőn egy "Gyógyulási esély: 65%" felirat segíthet.
      */
 
-    protected override void Initialize()
+    protected override async void Initialize()
     {
         base.Initialize();
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
         saveLoadManager.OnSaveRequested += Save;
-    }
 
-    void Save(SaveData saveData)
-    {
-        foreach (var playerUpgrade in purchasedPlayerUpgrades)
-        {
-            saveData.playerSaveData.upgradeIDs.Add(playerUpgrade.ID);
-        }
-    }
-
-    private void OnDestroy()
-    {
-        saveLoadManager.OnSaveRequested -= Save;
-    }
-
-
-
-    /// <summary>
-    /// Ez a metódus a játékos fejlesztéseinek betöltésére és vásárlására szolgál. Aszinkron módon működik,
-    /// és különböző lépésekben tölt be adatokat, vásárol fejlesztéseket, majd végrehajt egy visszaállítást. (TESZT)
-    /// </summary>
-    private async void Start()
-    {
         // Az összes játékos fejlesztés adatainak betöltése aszinkron módon. Ha nem sikerül, hibát loggolunk.
         bool upgradesLoaded = await LoadAllPlayerUpgradesDataAsync();
         if (!upgradesLoaded)
@@ -108,7 +86,34 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         {
             Debug.LogError("HIBÁS ADATBETÖLTÉS"); // Hibás adatbetöltés, ha az adatok nem töltődtek be.
         }
-        
+    }
+
+    void Save(SaveData saveData)
+    {
+        foreach (var playerUpgrade in purchasedPlayerUpgrades)
+        {
+            saveData.playerSaveData.upgradeIDs.Add(playerUpgrade.ID);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (saveLoadManager != null)
+        {
+            saveLoadManager.OnSaveRequested -= Save;            
+        }
+    }
+
+
+
+    /// <summary>
+    /// Ez a metódus a játékos fejlesztéseinek betöltésére és vásárlására szolgál. Aszinkron módon működik,
+    /// és különböző lépésekben tölt be adatokat, vásárol fejlesztéseket, majd végrehajt egy visszaállítást. (TESZT)
+    /// </summary>
+    private async void Start()
+    {
+
+        /*
         // TESZT KEZDETE
         // A boltban elérhető játékos fejlesztéseinek betöltése egy adott szinten és szorzóval. Ha nem sikerül, hibát loggolunk.
         bool shopUpgrades = await GetShopPlayerUpgradesByLevel(1, 0.55f);
@@ -129,6 +134,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         {
             Debug.LogError("HIBÁS BOLT"); // Hibás bolt, ha a fejlesztések nem töltődtek be a boltban.
         }
+        */
         /*
         // Várakozás újra 3 másodpercig.
         await Task.Delay(3000);

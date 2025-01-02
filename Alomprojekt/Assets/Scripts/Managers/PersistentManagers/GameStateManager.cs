@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using UnityEngine;
 
 // TODO: ellenség halálakor eventre feliratkozni, pontok számolása (-> mentés)
@@ -14,17 +15,27 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     private float _playerHealthPercentage = 1f;
     private int _currentLevel = 1;
     //private int _totalLevels = 4;
+    private bool _isStateChanging = false;
+
+    private Queue<Func<Task>> deferredStateChanges = new Queue<Func<Task>>();
 
 
     public enum GameState
     {
         MainMenu,
+        LoadingNewGame,
+        LoadingNextLevel,
+        LoadingSavedGame,
         Playing,
         Paused,
         GameOver,
         Victory,
-        PlayerUpgrade
+        PlayerUpgrade,
+        Quitting
     }
+
+
+
 
 
     /// <summary>
@@ -33,11 +44,18 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     LevelManager levelmanager;
     GameSceneManager gameSceneManager;
     SaveLoadManager saveLoadManager;
+    PlayerUpgradeManager playerUpgradeManager;
+    UIManager uiManager;
 
 
     /// <summary>
     /// Getterek és Setterek
     /// </summary>
+    public bool IsStateChanging
+    {
+        get { return _isStateChanging; }
+        set { _isStateChanging = value; }
+    }
     public float PlayerHealtPercenatge
     {
         get { return _playerHealthPercentage; }
@@ -50,25 +68,52 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         set { _points = value; }
     }
 
+    public int CurrentLevel
+    {
+        get { return _currentLevel; }
+        set { _currentLevel = value; }
+    }
+
     public GameState CurrentState { get; private set; } = GameState.MainMenu;
 
 
     /// <summary>
     /// Események
     /// </summary>
-    public event Action<GameState> OnStateChanged;
+    //public event Action<GameState> OnStateChanged;
     public event Action<int> OnPointsChanged;
 
 
-    protected override void Initialize()
+    protected override async void Initialize()
     {
         base.Initialize();
+        // Persistent Manager referenciák összegűjtése
         levelmanager = FindObjectOfType<LevelManager>();
         gameSceneManager = FindObjectOfType<GameSceneManager>();
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
-        levelmanager.OnLevelCompleted += IsActualLevelCompleted;    // ezt újra aktiválni kell majd!!!
+        playerUpgradeManager = FindObjectOfType<PlayerUpgradeManager>();
+        uiManager = FindAnyObjectByType<UIManager>();
+
+        // Persistent Manager esemény-feliratkozások
+        levelmanager.OnLevelCompleted += IsActualLevelCompleted;    // ezt újra aktiválni kell majd!!!, feliratkozás máshol
         saveLoadManager.OnSaveRequested += Save;
         levelmanager.OnPointsAdded += AddPoints;
+        uiManager.OnStartNewGame += HandleStateChanged;
+        uiManager.OnLoadGame += HandleStateChanged;
+        uiManager.OnExitGame += HandleStateChanged;
+        uiManager.OnGamePaused += HandleStateChanged;
+        uiManager.OnGameResumed += HandleStateChanged;
+        uiManager.OnBackToMainMenu += HandleStateChanged;
+
+        //await Task.Yield();
+    }
+
+    private async void HandleStateChanged(GameState newState)
+    {
+        Debug.Log("State is changing to: " + newState);
+
+        // Await SetState to ensure state transition completes before continuing
+        await SetState(newState);
     }
 
 
@@ -81,7 +126,26 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
 
     private void OnDestroy()
     {
-        saveLoadManager.OnSaveRequested -= Save;
+        if (saveLoadManager != null)
+        {
+            saveLoadManager.OnSaveRequested -= Save;            
+        }
+
+        if (levelmanager != null)
+        {
+
+        }
+
+        if (uiManager != null)
+        {
+            uiManager.OnStartNewGame -= HandleStateChanged;
+            uiManager.OnLoadGame -= HandleStateChanged;
+            uiManager.OnExitGame -= HandleStateChanged;
+            uiManager.OnGamePaused -= HandleStateChanged;
+            uiManager.OnGameResumed -= HandleStateChanged;
+            uiManager.OnBackToMainMenu -= HandleStateChanged;
+
+        }
     }
 
     public void AddPoints(int points)
@@ -136,33 +200,99 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     }
 
 
-    public void SetState(GameState newState)
+    public async Task SetState(GameState newState)
     {
-        if (CurrentState == newState)
+        if (IsStateChanging)
         {
+            Debug.LogWarning("State change already in progress! " + newState);
             return;
         }
 
-        CurrentState = newState;
-        OnStateChanged?.Invoke(CurrentState);
+        IsStateChanging = true;
 
-
-        switch (CurrentState)
+        try
         {
-            case GameState.MainMenu:
-                break;
-            case GameState.Playing:
-                Time.timeScale = 1;
-                break;
-            case GameState.Paused:
-                Time.timeScale = 0;
-                break;
-            case GameState.GameOver:
-                break;
-            case GameState.Victory:
-                break;
-            case GameState.PlayerUpgrade:
-                break;
+            if (CurrentState == newState)
+            {
+                return;
+            }
+
+            CurrentState = newState;
+            //OnStateChanged?.Invoke(CurrentState);
+
+            bool asyncOperation;
+            switch (CurrentState)
+            {
+                case GameState.MainMenu:
+                    asyncOperation = await gameSceneManager.LoadUtilitySceneAsync("MainMenu");
+                    // UIManager gombokat beállító függvény hívása!
+                    break;
+
+                case GameState.LoadingNewGame:
+                    Debug.Log("NEW Game");
+                    // load newGame cutscene :: sceneManager
+                    //asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("NewGame");
+
+                    // load level 1 :: LevelManager
+                    asyncOperation = await levelmanager.LoadNewLevelAsync(CurrentLevel);
+                    if (asyncOperation)
+                    {
+                        // After level load is complete, change state to "Playing"
+                        DeferStateChange(() => SetState(GameState.Playing));
+                    }
+                    break;
+
+                case GameState.LoadingNextLevel:
+                    string cutsceneRefName = "LevelTransition" + (CurrentLevel - 1).ToString() + CurrentLevel.ToString();
+                    asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync(cutsceneRefName);
+                    break;
+
+                case GameState.LoadingSavedGame:
+                    Debug.Log("LOAD Game");
+                    // LoadManager -> LevelManager ?
+                    break;
+
+                case GameState.Playing:
+                    Time.timeScale = 1;
+                    break;
+
+                case GameState.Paused:
+                    Time.timeScale = 0;
+                    break;
+
+                case GameState.GameOver:
+                    break;
+
+                case GameState.Victory:
+                    break;
+
+                case GameState.PlayerUpgrade:
+                    break;
+
+                case GameState.Quitting:
+                    Debug.Log("EXIT Game");
+                    Application.Quit();
+                    break;
+            }
+
+            Debug.Log(CurrentState);
         }
+        finally
+        {
+            IsStateChanging = false;
+
+            while (deferredStateChanges.Count > 0)
+            {
+                var deferredAction = deferredStateChanges.Dequeue();
+                await deferredAction(); // Ensure the deferred action is awaited
+            }
+        }
+
+        
+    }
+
+    private void DeferStateChange(Func<Task> action)
+    {
+        deferredStateChanges.Enqueue(action);
     }
 }
