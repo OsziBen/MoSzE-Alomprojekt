@@ -35,7 +35,7 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
     /// <summary>
     /// 
     /// </summary>
-    protected override void Initialize()
+    protected override async void Initialize()
     {
         base.Initialize();
         _dataHandler = new FileDataHandler(Application.persistentDataPath, _fileName, _useEncryption);
