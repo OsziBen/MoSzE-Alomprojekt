@@ -1,13 +1,39 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using static GameStateManager;
 
 public class PauseMenuController : MonoBehaviour
 {
+    /// <summary>
+    /// Változók
+    /// </summary>
+    [Header("Panels")]
     [SerializeField]
     private GameObject mainPanel; // A fõpanel (alapértelmezett megjelenítés).
     [SerializeField]
     private GameObject hintPanel; // A tippablak (segítség megjelenítésére).
+    [Header("Buttons")]
+    [SerializeField]
+    private Button resumeGameButton;
+    [SerializeField]
+    private Button exitToMainMenuButton;
+
+
+    /// <summary>
+    /// Komponensek
+    /// </summary>
+    UIManager uiManager;
+
+
+    private void Start()
+    {
+        uiManager = FindAnyObjectByType<UIManager>();
+        resumeGameButton.onClick.AddListener(() => uiManager.ResumeGameButtonClicked());
+        exitToMainMenuButton.onClick.AddListener(() => uiManager.ExitToMainMenuButtonClicked());
+    }
 
 
     /// <summary>
@@ -35,15 +61,5 @@ public class PauseMenuController : MonoBehaviour
         mainPanel.SetActive(true);
     }
 
-
-    /// <summary>
-    /// Akkor hívódik meg, amikor a Szünet menü bezárását jelölõ gombra kattintanak.
-    /// Elrejti az egész menü GameObject-jét.
-    /// </summary>
-    public void OnPauseMenuCloseButtonClicked()
-    {
-        // Az aktuális GameObject elrejtése
-        gameObject.SetActive(false);
-    }
 
 }
