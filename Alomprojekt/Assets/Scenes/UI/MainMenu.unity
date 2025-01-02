@@ -527,19 +527,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 439120438}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 619654192}
-        m_TargetAssemblyTypeName: UIManager, Main
-        m_MethodName: StartNewGameButton
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &439120438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -862,12 +850,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d19ccdb3b227770469e3873a9b82c064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panel: {fileID: 0}
-  upgradePanel: {fileID: 0}
-  upgradePrefab: {fileID: 0}
-  upgradeName: {fileID: 0}
+  purchaseOptions: []
+  newGameButton: {fileID: 0}
   loadGameButton: {fileID: 0}
-  saveLoadManager: {fileID: 0}
+  settingsButton: {fileID: 0}
+  scoreboardButton: {fileID: 0}
+  quitGameButton: {fileID: 0}
+  menuButtonUIPrefab: {fileID: 4366813243578398562, guid: 6eaba6ce01977e54fb70f5900650879b, type: 3}
+  pauseMenuUIPrefab: {fileID: 3613694144039468214, guid: 3252d0fb45a151c4c9987c3fa26cc77d, type: 3}
+  playerStatsUIPrefab: {fileID: 7786403222401167085, guid: 21f399bf7324f47488c6a57ca88002ae, type: 3}
+  damageStatsUIPrefab: {fileID: 246813198642605080, guid: 5e094dfb790f2d345ad185ec86cc4867, type: 3}
+  upgradeShopUIPrefab: {fileID: 8571160736981282561, guid: 170f44a006841844288473a6e89fc33f, type: 3}
+  pauseMenu: {fileID: 0}
+  upgradesPanel: {fileID: 0}
+  normalUpgradeUIPrefab: {fileID: 8881764597787728616, guid: a160250e8bae11b448717713e3c88603, type: 3}
+  nextLevelUpgradeUIPrefab: {fileID: 8881764597787728616, guid: bbb94e4e05d40c04494e368b51159678, type: 3}
+  healUpgradeUIPrefab: {fileID: 8881764597787728616, guid: ac014ced52fed384eb4715c57d9050b1, type: 3}
 --- !u!4 &619654193
 Transform:
   m_ObjectHideFlags: 0
@@ -1392,8 +1390,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bufferTimeBeforeFirstFade: 0.5
   fadeDuration: 3
-  waitDuration: 10
-  saveLoadManager: {fileID: 0}
+  waitDuration: 4
 --- !u!4 &1213445754
 Transform:
   m_ObjectHideFlags: 0
@@ -1543,6 +1540,68 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1214343665}
   m_CullTransparentMesh: 1
+--- !u!1 &1250178108
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1250178110}
+  - component: {fileID: 1250178109}
+  m_Layer: 0
+  m_Name: PlayerUpgradeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1250178109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250178108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c52ef1d1e549b44399ed57ea2b3a02a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allPlayerUpgradesData: []
+  healingUpgradeData: {fileID: 0}
+  allPlayerUpgrades: []
+  healingUpgrade:
+    upgradeName: 
+    icon: {fileID: 0}
+    isHealing: 0
+    description: 
+    customDescription: 
+    minUpgradeLevel: 0
+    maxUpgradeLevel: 0
+    currentUpgradeLevel: 0
+    basePrice: 0
+    priceScaleFactor: 0
+    modifiers: []
+    isTempCopy: 0
+  purchasedPlayerUpgrades: []
+  shopPlayerUpgrades: []
+--- !u!4 &1250178110
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250178108}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1434963187
 GameObject:
   m_ObjectHideFlags: 0
@@ -1883,6 +1942,97 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1627694803}
   m_CullTransparentMesh: 1
+--- !u!1 &1709834737
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1709834739}
+  - component: {fileID: 1709834738}
+  m_Layer: 0
+  m_Name: LevelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1709834738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709834737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96a227eb718f872458fa012afd34a10c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allLevels: []
+  currentLevel: {fileID: 0}
+  characterSetupManager: {fileID: 0}
+--- !u!4 &1709834739
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709834737}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.791115, y: 4.9513903, z: -0.69431686}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1793005883
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1793005885}
+  - component: {fileID: 1793005884}
+  m_Layer: 0
+  m_Name: GameStateManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1793005884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1793005883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43d87d6daeb075b468020c77489e68d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1793005885
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1793005883}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.791115, y: 4.9513903, z: -0.69431686}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1812771203
 GameObject:
   m_ObjectHideFlags: 0
@@ -1912,7 +2062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56a895238f09ac94a8e4af6aad1f1c5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fileName: savefile.games
+  _fileName: savefile.game
   _useEncryption: 0
 --- !u!4 &1812771205
 Transform:
@@ -2241,3 +2391,6 @@ SceneRoots:
   - {fileID: 619654193}
   - {fileID: 1213445754}
   - {fileID: 1812771205}
+  - {fileID: 1793005885}
+  - {fileID: 1709834739}
+  - {fileID: 1250178110}
