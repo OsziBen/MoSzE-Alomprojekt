@@ -27,6 +27,9 @@ public class UpgradeUIController : MonoBehaviour
 
     public string ID; // A frissítés egyedi azonosítója.
 
+    public int Price;
+
+
 
     /// <summary>
     /// Beállítja a fejlesztés UI elemeinek szövegeit és értékeit a megadott `PurchaseOption` alapján.
@@ -35,6 +38,8 @@ public class UpgradeUIController : MonoBehaviour
     {
         // Az azonosító értékének beállítása
         ID = purchaseOption.ID;
+
+        Price = purchaseOption.Price;
 
         // A fejlesztés nevének és szintjének szöveges megjelenítése, arab számokat rómaira cserélve
         upgradeNameUI.text = $"{purchaseOption.Name} {ReplaceArabicWithRoman(purchaseOption.currentLevel.ToString())}.";
