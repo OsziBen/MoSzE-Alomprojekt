@@ -113,10 +113,7 @@ public class UIManager : BasePersistentManager<UIManager>
     /// <summary>
     /// 
     /// </summary>
-    void Start()        // TODO: gombok inicializálása paranccsal!!!
-                        // find the button when the scene is loaded, ...
-                        // valószínûleg egy függvényt kell meghívni startnál
-                        // és a gameStatemanagerbõl is...
+    void Start()
     {
         //SetMainMenuButtonReferences();
         //UpdateMainMenuButtons();
@@ -635,6 +632,10 @@ public class UIManager : BasePersistentManager<UIManager>
         foreach (var button in buttons)
         {
             button.onClick.AddListener(() => OnBuyButtonClicked(button.GetComponentInParent<UpgradeUIController>().ID));
+            if(button.GetComponentInParent<UpgradeUIController>().Price < gameStateManager.PlayerPoints)
+            {
+                button.interactable = false;
+            }
         }
     }
 
