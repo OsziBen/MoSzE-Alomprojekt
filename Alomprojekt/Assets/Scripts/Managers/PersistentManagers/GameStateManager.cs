@@ -155,13 +155,14 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         Debug.Log("PONTOK, LACIKÁM: " + this.PlayerPoints);
     }
 
+    // TODO: SetState!
     async void IsActualLevelCompleted(bool isCompleted, float playerHealthPercentage)
     {
         levelmanager.OnLevelCompleted -= IsActualLevelCompleted;
         levelmanager.OnPointsAdded -= AddPoints;
 
-        this._playerHealthPercentage = playerHealthPercentage;
-        Debug.Log(this._playerHealthPercentage);
+        this.PlayerHealtPercenatge = playerHealthPercentage;
+        Debug.Log(PlayerHealtPercenatge);
 
         try
         {
@@ -240,16 +241,19 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                         // After level load is complete, change state to "Playing"
                         DeferStateChange(() => SetState(GameState.Playing));
                     }
+                    // event feliratkozás IsActualLevelCompleted
                     break;
 
                 case GameState.LoadingNextLevel:
                     string cutsceneRefName = "LevelTransition" + (CurrentLevel - 1).ToString() + CurrentLevel.ToString();
                     asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync(cutsceneRefName);
+                    // event feliratkozás IsActualLevelCompleted
                     break;
 
                 case GameState.LoadingSavedGame:
                     Debug.Log("LOAD Game");
                     // LoadManager -> LevelManager ?
+                    // event feliratkozás IsActualLevelCompleted
                     break;
 
                 case GameState.Playing:
@@ -261,12 +265,21 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     break;
 
                 case GameState.GameOver:
+                    // előtte/utána valami kattintható felület?
+                    asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("Defeat");
+                    asyncOperation = await gameSceneManager.LoadUtilitySceneAsync("MainMenu");
                     break;
 
                 case GameState.Victory:
+                    // előtte/utána valami kattintható felület?
+                    asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("Victory");
+                    asyncOperation = await gameSceneManager.LoadUtilitySceneAsync("MainMenu");
                     break;
 
                 case GameState.PlayerUpgrade:
+                    Time.timeScale = 0;
+                    // ui elem megjelenítése
+                    // gombnyomást követően/ event hatására állapotváltás
                     break;
 
                 case GameState.Quitting:

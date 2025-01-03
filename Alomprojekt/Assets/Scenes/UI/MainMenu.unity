@@ -1971,9 +1971,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96a227eb718f872458fa012afd34a10c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allLevels: []
-  currentLevel: {fileID: 0}
-  characterSetupManager: {fileID: 0}
+  playerPrefab: {fileID: 2495013396380952890, guid: 50465959c40b1d64da8af35764e3d84e, type: 3}
+  obstaclePrefab: {fileID: -3144869794669972271, guid: 54cddfb7de887cd45a1f8bb28a03fd5b, type: 3}
 --- !u!4 &1709834739
 Transform:
   m_ObjectHideFlags: 0
