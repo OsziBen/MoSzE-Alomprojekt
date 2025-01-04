@@ -10,7 +10,6 @@ public class Projectile : MonoBehaviour
     /// Változók
     /// </summary>
     private float _projectileDMG;           // A lövedék sebzésértéke
-    //public float deleteDistance = 25.0f;    // A lövedék maximálisan megtehetõ távolsága, amely után törlésre kerül
     public float deleteTime = 5f;
     private float timer = 0f;
     public int force = 3;                   // Az alkalmazott erõ, amely meghatározza a lövedék indításának intenzitását
@@ -27,6 +26,8 @@ public class Projectile : MonoBehaviour
     private ObjectPoolForProjectiles objectPool;    // A lövedékeket kezelõ ObjectPoolForProjectiles komponens
 
     private PlayerController player;
+
+    private Camera _mainCamera;
 
     /// <summary>
     /// Getterek és Setterek
@@ -47,6 +48,12 @@ public class Projectile : MonoBehaviour
     {
         get { return _isMarked; }
         set { _isMarked = value; }
+    }
+
+    public Camera MainCamera
+    {
+        get { return _mainCamera; }
+        set { _mainCamera = value; }
     }
 
 
@@ -81,13 +88,16 @@ public class Projectile : MonoBehaviour
     /// </summary>
     void Update()
     {
+        Vector3 viewportPosition = MainCamera.WorldToViewportPoint(transform.position);
+
         timer += Time.deltaTime;
 
-        if (timer >= deleteTime)
+        if (viewportPosition.x < 0 || viewportPosition.x > 1 || viewportPosition.y < 0 || viewportPosition.y > 1 || timer >= deleteTime)
         {
             DestroyProjectile();
         }
     }
+
 
     private void OnEnable()
     {
