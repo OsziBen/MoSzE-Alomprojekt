@@ -503,6 +503,11 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
     /// <param name="currentGamelevel">Az aktuális játékszint, amely a fejlesztés szintjének frissítésére szolgál.</param>
     private void AddRandomValidPlayerUpgradeToShop(List<PlayerUpgrade> validPlayerUpgrades, int currentGamelevel)
     {
+        if (validPlayerUpgrades.Count == 0)
+        {
+            return;
+        }
+
         // Véletlenszerűen kiválaszt egy fejlesztést a megadott listából.
         PlayerUpgrade randomValidPlayerUpgrade = GetRandomPlayerUpgradeFromList(validPlayerUpgrades);
 
