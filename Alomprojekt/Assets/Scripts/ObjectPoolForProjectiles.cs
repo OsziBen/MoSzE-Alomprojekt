@@ -24,7 +24,7 @@ namespace Assets.Scripts
         /// <summary>
         /// Komponenesek
         /// </summary>
-
+        private Camera mainCamera;
 
         /// <summary>
         /// Getterek és Setterek
@@ -61,11 +61,12 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
-
+            mainCamera = Camera.main;
             for (int i = 0; i < poolSize; i++)
             {
                 GameObject projectile = Instantiate(projectilePrefab);
                 projectile.SetActive(false);
+                projectile.GetComponent<Projectile>().MainCamera = mainCamera;
                 pool.Enqueue(projectile);
             }
         }
