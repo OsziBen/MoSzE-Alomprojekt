@@ -257,10 +257,14 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     break;
 
                 case GameState.Playing:
+                    Cursor.visible = false;  // Hides the cursor
+                    Cursor.lockState = CursorLockMode.Locked;  // Locks the cursor in the center (optional)
                     Time.timeScale = 1;
                     break;
 
                 case GameState.Paused:
+                    Cursor.visible = true;  // Shows the cursor
+                    Cursor.lockState = CursorLockMode.None;  // Unlocks the cursor (optional)
                     Time.timeScale = 0;
                     break;
 
@@ -277,6 +281,8 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     break;
 
                 case GameState.PlayerUpgrade:
+                    Cursor.visible = true;  // Shows the cursor
+                    Cursor.lockState = CursorLockMode.None;  // Unlocks the cursor (optional)
                     Time.timeScale = 0;
                     // ui elem megjelenítése
                     // gombnyomást követően/ event hatására állapotváltás
