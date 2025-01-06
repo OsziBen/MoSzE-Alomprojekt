@@ -25,11 +25,11 @@ public class EnemySpawner : Assets.Scripts.SpawnerBase
     /// függvényben annyiszor hívjuk meg a PlaceEnemy() függvényt, ahány enemy-t szeretnénk
     /// spawnolni.
     /// </summary>
-    public void Activate(int level)
+    public void Activate()
     {
         for(int i = 1; i < numberOfSpawned; i++)
         {
-            PlaceEnemy(level);
+            Place();
         }
         Destroy(gameObject);
     }
@@ -38,11 +38,10 @@ public class EnemySpawner : Assets.Scripts.SpawnerBase
     /// A SpawnerBase osztály Place() függvényének kiegészítése
     /// a spawnerhez specifikus gameobject instanciálásával.
     /// </summary>
-    public void PlaceEnemy(int level)
+    public override void Place()
     {
         base.Place();
         EnemyController spawnedEnemy = Instantiate(enemy, spawnPosition, Quaternion.identity);
-        // spawnedEnemy.SetCurrentEnemyStatsByLevel(int level) // spawnolt enemy statjainak skálázása szint szerint
     }
 
     /// <summary>
