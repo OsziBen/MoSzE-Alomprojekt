@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObstacleSpawner : Assets.Scripts.SpawnerBase
 {
-    public GameObject obstacle; // a spawnolandó objektum megadása
+    public ObstacleController obstacle; // a spawnolandó objektum megadása
 
     // Start is called before the first frame update
     void Start()
