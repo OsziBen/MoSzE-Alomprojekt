@@ -742,11 +742,15 @@ public class UIManager : BasePersistentManager<UIManager>
     /// <param name="mode">A betöltés módja (pl. új jelenet betöltése vagy hozzáadás).</param>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (IsMainMenuScene())
+        {
         // Beállítjuk a "Load Game" gomb referenciáját
         SetMainMenuButtonReferences();
 
         // Frissítjük a gomb állapotát (aktív vagy inaktív)
         UpdateMainMenuButtons();
+            
+        }
     }
 
 
