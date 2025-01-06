@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
+using static LevelManager;
 using static SpawnManager;
 
 public class SpawnManager : MonoBehaviour
@@ -37,6 +39,58 @@ public class SpawnManager : MonoBehaviour
             this.maxCount = maxCount;
         }
     }
+
+    public async Task<bool> newGameLoad(List<EnemyData.EnemySpawnInfo> enemies, PlayerController playerPrefab, ObstacleController obstaclePrefab)
+    {
+        await Task.Yield();
+        
+        try {
+            // tényleges működés
+            return true;
+        }
+        catch (Exception ex) {
+            // hibaüzenet +ex
+            return false;
+        }
+    }
+
+    //TryGetComponent
+
+    public async Task<bool> savedGameLoad(List<GameObjectPosition> loadData)
+    {
+        await Task.Yield();
+
+        try
+        {
+            // gizmo törlése
+            // tényleges működés
+            return true;
+        }
+        catch (Exception ex)
+        {
+            // hibaüzenet +ex
+            return false;
+        }
+    }
+
+    public async Task<bool> bossGameLoad(List<GameObjectPosition> bossLoadData) // kételemű lista
+    {
+        await Task.Yield();
+
+        try
+        {
+            // gizmo törlése
+            // lehelyezés fix koordinátára
+            // tényleges működés
+            return true;
+        }
+        catch (Exception ex)
+        {
+            // hibaüzenet +ex
+            return false;
+        }
+    }
+
 
     void Start()
     {
