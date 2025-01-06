@@ -323,13 +323,13 @@ public class LevelManager : BasePersistentManager<LevelManager>
         //UI
         
         bool ui = await uiManager.LoadPlayerUIAsync();
-        
+        */
         await Task.Delay(5000);
-        ui = await uiManager.LoadUpgradesShopUIAsync(playerUpgradeManager.shopPlayerUpgrades);
+        asyncOperation = await uiManager.LoadUpgradesShopUIAsync(playerUpgradeManager.shopPlayerUpgrades);
         
 
         Debug.Log("PLAY TIME!");
-        */
+        
         return true;
     }
 
