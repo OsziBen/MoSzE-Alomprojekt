@@ -12,7 +12,6 @@ public class SpawnManager : MonoBehaviour
     private List<ObstacleSpawner> obstacleSpawners; // A manager-hez tartozó obstacle spawnerek listája.
     private List<PlayerSpawner> playerSpawners; // A manager-hez tartozó player spawnerek listája.
 
-    public int currentLevel = 1; // A jelenlegi pálya, LevelManager-ig placeholder.
     public int numOfObstacleSpawners; // Ennyi obstacle-t fogunk elhelyezni a pályán.
 
     // System.Random használata Unity.Random helyett.
@@ -119,7 +118,7 @@ public class SpawnManager : MonoBehaviour
 
             selectedSpawner.enemy = enemyGroup.enemyPrefab; // Megadjuk a spawnernek a plan-ben szereplő ellenségtípust.
             selectedSpawner.numberOfSpawned = enemiesToSpawn; // Megadjuk a spawnernek a spawnolandó mennyiséget.
-            selectedSpawner.Activate(currentLevel); // Aktiváljuk a spawnert, elhelyezi a paraméterek alapján az ellenségeket.
+            selectedSpawner.Activate(); // Aktiváljuk a spawnert, elhelyezi a paraméterek alapján az ellenségeket.
 
             enemySpawners.RemoveAt(randomSpawnerIndex); // Használat után a spawnert töröljük a listából.
         }
