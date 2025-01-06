@@ -113,7 +113,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
     private async void Start()
     {
 
-        /*
+        await Task.Delay(3000);
         // TESZT KEZDETE
         // A boltban elérhető játékos fejlesztéseinek betöltése egy adott szinten és szorzóval. Ha nem sikerül, hibát loggolunk.
         bool shopUpgrades = await GetShopPlayerUpgradesByLevel(1, 0.55f);
@@ -121,7 +121,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         {
             Debug.LogError("HIBÁS BOLT"); // Hibás bolt, ha a fejlesztések nem töltődtek be a boltban.
         }
-        
+        /*
         // Várakozunk 3 másodpercet, hogy biztosítsuk a folyamat befejezését.
         await Task.Delay(3000);
 
