@@ -200,7 +200,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         }
     }
 
-
+    // TODO: cursor setter method
     public async Task SetState(GameState newState)
     {
         if (IsStateChanging)
@@ -233,7 +233,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     Debug.Log("NEW Game");
                     // load newGame cutscene :: sceneManager
                     //asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("NewGame");
-
+                    
                     // load level 1 :: LevelManager
                     asyncOperation = await levelmanager.LoadNewLevelAsync(CurrentLevel);
                     if (asyncOperation)
@@ -257,14 +257,14 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     break;
 
                 case GameState.Playing:
-                    Cursor.visible = false;  // Hides the cursor
-                    Cursor.lockState = CursorLockMode.Locked;  // Locks the cursor in the center (optional)
+                    //Cursor.visible = false;  // Hides the cursor
+                    //Cursor.lockState = CursorLockMode.Locked;  // Locks the cursor in the center (optional)
                     Time.timeScale = 1;
                     break;
 
                 case GameState.Paused:
-                    Cursor.visible = true;  // Shows the cursor
-                    Cursor.lockState = CursorLockMode.None;  // Unlocks the cursor (optional)
+                    //Cursor.visible = true;  // Shows the cursor
+                    //Cursor.lockState = CursorLockMode.None;  // Unlocks the cursor (optional)
                     Time.timeScale = 0;
                     break;
 
@@ -281,8 +281,8 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     break;
 
                 case GameState.PlayerUpgrade:
-                    Cursor.visible = true;  // Shows the cursor
-                    Cursor.lockState = CursorLockMode.None;  // Unlocks the cursor (optional)
+                    //Cursor.visible = true;  // Shows the cursor
+                    //Cursor.lockState = CursorLockMode.None;  // Unlocks the cursor (optional)
                     Time.timeScale = 0;
                     // ui elem megjelenítése
                     // gombnyomást követően/ event hatására állapotváltás
