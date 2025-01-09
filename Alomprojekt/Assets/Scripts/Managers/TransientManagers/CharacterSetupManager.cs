@@ -11,7 +11,7 @@ public class CharacterSetupManager : BaseTransientManager<CharacterSetupManager>
 {
     List<EnemyController> enemyList;
 
-    public PlayerController player;
+    PlayerController player;
 
     PlayerUpgradeManager playerUpgradeManager;
     GameStateManager gameStateManager;

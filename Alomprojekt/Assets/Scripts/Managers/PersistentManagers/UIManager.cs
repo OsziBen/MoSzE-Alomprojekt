@@ -171,17 +171,14 @@ public class UIManager : BasePersistentManager<UIManager>
             player.OnPlayerDeath += StopPlayerHealthDetection;
             player.OnHealthChanged += UpdateHealthUIText;
 
-            if (textMeshProElementReferences.Count == 0)
-            {
-                // Inicializáljuk a TextMeshPro refernecia-elemek szótárát
-                InitializeCanvasTextElementsDictionary(textMeshProElementReferences, playerUICanvas);                
-            }
 
-            if (playerVariableValues.Count == 0)
-            {
-                // Inicializáljuk a játékos statisztikáit tartalmazó szótárat
-                InitializePlayerStatNamesDictionary(playerVariableValues, player, gameStateManager);                
-            }
+            // Inicializáljuk a TextMeshPro refernecia-elemek szótárát
+            textMeshProElementReferences.Clear();
+            InitializeCanvasTextElementsDictionary(textMeshProElementReferences, playerUICanvas);
+
+            // Inicializáljuk a játékos statisztikáit tartalmazó szótárat
+            playerVariableValues.Clear();
+            InitializePlayerStatNamesDictionary(playerVariableValues, player, gameStateManager);                
 
 
             // A UI szövegek beállítása a megfelelõ értékekkel

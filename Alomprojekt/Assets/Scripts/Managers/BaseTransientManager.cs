@@ -11,7 +11,7 @@ public abstract class BaseTransientManager<T> : MonoBehaviour where T : BaseTran
         if (Instance == null)
         {
             Instance = (T)this;
-            //Initialize();
+            Initialize();
         }
         else
         {
@@ -20,7 +20,7 @@ public abstract class BaseTransientManager<T> : MonoBehaviour where T : BaseTran
     }
 
 
-    protected virtual void Initialize()
+    protected virtual async void Initialize()
     {
         Debug.Log("Hello, I am " + this.name);
     }

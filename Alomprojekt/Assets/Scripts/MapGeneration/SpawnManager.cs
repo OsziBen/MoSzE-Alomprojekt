@@ -38,7 +38,7 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    public async Task<bool> newLevelInit(List<EnemyData.EnemySpawnInfo> enemies, PlayerController playerPrefab, ObstacleController obstaclePrefab)
+    public async Task<bool> NewLevelInit(List<EnemyData.EnemySpawnInfo> enemies, PlayerController playerPrefab, ObstacleController obstaclePrefab)
     {
         await Task.Yield();
 
@@ -60,7 +60,7 @@ public class SpawnManager : MonoBehaviour
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Hiba történt a {nameof(newLevelInit)} metódusban: {ex.Message}");
+            Debug.LogError($"Hiba történt a {nameof(NewLevelInit)} metódusban: {ex.Message}");
             return false;
         }
     }

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class ObjectPoolForProjectiles : MonoBehaviour
+    public class ObjectPoolForProjectiles : BaseTransientManager<ObjectPoolForProjectiles>
     {
         /// <summary>
         /// Változók
@@ -47,21 +47,13 @@ namespace Assets.Scripts
         /// A 'pool' változó egy Queue típusú adatstruktúra, amely a lövedékek kezelésére szolgál.
         /// A 'EnableMarking' metódus itt kerül meghívásra, hogy engedélyezze a jelölést.
         /// </summary>
-        private void Awake()
+        protected override async void Initialize()
         {
+            await Task.Yield();
+            base.Initialize();
+            mainCamera = Camera.main;
             pool = new Queue<GameObject>(poolSize);
 
-            //EnableMarking(true);
-        }
-
-
-        /// <summary>
-        /// Inicializálja a lövedékek pool-ját azáltal, hogy elõállítja és deaktiválja a szükséges számú lövedéket.
-        /// A lövedékek a poolba kerülnek, és készen állnak a használatra.
-        /// </summary>
-        private void Start()
-        {
-            mainCamera = Camera.main;
             for (int i = 0; i < poolSize; i++)
             {
                 GameObject projectile = Instantiate(projectilePrefab);
@@ -70,6 +62,13 @@ namespace Assets.Scripts
                 pool.Enqueue(projectile);
             }
         }
+
+
+        /// <summary>
+        /// Inicializálja a lövedékek pool-ját azáltal, hogy elõállítja és deaktiválja a szükséges számú lövedéket.
+        /// A lövedékek a poolba kerülnek, és készen állnak a használatra.
+        /// </summary>
+
 
 
         /// <summary>

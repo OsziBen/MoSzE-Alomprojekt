@@ -50,7 +50,6 @@ public class LevelManager : BasePersistentManager<LevelManager>
     /// </summary>
     GameSceneManager gameSceneManager;
     SpawnManager spawnManager;
-    PlayerUpgradeManager playerUpgradeManager;  // HOL HASZNÁLJUK???
     CharacterSetupManager characterSetupManager;
     UIManager uiManager;
     SaveLoadManager saveLoadManager;
@@ -63,6 +62,10 @@ public class LevelManager : BasePersistentManager<LevelManager>
     private PlayerController playerPrefab;
     [SerializeField]
     private ObstacleController obstaclePrefab;
+    [SerializeField]
+    private ObjectPoolForProjectiles objectPoolPrefab;
+    [SerializeField]
+    private CharacterSetupManager characterSetupManagerPrefab;
 
 
     /// <summary>
@@ -71,15 +74,18 @@ public class LevelManager : BasePersistentManager<LevelManager>
     public event Action<bool, float> OnLevelCompleted; // true: success; false: failure // player HP %: 0 or ]0;100]
     public event Action<int> OnPointsAdded;
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     protected override async void Initialize()
     {
         base.Initialize();
         gameSceneManager = FindObjectOfType<GameSceneManager>();
-        spawnManager = FindObjectOfType<SpawnManager>();    // EZT IS KÖZBEN KERESSÜK MEG!
+        
         uiManager = FindObjectOfType<UIManager>();
         //characterSetupManager = FindObjectOfType<CharacterSetupManager>();    // EZT IS KÖZBEN KERESSÜK MEG!
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
-        playerUpgradeManager = FindObjectOfType<PlayerUpgradeManager>();
 
         saveLoadManager.OnSaveRequested += Save;
 
@@ -90,6 +96,11 @@ public class LevelManager : BasePersistentManager<LevelManager>
         }
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="saveData"></param>
     void Save(SaveData saveData)
     {
         foreach (var enemy in enemies)
@@ -106,6 +117,12 @@ public class LevelManager : BasePersistentManager<LevelManager>
         }
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="gameObject"></param>
+    /// <returns></returns>
     PrefabSaveData GetPrefabSaveData(GameObject gameObject)
     {
         PrefabSaveData prefabSaveData = new PrefabSaveData();
@@ -129,6 +146,10 @@ public class LevelManager : BasePersistentManager<LevelManager>
         return prefabSaveData;
     }
 
+
+    /// <summary>
+    /// 
+    /// </summary>
     private void OnDestroy()
     {
         if (saveLoadManager != null)
@@ -137,15 +158,16 @@ public class LevelManager : BasePersistentManager<LevelManager>
         }
     }
 
-    private async void Start()
-    {
 
-    }
-
-
-    // KÉRDÉS: átadjam-e az obstacle/player prefabot is?
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="level"></param>
+    /// <returns></returns>
     List<EnemyData.EnemySpawnInfo> GetSpawnManagerDataByLevel(int level)
     {
+        spawnManagerData.Clear();
+
         currentLevel = allLevels.Find(x => x.levelNumber == level);
 
         int activeZoneCount = currentLevel.zoneData.spawnZoneInfos.Find(x => x.zoneType == ZoneType.Enemy).activeZoneCount;
@@ -165,9 +187,11 @@ public class LevelManager : BasePersistentManager<LevelManager>
     }
 
 
-
-    // OBSTACLE public List az editorban! + player ; nem fogjuk megtalálni őket a jelenetben, mert még nem idéztük le!!!
-    // valószínűleg egy másik metódus fogja hívni, amelyik már megkereste a player és obstacle referenciákat
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="saveData"></param>
+    /// <returns></returns>
     List<GameObjectPosition> GetSpawnManagerLoadDataFromSaveData(SaveData saveData)
     {
         List<GameObjectPosition> gameObjectPositions = new List<GameObjectPosition>();
@@ -254,87 +278,174 @@ public class LevelManager : BasePersistentManager<LevelManager>
     }
 
 
-    // ASYNC !!!
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="levelNumber"></param>
+    /// <returns></returns>
     public async Task<bool> LoadNewLevelAsync(int levelNumber)
     {
         bool asyncOperation;
 
-        // SceneManager - Megfelelő pálya betöltése (TEMP: random pályaválasztás kikapcsolva)
-        asyncOperation = await gameSceneManager.LoadRandomSceneByLevelAsync(levelNumber);
-        if (!asyncOperation)
-        {
-            Debug.Log("Scene loading failed.");
-            return false;
-        }
-        
-        if (isLoadSuccessful)
-        {
-            currentLevel = allLevels.Find(level => level.levelNumber == levelNumber);
-            if (currentLevel == null)
+        try {
+            // SceneManager - Megfelelő pálya betöltése (TEMP: random pályaválasztás kikapcsolva)
+            asyncOperation = await gameSceneManager.LoadRandomSceneByLevelAsync(levelNumber);
+            if (!asyncOperation)
             {
-                Debug.LogError($"Level {levelNumber} not found!");
-                return false;
+                throw new Exception("Scene loading failed.");
             }
-            Debug.Log("READY FOR SPAWN MANAGER TASKS");
-            // SPAWNMANAGER ADATOK generálása és SpawnManager meghívása
-            Debug.Log("LEVELDATA: " + GetSpawnManagerDataByLevel(levelNumber).Count);
-            Debug.Log("SPAWN MANAGER TASKS...");
-        }
-        else
-        {
-            Debug.LogError("Level load failed! Cannot load new level.");
-        }
 
-        // rossz helyen van egyenlőre!
-        asyncOperation = await uiManager.LoadPlayerUIAsync();
+            // ObjectPool és CharacterSetupManager hozzáadása a jelenethez (más komponenseknek szüksége van rá az init során)
+            asyncOperation = await InstantiateTransientLevelElementsAsync(objectPoolPrefab, characterSetupManagerPrefab);
+            if (!asyncOperation)
+            {
+                throw new Exception("Object instantiation failed.");
+            }
 
-        /*
-        characterSetupManager = FindObjectOfType<CharacterSetupManager>();
-        // CharacterSetupManager meghívása
-        bool charactersSetup = await characterSetupManager.SetCharactersAsync(levelNumber);
-        if (!charactersSetup)
-        {
-            Debug.Log("Character setup failed.");
+            // SpawnManager adatok előkészítése
+            if (isLoadSuccessful)
+            {
+                currentLevel = allLevels.Find(level => level.levelNumber == levelNumber);
+                if (currentLevel == null)
+                {
+                    throw new Exception($"Level {levelNumber} not found!");
+                }
+
+                // SpawnManager - prefabok elhelyezése a pályán
+                spawnManager = FindObjectOfType<SpawnManager>();
+                asyncOperation = await spawnManager.NewLevelInit(GetSpawnManagerDataByLevel(levelNumber), playerPrefab, obstaclePrefab);
+                if (!asyncOperation)
+                {
+                    throw new Exception("Spawn Manager initialization failed.");
+                }
+
+            }
+            else
+            {
+                throw new Exception("Level load failed! Cannot load new level.");
+            }
+
+
+            // CharacterSetupManager - játékos és ellenségek értékeinek beállítása
+            asyncOperation = await characterSetupManager.SetCharactersAsync(levelNumber);
+            if (!asyncOperation)
+            {
+                throw new Exception("Character setup failed.");
+            }
+
+            // Eseményfeliratkozások, játékbeli objektum-referenciák összegyűjtése
+            asyncOperation = await SubscribeForCharacterEvents();
+            if (!asyncOperation)
+            {
+                throw new Exception("Event subscription failed.");
+            }
+
+            // SaveLoadManager
+            asyncOperation = await saveLoadManager.SaveGame();
+            if (!asyncOperation)
+            {
+                throw new Exception("Saving level state failed.");
+            }
+
+            // ObjectPool - beállítások (pl.: marking based on Player stats)        
+            asyncOperation = await SetObjectPool(objectPool);
+            if (!asyncOperation)
+            {
+                throw new Exception("ObjectPool setup failed.");
+            }
+
+            // UIManager        
+            asyncOperation = await uiManager.LoadPlayerUIAsync();
+            if (!asyncOperation)
+            {
+                throw new Exception("UI setup failed.");
+            }
+
+            return true;
+        }
+        catch (Exception ex) {
+            Debug.LogError($"Error: {ex.Message}");
             return false;
         }
-
-        Debug.Log("CHECKING LEVEL CONDITIONS...");
-        bool eventSubscription = await SubscribeForCharacterEvents();
-        if (!eventSubscription)
-        {
-            Debug.Log("Event subscription has failed.");
-            return false;
-        }
-
-        // SaveLoadManager
-        bool saved = await saveLoadManager.SaveGame();
-        if (!saved)
-        {
-            Debug.Log("Saving level state failed.");
-            return false;
-        }
-
-        // objectPool setting
-        objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
-        objectPool.EnableMarking(player.CurrentPercentageBasedDMG > 0f);
-        Debug.Log("OBJ_POOL: " + objectPool.IsMarkingEnabled);
-
-
-        //UI
         
-        bool ui = await uiManager.LoadPlayerUIAsync();
-        */
-        await Task.Delay(5000);
-        asyncOperation = await uiManager.LoadUpgradesShopUIAsync(playerUpgradeManager.shopPlayerUpgrades);
-        
-
-        Debug.Log("PLAY TIME!");
-        
-        return true;
     }
 
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="objectPool"></param>
+    /// <returns></returns>
+    async Task<bool> SetObjectPool(ObjectPoolForProjectiles objectPool)
+    {
+        await Task.Yield();
 
+        try {
+            if (player == null)
+            {
+                throw new Exception("Player reference is missing!");
+            }
+            objectPool.EnableMarking(player.CurrentPercentageBasedDMG > 0f);
+            Debug.Log("OBJ_POOL: " + objectPool.IsMarkingEnabled);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error: {ex.Message}");
+            return false;
+        }
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="objectPoolPrefab"></param>
+    /// <param name="setupManagerPrefab"></param>
+    /// <returns></returns>
+    async Task<bool> InstantiateTransientLevelElementsAsync(ObjectPoolForProjectiles objectPoolPrefab, CharacterSetupManager setupManagerPrefab)
+    {
+        await Task.Yield();
+
+        try {
+            // ObjectPool
+            ObjectPoolForProjectiles objectPoolInstance = Instantiate(objectPoolPrefab);
+
+            if (objectPoolInstance == null)
+            {
+                throw new Exception("Failed to instantiate ObjectPool.");
+            }
+
+            objectPoolInstance.transform.SetParent(null);
+            objectPool = objectPoolInstance.GetComponent<ObjectPoolForProjectiles>();
+
+            // CharacterSetupManager
+            CharacterSetupManager characterSetupInstance = Instantiate(characterSetupManagerPrefab);
+
+            if (characterSetupInstance == null)
+            {
+                throw new Exception("Failed to instantiate CharacterSetupManager.");
+            }
+
+            characterSetupInstance.transform.SetParent(null);
+            characterSetupManager = characterSetupInstance.GetComponent<CharacterSetupManager>();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error: {ex.Message}");
+            return false;
+        }
+
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     async Task<bool> SubscribeForCharacterEvents()
     {
         await Task.Yield();
@@ -390,7 +501,9 @@ public class LevelManager : BasePersistentManager<LevelManager>
     }
 
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     void PlayerKilled()
     {
         player.OnPlayerDeath -= PlayerKilled;
@@ -419,6 +532,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
     public async Task<bool> LoadSavedLevelAsync()
     {
+        await Task.Yield();
         // SceneManager: megfelelő pálya betöltése
         // SpawnManager: prefabok+pozíciók átadása
             // ID alapján prefab a dictionaryból

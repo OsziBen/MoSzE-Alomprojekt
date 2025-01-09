@@ -9,7 +9,6 @@ public class EnemySpawnerTests
     private GameObject spawnerObject;
     private EnemySpawner enemySpawner;
     private EnemyController enemyPrefab;
-    private int level = 1;
 
     [SetUp]
     public void SetUp()
@@ -34,7 +33,7 @@ public class EnemySpawnerTests
     [Test]
     public void Activate_SpawnsCorrectNumberOfEnemies()
     {
-        enemySpawner.Activate(level);
+        enemySpawner.Activate();
 
         EnemyController[] spawnedEnemies = Object.FindObjectsOfType<EnemyController>();
         Assert.AreEqual(enemySpawner.numberOfSpawned, spawnedEnemies.Length);
@@ -47,7 +46,7 @@ public class EnemySpawnerTests
     public void Activate_SpawnsEnemyWithinRadius()
     {
         Vector3 spawnCenter = spawnerObject.transform.position;
-        enemySpawner.Activate(level);
+        enemySpawner.Activate();
 
         EnemyController[] spawnedEnemies = Object.FindObjectsOfType<EnemyController>();
         foreach(EnemyController enemy in spawnedEnemies)
