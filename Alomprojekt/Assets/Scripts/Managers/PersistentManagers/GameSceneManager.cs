@@ -64,6 +64,7 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
 
     protected override async void Initialize()
     {
+        await Task.Yield();
         base.Initialize();
         LoadScenesFromBuildSettings();
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
