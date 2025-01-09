@@ -156,6 +156,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     }
 
     // TODO: SetState!
+    //asyncOperation = await uiManager.LoadUpgradesShopUIAsync(playerUpgradeManager.shopPlayerUpgrades);
     async void IsActualLevelCompleted(bool isCompleted, float playerHealthPercentage)
     {
         levelmanager.OnLevelCompleted -= IsActualLevelCompleted;
@@ -231,9 +232,11 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
 
                 case GameState.LoadingNewGame:
                     Debug.Log("NEW Game");
+                    this.PlayerPoints = 0;
+
                     // load newGame cutscene :: sceneManager
                     //asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("NewGame");
-                    
+
                     // load level 1 :: LevelManager
                     asyncOperation = await levelmanager.LoadNewLevelAsync(CurrentLevel);
                     if (asyncOperation)
