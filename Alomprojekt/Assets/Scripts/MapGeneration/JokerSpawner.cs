@@ -7,6 +7,9 @@ public class JokerSpawner : Assets.Scripts.SpawnerBase
     public EnemySpawner enemySpawner;
     public ObstacleSpawner obstacleSpawner;
 
+    // System.Random használata Unity.Random helyett.
+    private System.Random random = new System.Random();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,16 +22,23 @@ public class JokerSpawner : Assets.Scripts.SpawnerBase
         
     }
 
-    public void SelectSpawner()
+    public void SelectSpawner(bool isHeads, EnemyData.EnemySpawnInfo enemy, ObstacleController obstacle)
     {
-        bool isHeads = Random.Range(0, 2) == 0;
         if(isHeads)
         {
-            Instantiate(enemySpawner,transform.position,Quaternion.identity);
+            var selectedSpawner = Instantiate(enemySpawner,transform.position,Quaternion.identity);
+            selectedSpawner.numberOfSpawned = random.Next(enemy.minNum, System.Math.Clamp(enemy.maxNum + 1, 0, 3));
+            selectedSpawner.enemy = enemy.enemyPrefab;
+            selectedSpawner.Activate();
+
         } else
         {
-            Instantiate(obstacleSpawner, transform.position, Quaternion.identity);
+            var selectedSpawner = Instantiate(obstacleSpawner, transform.position, Quaternion.identity);
+            selectedSpawner.obstacle = obstacle;
+            selectedSpawner.Place();
         }
+
+        Destroy(gameObject);
     }
 
     private void OnDrawGizmos()

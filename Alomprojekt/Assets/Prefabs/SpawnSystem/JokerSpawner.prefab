@@ -46,5 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnRadius: 1
   numberOfSpawned: 0
-  obstacle: {fileID: 7057177917437848977, guid: 54cddfb7de887cd45a1f8bb28a03fd5b, type: 3}
-  enemy: {fileID: 4952149793170091642, guid: d7e3a131ab8e4364f881f3fc7bd4e394, type: 3}
+  enemySpawner: {fileID: 9101971111605496122, guid: 25a7df777ae24f34f89f40807d384cf0, type: 3}
+  obstacleSpawner: {fileID: -4594058923644197854, guid: 26093beb5aeb9024ebf0de3e3bfe9dfe, type: 3}
