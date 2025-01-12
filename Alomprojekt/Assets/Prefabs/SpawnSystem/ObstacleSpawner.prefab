@@ -46,4 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnRadius: 1
   numberOfSpawned: 0
-  obstacle: {fileID: 7057177917437848977, guid: 54cddfb7de887cd45a1f8bb28a03fd5b, type: 3}
+  obstacle: {fileID: 0}

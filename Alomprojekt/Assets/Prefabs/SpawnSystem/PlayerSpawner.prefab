@@ -46,4 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnRadius: 1
   numberOfSpawned: 0
-  player: {fileID: 2495013396380952890, guid: 50465959c40b1d64da8af35764e3d84e, type: 3}
+  player: {fileID: 0}
