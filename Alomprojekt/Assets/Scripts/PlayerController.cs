@@ -110,6 +110,7 @@ public class PlayerController : Assets.Scripts.Character
         }
         else
         {
+            SetDefaultPlayerAttributes(currentHealthPercentage);
             ApplyPlayerUpgradeStats(statValues, currentHealthPercentage);
         }
         characterSetupManager.OnSetPlayerAttributes -= SetPlayerAttributes;
@@ -134,27 +135,33 @@ public class PlayerController : Assets.Scripts.Character
             switch (statValue.Key)
             {
                 case StatType.Health:
+                    Debug.Log(statValue.Key + " :: " + statValue.Value);
                     additionalHealth += statValue.Value;
                     MaxHealth = ClampStat(maxHealth, additionalHealth, minHealthValue, maxHealthValue);
                     CurrentHealth = MaxHealth * currentHealthPercentage;
                     break;
                 case StatType.MovementSpeed:
+                    Debug.Log(statValue.Key + " :: " + statValue.Value);
                     additionalMovementSpeed += statValue.Value;
                     CurrentMovementSpeed = ClampStat(baseMovementSpeed, additionalMovementSpeed, minMovementSpeedValue, maxMovementSpeedValue);
                     break;
                 case StatType.Damage:
+                    Debug.Log(statValue.Key + " :: " + statValue.Value);
                     additionalDMG += statValue.Value;
                     CurrentDMG = ClampStat(baseDMG, additionalDMG, minDMGValue, maxDMGValue);
                     break;
                 case StatType.AttackCooldownReduction:
+                    Debug.Log(statValue.Key + " :: " + statValue.Value);
                     attackCooldownReduction += statValue.Value;
                     CurrentAttackCooldown = ClampStat(baseAttackCooldown, attackCooldownReduction, minAttackCooldownValue, maxAttackCooldownValue);
                     break;
                 case StatType.CriticalHitChance:
+                    Debug.Log(statValue.Key + " :: " + statValue.Value);
                     additionalCriticalHitChance += statValue.Value;
                     CurrentCriticalHitChance = ClampStat(baseCriticalHitChance, additionalCriticalHitChance, minCriticalHitChanceValue, maxCriticalHitChanceValue);
                     break;
                 case StatType.PercentageBasedDMG:
+                    Debug.Log(statValue.Key + " :: " + statValue.Value);
                     additionalPercentageBasedDMG += statValue.Value;
                     CurrentPercentageBasedDMG = ClampStat(basePercentageBasedDMG, additionalPercentageBasedDMG, minPercentageBasedDMGValue, maxPercentageBasedDMGValue);
                     break;

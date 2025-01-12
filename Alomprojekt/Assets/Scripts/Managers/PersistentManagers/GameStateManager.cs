@@ -14,7 +14,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     private int _points = 0;
     private float _playerHealthPercentage = 1f;
     private int _currentLevel = 1;
-    //private int _totalLevels = 4;
+    private int _totalLevels = 4;
     private bool _isStateChanging = false;
 
     private Queue<Func<Task>> deferredStateChanges = new Queue<Func<Task>>();
@@ -74,6 +74,12 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         set { _currentLevel = value; }
     }
 
+    public int TotalLevels
+    {
+        get { return _totalLevels; }
+        set { _totalLevels = value; }
+    }
+
     public GameState CurrentState { get; private set; } = GameState.MainMenu;
 
 
@@ -95,7 +101,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         uiManager = FindAnyObjectByType<UIManager>();
 
         // Persistent Manager esemény-feliratkozások
-        levelmanager.OnLevelCompleted += IsActualLevelCompleted;    // ezt újra aktiválni kell majd!!!, feliratkozás máshol
+        levelmanager.OnLevelCompleted += IsActualLevelCompleted;
         saveLoadManager.OnSaveRequested += Save;
         levelmanager.OnPointsAdded += AddPoints;
         uiManager.OnStartNewGame += HandleStateChanged;
@@ -104,6 +110,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         uiManager.OnGamePaused += HandleStateChanged;
         uiManager.OnGameResumed += HandleStateChanged;
         uiManager.OnBackToMainMenu += HandleStateChanged;
+        uiManager.OnPurchaseOptionChosen += IsPurchaseOptionChosen;
 
         //await Task.Yield();
     }
@@ -128,12 +135,13 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     {
         if (saveLoadManager != null)
         {
-            saveLoadManager.OnSaveRequested -= Save;            
+            saveLoadManager.OnSaveRequested -= Save;
         }
 
         if (levelmanager != null)
         {
-
+            levelmanager.OnLevelCompleted -= IsActualLevelCompleted;
+            levelmanager.OnPointsAdded -= AddPoints;
         }
 
         if (uiManager != null)
@@ -144,7 +152,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
             uiManager.OnGamePaused -= HandleStateChanged;
             uiManager.OnGameResumed -= HandleStateChanged;
             uiManager.OnBackToMainMenu -= HandleStateChanged;
-
+            uiManager.OnPurchaseOptionChosen -= IsPurchaseOptionChosen;
         }
     }
 
@@ -152,16 +160,11 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     {
         this.PlayerPoints += points;
         OnPointsChanged?.Invoke(PlayerPoints);
-        Debug.Log("PONTOK, LACIKÁM: " + this.PlayerPoints);
     }
 
-    // TODO: SetState!
-    //asyncOperation = await uiManager.LoadUpgradesShopUIAsync(playerUpgradeManager.shopPlayerUpgrades);
+
     async void IsActualLevelCompleted(bool isCompleted, float playerHealthPercentage)
     {
-        levelmanager.OnLevelCompleted -= IsActualLevelCompleted;
-        levelmanager.OnPointsAdded -= AddPoints;
-
         this.PlayerHealtPercenatge = playerHealthPercentage;
         Debug.Log(PlayerHealtPercenatge);
 
@@ -169,13 +172,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         {
             if (isCompleted)
             {
-                Debug.Log("UPGRADES!!!");
-                // change gameState
-                bool victorySceneLoaded = await gameSceneManager.LoadUtilitySceneAsync("Victory");
-                if (!victorySceneLoaded)
-                {
-                    Debug.LogError("Level load failed!");
-                }
+                await SetState(GameState.PlayerUpgrade);
             }
             else
             {
@@ -187,19 +184,26 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     Debug.LogError("Level load failed!");
                 }
             }
-            /*
-            bool sceneLoaded = await gameSceneManager.LoadUtilityScene("ManagersTestScene");
-            if (!sceneLoaded)
-            {
-                Debug.LogError("Level load failed!");
-            }
-            */
+
         }
         catch (Exception ex)
         {
             Debug.LogError($"Hiba történt az IsActualLevelCompleted metódusban: {ex.Message}");
         }
     }
+
+    async void IsPurchaseOptionChosen(string upgradeID)
+    {
+        bool asyncOperation;
+        asyncOperation = await playerUpgradeManager.PurchasePlayerUpgrade(upgradeID);
+        if (!asyncOperation)
+        {
+            Debug.LogError("Hiba fejlesztés-vásárlása során!");
+        }
+
+        await SetState(GameState.LoadingNextLevel);
+    }
+
 
     // TODO: cursor setter method
     public async Task SetState(GameState newState)
@@ -227,15 +231,18 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
             {
                 case GameState.MainMenu:
                     asyncOperation = await gameSceneManager.LoadUtilitySceneAsync("MainMenu");
+
                     // UIManager gombokat beállító függvény hívása!
                     break;
 
                 case GameState.LoadingNewGame:
-                    Debug.Log("NEW Game");
                     this.PlayerPoints = 0;
-
+                    this.PlayerHealtPercenatge = 1f;
+                    this.CurrentLevel = 1;
+                    asyncOperation = await playerUpgradeManager.ResetPlayerUpgradesListsAsync();
+                    Time.timeScale = 1;
                     // load newGame cutscene :: sceneManager
-                    //asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("NewGame");
+                    asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("NewGame");
 
                     // load level 1 :: LevelManager
                     asyncOperation = await levelmanager.LoadNewLevelAsync(CurrentLevel);
@@ -244,35 +251,56 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                         // After level load is complete, change state to "Playing"
                         DeferStateChange(() => SetState(GameState.Playing));
                     }
-                    // event feliratkozás IsActualLevelCompleted
+
                     break;
 
                 case GameState.LoadingNextLevel:
-                    string cutsceneRefName = "LevelTransition" + (CurrentLevel - 1).ToString() + CurrentLevel.ToString();
-                    asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync(cutsceneRefName);
-                    // event feliratkozás IsActualLevelCompleted
+                    Time.timeScale = 1;
+                    CurrentLevel++;
+
+                    if (CurrentLevel <= TotalLevels)
+                    {
+                        string cutsceneRefName = "LevelTransition" + (CurrentLevel - 1).ToString() + CurrentLevel.ToString();
+                        asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync(cutsceneRefName);
+
+                        asyncOperation = await levelmanager.LoadNewLevelAsync(CurrentLevel);
+                        if (asyncOperation)
+                        {
+                            // After level load is complete, change state to "Playing"
+                            DeferStateChange(() => SetState(GameState.Playing));
+                        }
+                    }
+                    else
+                    {
+                        // BOSS FIGHT!
+                        asyncOperation = await gameSceneManager.LoadUtilitySceneAsync("BossFight");
+                    }
+                    Debug.Log("PLAYERHP: " + PlayerHealtPercenatge);
+                    Debug.Log("PLAYERPOINTS: " + PlayerPoints);
+
                     break;
 
                 case GameState.LoadingSavedGame:
                     Debug.Log("LOAD Game");
                     // LoadManager -> LevelManager ?
-                    // event feliratkozás IsActualLevelCompleted
+
                     break;
 
                 case GameState.Playing:
+                    Time.timeScale = 1;
                     //Cursor.visible = false;  // Hides the cursor
                     //Cursor.lockState = CursorLockMode.Locked;  // Locks the cursor in the center (optional)
-                    Time.timeScale = 1;
                     break;
 
                 case GameState.Paused:
+                    Time.timeScale = 0;
                     //Cursor.visible = true;  // Shows the cursor
                     //Cursor.lockState = CursorLockMode.None;  // Unlocks the cursor (optional)
-                    Time.timeScale = 0;
                     break;
 
                 case GameState.GameOver:
                     // előtte/utána valami kattintható felület?
+                    // csak akkor látszódjon a kisfilm, ha boss szinten vagyunk a halálkor!
                     asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("Defeat");
                     asyncOperation = await gameSceneManager.LoadUtilitySceneAsync("MainMenu");
                     break;
@@ -284,11 +312,13 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     break;
 
                 case GameState.PlayerUpgrade:
-                    //Cursor.visible = true;  // Shows the cursor
-                    //Cursor.lockState = CursorLockMode.None;  // Unlocks the cursor (optional)
+                    Cursor.visible = true;
+                    Cursor.lockState = CursorLockMode.None;
                     Time.timeScale = 0;
-                    // ui elem megjelenítése
-                    // gombnyomást követően/ event hatására állapotváltás
+
+                    asyncOperation = await playerUpgradeManager.GenerateCurrentShopUpgradesAsync(CurrentLevel, PlayerHealtPercenatge);
+                    asyncOperation = await uiManager.LoadUpgradesShopUIAsync(playerUpgradeManager.CurrentShopUpgrades);
+
                     break;
 
                 case GameState.Quitting:
@@ -310,7 +340,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
             }
         }
 
-        
+
     }
 
     private void DeferStateChange(Func<Task> action)
