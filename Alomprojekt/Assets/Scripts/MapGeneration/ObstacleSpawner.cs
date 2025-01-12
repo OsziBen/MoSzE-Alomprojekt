@@ -28,6 +28,8 @@ public class ObstacleSpawner : Assets.Scripts.SpawnerBase
 
         // Instantiate the enemy at the calculated position
         Instantiate(obstacle, spawnPosition, Quaternion.identity);
+
+        Destroy(gameObject);
     }
 
     /// <summary>

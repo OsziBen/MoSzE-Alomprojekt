@@ -313,7 +313,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
                 // SpawnManager - prefabok elhelyezése a pályán
                 spawnManager = FindObjectOfType<SpawnManager>();
-                asyncOperation = await spawnManager.NewLevelInit(GetSpawnManagerDataByLevel(levelNumber), playerPrefab, obstaclePrefab);
+                asyncOperation = await spawnManager.NewLevelInit(GetSpawnManagerDataByLevel(levelNumber), playerPrefab, obstaclePrefab, 3, 2);
                 if (!asyncOperation)
                 {
                     throw new Exception("Spawn Manager initialization failed.");

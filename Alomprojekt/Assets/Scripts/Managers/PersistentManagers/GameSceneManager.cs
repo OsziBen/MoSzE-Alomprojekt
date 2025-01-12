@@ -278,10 +278,10 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
             Debug.Log($"Betöltendő scene: {randomScene}");
 
             // Aszinkron scene betöltés (jelenleg tesztelési célból fixált "LevelTestScene" betöltése)
-            // AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(randomScene);
+            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(randomScene);
 
             // TEMP! - A teszteléshez ideiglenesen a "LevelTestScene" betöltése
-            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("LevelTestScene");
+            //AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("Level1_Layout1");
 
             // Várunk, amíg a scene teljesen betöltődik
             while (!asyncOperation.isDone)
