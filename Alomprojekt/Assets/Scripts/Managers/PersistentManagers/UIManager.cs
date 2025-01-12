@@ -42,9 +42,9 @@ public class UIManager : BasePersistentManager<UIManager>
 
     private Dictionary<string, TextMeshProUGUI> textMeshProElementReferences = new Dictionary<string, TextMeshProUGUI>();
 
-    private Dictionary<string, object> playerVariableValues = new Dictionary<string, object>();
+    private Dictionary<string, string> playerVariableValues = new Dictionary<string, string>();
 
-    
+
     /// <summary>
     /// Komponensek
     /// </summary>
@@ -95,6 +95,7 @@ public class UIManager : BasePersistentManager<UIManager>
     public event Action<GameState> OnGamePaused;
     public event Action<GameState> OnGameResumed;
     public event Action<GameState> OnBackToMainMenu;
+    public event Action<string> OnPurchaseOptionChosen;
 
 
     /// <summary>
@@ -178,11 +179,11 @@ public class UIManager : BasePersistentManager<UIManager>
 
             // Inicializáljuk a játékos statisztikáit tartalmazó szótárat
             playerVariableValues.Clear();
-            InitializePlayerStatNamesDictionary(playerVariableValues, player, gameStateManager);                
+            InitializePlayerStatNamesDictionary(playerVariableValues, player, gameStateManager);
 
 
             // A UI szövegek beállítása a megfelelõ értékekkel
-            SetCurrentUITextValues(textMeshProElementReferences, playerVariableValues);                
+            SetCurrentUITextValues(textMeshProElementReferences, playerVariableValues);
 
 
             return true; // A UI sikeresen betöltõdött
@@ -390,7 +391,7 @@ public class UIManager : BasePersistentManager<UIManager>
     public void UpdateHealthUIText(float currentPlayerHP)
     {
         // Beállítja a "Health" kulcshoz tartozó szöveges elem szövegét a játékos aktuális életerejére
-        textMeshProElementReferences["Health"].text = currentPlayerHP.ToString();
+        textMeshProElementReferences["Health"].text = currentPlayerHP.ToString("F0");
     }
 
 
@@ -402,7 +403,7 @@ public class UIManager : BasePersistentManager<UIManager>
     void UpdatePointsUIText(int points)
     {
         // Beállítja a "Points" kulcshoz tartozó szöveges elem szövegét a játékos aktuális pontszámára
-        textMeshProElementReferences["Points"].text = points.ToString();
+        textMeshProElementReferences["Points"].text = points.ToString("F0");
     }
 
 
@@ -453,17 +454,17 @@ public class UIManager : BasePersistentManager<UIManager>
     /// </summary>
     /// <param name="player">A játékos vezérlõ objektuma, amely tartalmazza a játékos aktuális statisztikáit.</param>
     /// <param name="gameStateManager">A játék állapot kezelõ objektum, amely tartalmazza a játékos pontjait.</param>
-    void InitializePlayerStatNamesDictionary(Dictionary<string, object> playerVariableValues, PlayerController player, GameStateManager gameStateManager)
+    void InitializePlayerStatNamesDictionary(Dictionary<string, string> playerVariableValues, PlayerController player, GameStateManager gameStateManager)
     {
         // A szótárhoz hozzáadjuk a játékos különbözõ statisztikai értékeit
-        playerVariableValues.Add("Points", gameStateManager.PlayerPoints);  // Játékos pontjai
-        playerVariableValues.Add("Health", player.CurrentHealth);  // Játékos aktuális életereje
-        playerVariableValues.Add("MovementSpeed", player.CurrentMovementSpeed);  // Játékos mozgási sebessége
-        playerVariableValues.Add("Damage", player.CurrentDMG * (1 / player.CurrentAttackCooldown));  // Játékos sebzés (a támadási-visszatöltõdési idõ figyelembevételével)
-        playerVariableValues.Add("BaseDMG", player.BaseDMG);  // Játékos alap sebzése
-        playerVariableValues.Add("AttackCooldown", player.CurrentAttackCooldown);  // Játékos támadás-visszatöltõdési ideje
-        playerVariableValues.Add("CritChance", player.CurrentCriticalHitChance);  // Játékos kritikus találat esélye
-        playerVariableValues.Add("PercentageDMG", player.CurrentPercentageBasedDMG);  // Játékos százalékos alapú sebzése
+        playerVariableValues.Add("Points", gameStateManager.PlayerPoints.ToString("F0"));  // Játékos pontjai
+        playerVariableValues.Add("Health", player.CurrentHealth.ToString("F0"));  // Játékos aktuális életereje
+        playerVariableValues.Add("MovementSpeed", player.CurrentMovementSpeed.ToString("F2"));  // Játékos mozgási sebessége
+        playerVariableValues.Add("Damage", (player.CurrentDMG * (1 / player.CurrentAttackCooldown)).ToString("F2"));  // Játékos sebzés (a támadási-visszatöltõdési idõ figyelembevételével)
+        playerVariableValues.Add("BaseDMG", player.BaseDMG.ToString("F2"));  // Játékos alap sebzése
+        playerVariableValues.Add("AttackCooldown", player.CurrentAttackCooldown.ToString("F2"));  // Játékos támadás-visszatöltõdési ideje
+        playerVariableValues.Add("CritChance", player.CurrentCriticalHitChance.ToString("F2"));  // Játékos kritikus találat esélye
+        playerVariableValues.Add("PercentageDMG", player.CurrentPercentageBasedDMG.ToString("F2"));  // Játékos százalékos alapú sebzése
     }
 
 
@@ -471,7 +472,7 @@ public class UIManager : BasePersistentManager<UIManager>
     /// Beállítja a szöveges elemek értékeit a `textElements` és `variableValues` szótárakban található közös kulcsok alapján.
     /// A közös kulcsokhoz tartozó szöveges elemeket frissíti a szótárban tárolt értékekkel.
     /// </summary>
-    void SetCurrentUITextValues(Dictionary<string, TextMeshProUGUI> textMeshProElementReferences, Dictionary<string, object> playerVariableValues)
+    void SetCurrentUITextValues(Dictionary<string, TextMeshProUGUI> textMeshProElementReferences, Dictionary<string, string> playerVariableValues)
     {
         // Kiválasztjuk a közös kulcsokat a `textElements` és `variableValues` szótárakból
         var commonKeys = textMeshProElementReferences.Keys.Intersect(playerVariableValues.Keys);
@@ -486,7 +487,7 @@ public class UIManager : BasePersistentManager<UIManager>
             // Ha mindkettõ nem null, akkor frissítjük a szöveget a tárolt értékkel
             if (textElement != null && value != null)
             {
-                textElement.text = value.ToString();
+                textElement.text = value;
             }
         }
     }
@@ -595,17 +596,8 @@ public class UIManager : BasePersistentManager<UIManager>
     /// <param name="id">A vásárolt elem azonosítója, amely alapján megtörténik a vásárlás nyilvántartása.</param>
     public void OnBuyButtonClicked(string id)      // PlayerUpgradeManager hívása!
     {
-        // Ellenõrizzük, hogy az id nem null
-        if (id != null)
-        {
-            // Ha az id érvényes, kiírjuk a logba, hogy mit vásároltak
-            Debug.Log("You have bought: " + id);
-        }
-        else
-        {
-            // Ha az id null, jelzi, hogy a vásárlás el lett hagyva
-            Debug.Log("SKIPPED!");
-        }
+        OnPurchaseOptionChosen?.Invoke(id);
+
     }
 
 
@@ -629,7 +621,7 @@ public class UIManager : BasePersistentManager<UIManager>
         foreach (var button in buttons)
         {
             button.onClick.AddListener(() => OnBuyButtonClicked(button.GetComponentInParent<UpgradeUIController>().ID));
-            if(button.GetComponentInParent<UpgradeUIController>().Price < gameStateManager.PlayerPoints)
+            if (button.GetComponentInParent<UpgradeUIController>().Price > gameStateManager.PlayerPoints)
             {
                 button.interactable = false;
             }
@@ -741,12 +733,12 @@ public class UIManager : BasePersistentManager<UIManager>
     {
         if (IsMainMenuScene())
         {
-        // Beállítjuk a "Load Game" gomb referenciáját
-        SetMainMenuButtonReferences();
+            // Beállítjuk a "Load Game" gomb referenciáját
+            SetMainMenuButtonReferences();
 
-        // Frissítjük a gomb állapotát (aktív vagy inaktív)
-        UpdateMainMenuButtons();
-            
+            // Frissítjük a gomb állapotát (aktív vagy inaktív)
+            UpdateMainMenuButtons();
+
         }
     }
 
@@ -826,7 +818,7 @@ public class UIManager : BasePersistentManager<UIManager>
     {
         if (gameStateManager != null)
         {
-            gameStateManager.OnPointsChanged -= UpdatePointsUIText;            
+            gameStateManager.OnPointsChanged -= UpdatePointsUIText;
         }
     }
 
