@@ -57,6 +57,16 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         get { return purchasedPlayerUpgrades; }
     }
 
+    public List<PlayerUpgrade> CurrentShopUpgrades
+    {
+        get { return shopPlayerUpgrades; }
+    }
+
+    public string HealingUpgradeID
+    {
+        get { return healingUpgrade.ID; }
+    }
+
     // TODO:
     // shopUpgrades kiválasztás algoritmus ->UIManager...
     // FONTOS: max hp növelés esetén a current hp %-os aránya megmarad!!! ->charactersetupmanager
@@ -70,6 +80,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
     protected override async void Initialize()
     {
         base.Initialize();
+        gameStateManager = FindObjectOfType<GameStateManager>();
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
         saveLoadManager.OnSaveRequested += Save;
 
@@ -102,83 +113,6 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         {
             saveLoadManager.OnSaveRequested -= Save;            
         }
-    }
-
-
-
-    /// <summary>
-    /// Ez a metódus a játékos fejlesztéseinek betöltésére és vásárlására szolgál. Aszinkron módon működik,
-    /// és különböző lépésekben tölt be adatokat, vásárol fejlesztéseket, majd végrehajt egy visszaállítást. (TESZT)
-    /// </summary>
-    private async void Start()
-    {
-
-        /*
-        // TESZT KEZDETE
-        // A boltban elérhető játékos fejlesztéseinek betöltése egy adott szinten és szorzóval. Ha nem sikerül, hibát loggolunk.
-        bool shopUpgrades = await GetShopPlayerUpgradesByLevel(1, 0.55f);
-        if (!shopUpgrades)
-        {
-            Debug.LogError("HIBÁS BOLT"); // Hibás bolt, ha a fejlesztések nem töltődtek be a boltban.
-        }
-        
-        // Várakozunk 3 másodpercet, hogy biztosítsuk a folyamat befejezését.
-        await Task.Delay(3000);
-
-        // Véletlenszerű játékos fejlesztés vásárlása a boltban elérhető fejlesztések közül.
-        PurchasePlayerUpgrade(GetRandomPlayerUpgradeFromList(shopPlayerUpgrades));
-
-        // A bolt újabb szintű fejlesztéseinek betöltése, ha nem sikerül, hibát loggolunk.
-        shopUpgrades = await GetShopPlayerUpgradesByLevel(2, 0.55f);
-        if (!shopUpgrades)
-        {
-            Debug.LogError("HIBÁS BOLT"); // Hibás bolt, ha a fejlesztések nem töltődtek be a boltban.
-        }
-        */
-        /*
-        // Várakozás újra 3 másodpercig.
-        await Task.Delay(3000);
-
-        // A vásárlás kihagyása.
-        SkipPurchase();
-
-        // A bolt újabb szintű fejlesztéseinek betöltése, ha nem sikerül, hibát loggolunk.
-        shopUpgrades = await GetShopPlayerUpgradesByLevel(3, 0.55f);
-        if (!shopUpgrades)
-        {
-            Debug.LogError("HIBÁS BOLT"); // Hibás bolt, ha a fejlesztések nem töltődtek be a boltban.
-        }
-
-        // Várakozás újra 3 másodpercig.
-        await Task.Delay(3000);
-
-        // Véletlenszerű játékos fejlesztés vásárlása a boltban elérhető fejlesztések közül.
-        PurchasePlayerUpgrade(GetRandomPlayerUpgradeFromList(shopPlayerUpgrades));
-
-        // A bolt újabb szintű fejlesztéseinek betöltése, ha nem sikerül, hibát loggolunk.
-        shopUpgrades = await GetShopPlayerUpgradesByLevel(4, 0.55f);
-        if (!shopUpgrades)
-        {
-            Debug.LogError("HIBÁS BOLT"); // Hibás bolt, ha a fejlesztések nem töltődtek be a boltban.
-        }
-
-        // Várakozás újra 3 másodpercig.
-        await Task.Delay(3000);
-
-        // Véletlenszerű játékos fejlesztés vásárlása a boltban elérhető fejlesztések közül.
-        PurchasePlayerUpgrade(GetRandomPlayerUpgradeFromList(shopPlayerUpgrades));
-
-        // Várakozás újra 3 másodpercig.
-        await Task.Delay(3000);
-
-        // A játékos fejlesztéseinek és boltjának listáját visszaállítjuk. Ha nem sikerül, hibát loggolunk.
-        bool reset = await ResetPlayerUpgradesListsAsync();
-        if (!reset)
-        {
-            Debug.LogError("NEW GAME FAILED!"); // Hibás új játék indítás, ha nem sikerül a lista visszaállítása.
-        }
-        // TESZT VÉGE
-        */
     }
 
 
@@ -419,7 +353,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
     /// <param name="currentGamelevel">A játék aktuális szintje.</param>
     /// <param name="playerHealthPercentage">A játékos életerő százaléka (0-tól 1-ig terjedő érték).</param>
     /// <returns>Visszatérési érték: bool. A művelet sikerességét jelzi.</returns>
-    public async Task<bool> GetShopPlayerUpgradesByLevel(int currentGamelevel, float playerHealthPercentage)
+    public async Task<bool> GenerateCurrentShopUpgradesAsync(int currentGamelevel, float playerHealthPercentage)
     {
         // Létrehoz egy TaskCompletionSource objektumot, amely lehetővé teszi az aszinkron művelet állapotának kezelését.
         var taskCompletionSource = new TaskCompletionSource<bool>();
@@ -544,41 +478,81 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
     /// A mentési rendszeren keresztül történő kommunikáció később kerül implementálásra.
     /// </summary>
     /// <param name="playerUpgrade">A megvásárolni kívánt fejlesztés objektuma.</param>         // string ID lesz a paraméter
-    public void PurchasePlayerUpgrade(PlayerUpgrade playerUpgrade) // async lesz, mert a mentés rendszerrel fog kommunikálni... a bool érték is akkor kerül megfelelően visszaadásra!
+    public async Task<bool> PurchasePlayerUpgrade(string playerUpgradeID)
     {
-        // Ellenőrzi, hogy a fejlesztés nem gyógyító típusú-e.
-        if (!playerUpgrade.isHealing)
+        await Task.Yield();
+
+        try
         {
-            // Ellenőrzi a megvásárolt fejlesztés és korábban megvásárolt fejlesztések ID egyezését (már megvásárolt fejlesztés azonosítása).
-            var match = purchasedPlayerUpgrades.Find(x => x.ID == playerUpgrade.ID);
-
-            if (match == null)
+            if (string.IsNullOrEmpty(playerUpgradeID))
             {
-                // Ha még nem szerepel a megvásárolt fejlesztések között, hozzáadja azt.
-                purchasedPlayerUpgrades.Add(playerUpgrade);
+                SkipPurchase();
+                return true;
+            }
 
-                // Az összes elérhető fejlesztést összesítő listából eltávolítja az adott fejlesztést.
-                allPlayerUpgrades.Remove(allPlayerUpgrades.Find(x => x.ID == playerUpgrade.ID));
+            PlayerUpgrade playerUpgrade = GetPlayerUpgradeFromShopByID(shopPlayerUpgrades, playerUpgradeID);
+
+            // Deduct player points
+            DeductPlayerPoints(playerUpgrade.GetPrice());
+
+
+            if (playerUpgrade.isHealing)
+            {
+                HandleHealingUpgrade();
             }
             else
             {
-                // Ha már szerepel a listában, frissíti annak szintjét és leírását.
-                match.currentUpgradeLevel = playerUpgrade.currentUpgradeLevel;
-                match.RefreshDescription();
-                match.IsTempCopy = false;
+                HandleNonHealingUpgrade(playerUpgrade);
             }
 
-            // Mentési művelet indítása a mentéskezelőn keresztül (későbbi implementáció).
-            // SaveManager.UpdatePurchasedUpgrades(purchasedPlayerUpgrades);
+            // Clear the shop list after purchase
+            ClearShopPlayerUpgradesList();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error during purchasing upgrade! {ex.Message}");
+            return false;
+        }
+    }
+
+    private void DeductPlayerPoints(int price)
+    {
+        gameStateManager.PlayerPoints -= price;
+        Debug.Log($"Remaining points: {gameStateManager.PlayerPoints}");
+    }
+
+    private void HandleHealingUpgrade()
+    {
+        gameStateManager.PlayerHealtPercenatge = 1f;
+        Debug.Log("Player health fully restored.");
+    }
+
+    private void HandleNonHealingUpgrade(PlayerUpgrade playerUpgrade)
+    {
+        // Check if the upgrade is already purchased
+        var match = purchasedPlayerUpgrades.Find(x => x.ID == playerUpgrade.ID);
+
+        if (match == null)
+        {
+            purchasedPlayerUpgrades.Add(playerUpgrade);
+            allPlayerUpgrades.RemoveAll(x => x.ID == playerUpgrade.ID);
+            Debug.Log($"Upgrade {playerUpgrade.ID} added to purchased list.");
         }
         else
         {
-            // Ha gyógyító fejlesztést vásároltak, a megfelelő mentési műveleteket kell végrehajtani.
-            // SaveManager.UpdateHealingUpgrade(playerUpgrade);
+            match.currentUpgradeLevel = playerUpgrade.currentUpgradeLevel;
+            match.RefreshDescription();
+            match.IsTempCopy = false;
+            Debug.Log($"Upgrade {playerUpgrade.ID} updated to level {playerUpgrade.currentUpgradeLevel}.");
         }
+    }
 
-        // A boltban megjelenített fejlesztések törlése.
-        ClearShopPlayerUpgradesList(shopPlayerUpgrades);
+
+    PlayerUpgrade GetPlayerUpgradeFromShopByID(List<PlayerUpgrade> ShopUpgrades, string upgradeID)
+    {
+        return ShopUpgrades.Find(x => x.ID == upgradeID);
     }
 
 
@@ -586,10 +560,10 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
     /// Kezeli a vásárlás kihagyását a boltban.
     /// A jelenleg elérhető fejlesztések törlése és a bolt adatainak frissítése.
     /// </summary>
-    public void SkipPurchase() // lehet async lesz?
+    public void SkipPurchase()
     {
         // Törli a boltban megjelenített fejlesztéseket.
-        ClearShopPlayerUpgradesList(shopPlayerUpgrades);
+        ClearShopPlayerUpgradesList();
     }
 
 
@@ -598,7 +572,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
     /// Előkészíti a listát az új fejlesztések hozzáadására.
     /// </summary>
     /// <param name="shopPlayerUpgrades">A bolt jelenlegi fejlesztési listája, amely törlésre kerül.</param>
-    public void ClearShopPlayerUpgradesList(List<PlayerUpgrade> shopPlayerUpgrades)
+    public void ClearShopPlayerUpgradesList()
     {
         // Törli az összes elemet a bolt fejlesztési listájából.
         shopPlayerUpgrades.Clear();
