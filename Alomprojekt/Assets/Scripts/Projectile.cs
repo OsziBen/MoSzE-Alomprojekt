@@ -11,7 +11,7 @@ public class Projectile : MonoBehaviour
     /// </summary>
     private float _projectileDMG;           // A lövedék sebzésértéke
     public float deleteTime = 5f;
-    private float timer = 0f;
+    //private float timer = 0f;
     public int force = 3;                   // Az alkalmazott erõ, amely meghatározza a lövedék indításának intenzitását
     private float _percentageDMGValue;      // Százalékos sebzésérték
     private bool _isMarked;     // lövedék megjelöltsége [igen/nem]
@@ -90,9 +90,9 @@ public class Projectile : MonoBehaviour
     {
         Vector3 viewportPosition = MainCamera.WorldToViewportPoint(transform.position);
 
-        timer += Time.deltaTime;
+        //timer += Time.deltaTime;
 
-        if (viewportPosition.x < 0 || viewportPosition.x > 1 || viewportPosition.y < 0 || viewportPosition.y > 1 || timer >= deleteTime)
+        if (viewportPosition.x < -0.05 || viewportPosition.x > 1.05 || viewportPosition.y < -0.05 || viewportPosition.y > 1.05 /*|| timer >= deleteTime*/)
         {
             DestroyProjectile();
         }
@@ -125,6 +125,8 @@ public class Projectile : MonoBehaviour
     /// <param name="force">Az erõ, amellyel a GameObject-nek mozognia kell</param>
     public void Launch(Vector2 direction, float launchForce)
     {
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, 0f, angle - 90f);
         rigidbody2d.AddForce(direction * launchForce);
     }
 
@@ -171,7 +173,7 @@ public class Projectile : MonoBehaviour
     void DestroyProjectile()
     {
         objectPool.ReturnProjectile(gameObject);
-        timer = 0f;
+        //timer = 0f;
     }
 
 }
