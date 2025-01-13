@@ -4,25 +4,11 @@ using UnityEngine;
 
 public class EnemySpawner : Assets.Scripts.SpawnerBase
 {
-    // Start is called before the first frame update
-
     public EnemyController enemy;
-      
-
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     /// <summary>
     /// Mivel enemyből többet is elhelyezünk, egy külön, SpawnManager által meghívható
-    /// függvényben annyiszor hívjuk meg a PlaceEnemy() függvényt, ahány enemy-t szeretnénk
+    /// függvényben annyiszor hívjuk meg a Place() függvényt, ahány enemy-t szeretnénk
     /// spawnolni.
     /// </summary>
     public void Activate()
