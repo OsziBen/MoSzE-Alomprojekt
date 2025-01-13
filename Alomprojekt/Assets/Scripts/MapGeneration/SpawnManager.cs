@@ -21,7 +21,7 @@ public class SpawnManager : MonoBehaviour
     // Eventek
     public event Action OnLevelGenerationFinished;
 
-    public async Task<bool> NewLevelInit(List<EnemyData.EnemySpawnInfo> enemies, PlayerController playerPrefab, ObstacleController obstaclePrefab, int activeObstacleSpawners, int activeJokerSpawners)
+    public async Task<bool> NewLevelInit(SpawnManagerData spawnManagerData)
     {
         await Task.Yield();
 
@@ -33,7 +33,7 @@ public class SpawnManager : MonoBehaviour
             playerSpawners = new List<PlayerSpawner>(GetComponentsInChildren<PlayerSpawner>());
             jokerSpawners = new List<JokerSpawner>(GetComponentsInChildren<JokerSpawner>());
 
-            SpawnEntities(enemies, playerPrefab, obstaclePrefab, activeObstacleSpawners, activeJokerSpawners); // A megadott SpawnPlan lista alapján végrehajtjuk a spawnokat.
+            SpawnEntities(spawnManagerData.EnemySpawnData, spawnManagerData.PlayerPrefab, spawnManagerData.ObstaclePrefab, spawnManagerData.ActiveObstacleSpawners, 0); // A megadott SpawnPlan lista alapján végrehajtjuk a spawnokat.
             Cleanup(); // Kitöröljük a spawnereket, mivel már nincs szükség rájuk.
 
             OnLevelGenerationFinished?.Invoke(); // Event a sikeres generálásról
@@ -96,7 +96,7 @@ public class SpawnManager : MonoBehaviour
         // Végigiterálunk a SpawnPlan listán, ez az ellenség spawnereket kezeli.
         foreach (var enemyGroup in enemyGroups)
         {
-            int enemiesToSpawn = random.Next(enemyGroup.minNum, enemyGroup.maxNum + 1); // A plan-ben megadott értékek alapján megadjuk a spawnolandó mennyiséget.
+            int enemiesToSpawn = random.Next(enemyGroup.minNum, enemyGroup.maxNum) + 1; // A plan-ben megadott értékek alapján megadjuk a spawnolandó mennyiséget.
             int randomSpawnerIndex = random.Next(0, enemySpawners.Count); // Választunk egy random indexet a spawnerlistából.
             EnemySpawner selectedSpawner = enemySpawners[randomSpawnerIndex]; // Kiválasztjuk az adott indexen lévő spawnert a listából.
 

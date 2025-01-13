@@ -27,7 +27,7 @@ public class EnemySpawner : Assets.Scripts.SpawnerBase
     /// </summary>
     public void Activate()
     {
-        for(int i = 1; i < numberOfSpawned; i++)
+        for(int i = 0; i < numberOfSpawned; i++)
         {
             Place();
         }
