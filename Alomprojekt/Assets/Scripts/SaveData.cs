@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static GameStateManager;
 
 
 [System.Serializable]
@@ -21,7 +22,7 @@ public class SaveData
 [System.Serializable]
 public class GameSaveData
 {
-    public int gameLevel;
+    public GameLevel gameLevel;
     public string levelLayoutName;
     public int points;
 
