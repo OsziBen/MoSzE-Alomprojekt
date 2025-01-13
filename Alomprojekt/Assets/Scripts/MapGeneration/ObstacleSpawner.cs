@@ -6,18 +6,6 @@ public class ObstacleSpawner : Assets.Scripts.SpawnerBase
 {
     public ObstacleController obstacle; // a spawnolandó objektum megadása
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     /// <summary>
     /// A SpawnerBase osztály Place() függvényének kiegészítése
     /// a spawnerhez specifikus gameobject instanciálásával.

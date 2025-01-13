@@ -7,18 +7,9 @@ public class PlayerSpawner : Assets.Scripts.SpawnerBase
 {
     public PlayerController player; // Játékos karakter prefab
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    /// <summary>
+    /// Meghívjuk a PlacePlayer() függvényt, majd hozzákötjük a pálya kamerájához az visszaadott játékos karaktert.
+    /// </summary>
     public void Activate()
     {
         var spawnedPlayer = PlacePlayer(); // Elmentjük az instanciált játékost egy változóba.
@@ -40,7 +31,6 @@ public class PlayerSpawner : Assets.Scripts.SpawnerBase
     {
         base.Place();
 
-        // Instantiate the enemy at the calculated position
         var spawnedPlayer = Instantiate(player, spawnPosition, Quaternion.identity);
 
         return spawnedPlayer;

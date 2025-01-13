@@ -43,7 +43,7 @@ public class JokerSpawner : Assets.Scripts.SpawnerBase
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.black;
+        Gizmos.color = Color.white;
         Gizmos.DrawSphere(transform.position, spawnRadius);
     }
 }

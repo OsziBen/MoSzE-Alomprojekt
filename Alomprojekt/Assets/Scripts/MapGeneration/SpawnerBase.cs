@@ -20,9 +20,9 @@ namespace Assets.Scripts
         /// </summary>
         public virtual void Place()
         {
-            randomPosition = Random.insideUnitCircle * spawnRadius;
+            randomPosition = Random.insideUnitCircle * spawnRadius; // spawnRadius sugarú körben kiválaszt egy random koordinátát
 
-            spawnPosition = new Vector2(randomPosition.x, randomPosition.y) + (Vector2)transform.position;
+            spawnPosition = new Vector2(randomPosition.x, randomPosition.y) + (Vector2)transform.position; // a random koordinátához hozzáadjuk a spawner koordinátáit
         }
     }
 }
