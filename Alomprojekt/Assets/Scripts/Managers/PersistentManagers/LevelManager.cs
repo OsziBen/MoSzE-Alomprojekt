@@ -19,6 +19,24 @@ public class LevelManager : BasePersistentManager<LevelManager>
     /// <summary>
     /// Változók
     /// </summary>
+    public class SpawnManagerData
+    {
+        private List<EnemyData.EnemySpawnInfo> _enemySpawnData;
+
+        public List<EnemyData.EnemySpawnInfo> EnemySpawnData
+        {
+            get => _enemySpawnData;
+            set => _enemySpawnData = value ?? new List<EnemyData.EnemySpawnInfo>();
+        }
+
+        public PlayerController PlayerPrefab { get; set; }
+        public ObstacleController ObstaclePrefab { get; set; }
+        public int ActiveObstacleSpawners { get; set; }
+        public int ActiveJokerSpawners { get; set; }
+    }
+
+
+
     public class GameObjectPosition
     {
         public GameObject gameObject;
@@ -35,7 +53,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
     LevelData currentLevel;
 
-    List<EnemyData.EnemySpawnInfo> spawnManagerData = new List<EnemyData.EnemySpawnInfo>();
+    //List<EnemyData.EnemySpawnInfo> spawnManagerData = new List<EnemyData.EnemySpawnInfo>();
 
     private bool isLoadSuccessful;
 
@@ -48,6 +66,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
     /// <summary>
     /// Komponensek
     /// </summary>
+    GameStateManager gameStateManager;
     GameSceneManager gameSceneManager;
     SpawnManager spawnManager;
     CharacterSetupManager characterSetupManager;
@@ -81,10 +100,10 @@ public class LevelManager : BasePersistentManager<LevelManager>
     protected override async void Initialize()
     {
         base.Initialize();
+        gameStateManager = FindObjectOfType<GameStateManager>();
         gameSceneManager = FindObjectOfType<GameSceneManager>();
         
         uiManager = FindObjectOfType<UIManager>();
-        //characterSetupManager = FindObjectOfType<CharacterSetupManager>();    // EZT IS KÖZBEN KERESSÜK MEG!
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
 
         saveLoadManager.OnSaveRequested += Save;
@@ -164,24 +183,39 @@ public class LevelManager : BasePersistentManager<LevelManager>
     /// </summary>
     /// <param name="level"></param>
     /// <returns></returns>
-    List<EnemyData.EnemySpawnInfo> GetSpawnManagerDataByLevel(int level)
+    List<EnemyData.EnemySpawnInfo> GetEnemySpawnDataFromCurrentLevelData(LevelData currentLevel)
     {
-        spawnManagerData.Clear();
+        List<EnemyData.EnemySpawnInfo> enemySpawnData = new List<EnemyData.EnemySpawnInfo>();
 
-        currentLevel = allLevels.Find(x => x.levelNumber == level);
-
-        int activeZoneCount = currentLevel.zoneData.spawnZoneInfos.Find(x => x.zoneType == ZoneType.Enemy).activeZoneCount;
+        int activeEnemyZoneCount = currentLevel.zoneData.spawnZoneInfos.Find(x => x.zoneType == ZoneType.Enemy).activeZoneCount;
 
         List<EnemyData.EnemySpawnInfo> allEnemyInfos = currentLevel.enemyData.enemyInfos;  // List of all possible enemy data
 
-        for (int i = 0; i < activeZoneCount; i++)
+        for (int i = 0; i < activeEnemyZoneCount; i++)
         {
             // Véletlenszerű index kiválasztása a lehetséges ellenségek listájából
             int randomIndex = rand.Next(allEnemyInfos.Count);
 
             // Véletlenszerű elem hozzáadása a spawnManagerData listához
-            spawnManagerData.Add(allEnemyInfos[randomIndex]);
+            enemySpawnData.Add(allEnemyInfos[randomIndex]);
         }
+
+        return enemySpawnData;
+    }
+
+
+    SpawnManagerData GetSpawnManagerDataByLevel(int level)
+    {
+        SpawnManagerData spawnManagerData = new SpawnManagerData();
+        LevelData currentLevel = allLevels.Find(x => x.levelNumber == level);
+
+        spawnManagerData.EnemySpawnData = GetEnemySpawnDataFromCurrentLevelData(currentLevel);
+        spawnManagerData.PlayerPrefab = playerPrefab;
+        spawnManagerData.ObstaclePrefab = obstaclePrefab;
+        spawnManagerData.ActiveObstacleSpawners = currentLevel.zoneData.spawnZoneInfos.Find(x => x.zoneType == ZoneType.Obstacle).activeZoneCount;
+        spawnManagerData.ActiveJokerSpawners = currentLevel.zoneData.spawnZoneInfos.Find(x => x.zoneType == ZoneType.Joker).activeZoneCount;
+
+        Debug.Log(spawnManagerData.EnemySpawnData.Count);
 
         return spawnManagerData;
     }
@@ -192,10 +226,10 @@ public class LevelManager : BasePersistentManager<LevelManager>
     /// </summary>
     /// <param name="saveData"></param>
     /// <returns></returns>
-    List<GameObjectPosition> GetSpawnManagerLoadDataFromSaveData(SaveData saveData)
+    List<GameObjectPosition> GetSpawnManagerLoadDataFromSaveData(SaveData saveData)     // ezt adjuk majd át loadnál
     {
         List<GameObjectPosition> gameObjectPositions = new List<GameObjectPosition>();
-        currentLevel = allLevels.Find(x => x.levelNumber == saveData.gameData.gameLevel);
+        currentLevel = allLevels.Find(x => x.levelNumber == gameStateManager.GameLevelToInt(saveData.gameData.gameLevel));
 
         foreach (var prefabData in saveData.spawnerSaveData.prefabsData)
         {
@@ -313,7 +347,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
                 // SpawnManager - prefabok elhelyezése a pályán
                 spawnManager = FindObjectOfType<SpawnManager>();
-                asyncOperation = await spawnManager.NewLevelInit(GetSpawnManagerDataByLevel(levelNumber), playerPrefab, obstaclePrefab, 3, 2);
+                asyncOperation = await spawnManager.NewLevelInit(GetSpawnManagerDataByLevel(levelNumber));
                 if (!asyncOperation)
                 {
                     throw new Exception("Spawn Manager initialization failed.");
