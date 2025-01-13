@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.TextCore.Text;
+using UnityEngine.UIElements;
 using static Cinemachine.DocumentationSortingAttribute;
 using static PlayerUpgradeData;
 using StatValuePair = System.Collections.Generic.KeyValuePair<PlayerUpgradeData.StatType, float>;
@@ -233,6 +234,15 @@ public class PlayerController : Assets.Scripts.Character
     void Update()
     {
         move = MoveAction.ReadValue<Vector2>();
+        if (move != Vector2.zero)
+        {
+            float angle = Mathf.Atan2(move.y, move.x) * Mathf.Rad2Deg; // Calculate angle in degrees
+            transform.rotation = Quaternion.Euler(0f, 0f, angle -90f); // Set the Z rotation
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+        }
 
         if (isInvincible)
         {
@@ -301,46 +311,112 @@ public class PlayerController : Assets.Scripts.Character
 
 
 
-    /// <summary>
-    /// A karakter támadását kezeli a bemeneti akció alapján, meghatározza a támadás irányát és elindítja a lövedéket.
-    /// A támadás irányát a bemeneti vezérlõ (nyílgombok) alapján állítja be.
-    /// </summary>
-    /// <param name="context">A bemeneti akció kontextusa, amely tartalmazza az aktuális irányt és a vezérlõt.</param>
+   /// <summary>
+   /// 
+   /// </summary>
+   /// <param name="context"></param>
     void Attack(InputAction.CallbackContext context)
     {
-        if (rigidbody2d == null) return;
+        if (rigidbody2d == null || !isAbleToAttack) return; // Early exits
 
-        switch (context.control.name)
+        Vector2 localOffset = GetLocalOffset(context.control.name);
+        if (localOffset == Vector2.zero) return; // Invalid input
+
+        float multiplier = GetMultiplier(localOffset);
+        attackDirection = rigidbody2d.position + localOffset * multiplier;
+
+        GameObject projectileObject = GetProjectileFromPool();
+        if (projectileObject == null) return; // Early exit if no projectile available
+
+        LaunchProjectile(projectileObject);
+        ResetAttackCooldown();
+        isAbleToAttack = false;
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="controlName"></param>
+    /// <returns></returns>
+    private Vector2 GetLocalOffset(string controlName)
+    {
+        switch (controlName)
         {
             case "upArrow":
-                attackDirection = rigidbody2d.position + Vector2.up * 0.5f;
-                break;
+                return Vector2.up;
             case "downArrow":
-                attackDirection = rigidbody2d.position + Vector2.down * 0.5f;
-                break;
+                return Vector2.down;
             case "leftArrow":
-                attackDirection = rigidbody2d.position + Vector2.left * 0.5f;
-                break;
+                return Vector2.left;
             case "rightArrow":
-                attackDirection = rigidbody2d.position + Vector2.right * 0.5f;
-                break;
+                return Vector2.right;
             default:
-                break;
+                return Vector2.zero; // Invalid input
         }
+    }
 
-        if (isAbleToAttack)
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="localOffset"></param>
+    /// <returns></returns>
+    private float GetMultiplier(Vector2 localOffset)
+    {
+        Vector2 facingDirection = transform.up;
+
+        // Handle diagonal facing directions
+        if (Mathf.Abs(facingDirection.x) > 0.1f && Mathf.Abs(facingDirection.y) > 0.1f)
         {
-            GameObject projectileObject = objectPool
-                .GetProjectile(attackDirection, Quaternion.identity, CalculateDMG(), CurrentPercentageBasedDMG);
-
-            Projectile projectile = projectileObject.GetComponent<Projectile>();
-            projectile.Launch(launchAction.ReadValue<Vector2>(), shotTravelSpeed);      // shottravespeed kiszervezése!
-            remainingAttackCooldown = CurrentAttackCooldown;
-            //Debug.Log(remainingAttackCooldown);
-            isAbleToAttack = false;
-            return;
+            return (2f + 1f) / 2f; // Blend of long (2f) and short (1f) distances for diagonals
         }
 
+        // Handle horizontal vs. vertical
+        bool isHorizontal = Mathf.Abs(facingDirection.x) > Mathf.Abs(facingDirection.y);
+
+        if (isHorizontal)
+        {
+            return (localOffset == Vector2.left || localOffset == Vector2.right) ? 2f : 1f; // 2f for horizontal, 1f for vertical
+        }
+        else
+        {
+            return (localOffset == Vector2.up || localOffset == Vector2.down) ? 2f : 1f; // 2f for vertical, 1f for horizontal
+        }
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    private GameObject GetProjectileFromPool()
+    {
+        // Retrieves a projectile from the pool
+        return objectPool.GetProjectile(attackDirection, Quaternion.identity, CalculateDMG(), CurrentPercentageBasedDMG);
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="projectileObject"></param>
+    private void LaunchProjectile(GameObject projectileObject)
+    {
+        // Get the projectile component and launch it
+        Projectile projectile = projectileObject.GetComponent<Projectile>();
+        Vector2 launchDirection = launchAction.ReadValue<Vector2>();
+        projectile.Launch(launchDirection, shotTravelSpeed);
+    }
+
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private void ResetAttackCooldown()
+    {
+        // Set cooldown and reset remaining attack cooldown
+        remainingAttackCooldown = CurrentAttackCooldown;
     }
 
 
