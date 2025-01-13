@@ -10,10 +10,10 @@ public class EnemyData : ScriptableObject
     {
         public EnemyController enemyPrefab;
 
-        [Range(0, 10)]
+        [Range(1, 10)]
         public int minNum;
 
-        [Range(0, 10)]
+        [Range(1, 10)]
         public int maxNum;
     }
 

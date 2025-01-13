@@ -172,7 +172,7 @@ namespace Assets.Scripts
         /// </summary>
         protected virtual void Awake()
         {
-            levelSpriteDictionary = SpriteListToDictionary(LevelSpritePairs);
+            //levelSpriteDictionary = SpriteListToDictionary(LevelSpritePairs);
 
             /*
             rigidbody2d = GetComponent<Rigidbody2D>();

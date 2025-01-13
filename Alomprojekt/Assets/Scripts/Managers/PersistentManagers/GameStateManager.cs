@@ -13,11 +13,21 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     /// </summary>
     private int _points = 0;
     private float _playerHealthPercentage = 1f;
-    private int _currentLevel = 1;
+    private GameLevel _currentLevel;
+    private int _minLevel = 1;
     private int _totalLevels = 4;
     private bool _isStateChanging = false;
 
     private Queue<Func<Task>> deferredStateChanges = new Queue<Func<Task>>();
+
+    public enum GameLevel
+    {
+        Level1,
+        Level2,
+        Level3,
+        Level4,
+        BossBattle
+    }
 
 
     public enum GameState
@@ -33,9 +43,6 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         PlayerUpgrade,
         Quitting
     }
-
-
-
 
 
     /// <summary>
@@ -68,7 +75,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         set { _points = value; }
     }
 
-    public int CurrentLevel
+    public GameLevel CurrentLevel
     {
         get { return _currentLevel; }
         set { _currentLevel = value; }
@@ -238,14 +245,15 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                 case GameState.LoadingNewGame:
                     this.PlayerPoints = 0;
                     this.PlayerHealtPercenatge = 1f;
-                    this.CurrentLevel = 1;
+                    asyncOperation = await ResetCurrentLevel();
+
                     asyncOperation = await playerUpgradeManager.ResetPlayerUpgradesListsAsync();
                     Time.timeScale = 1;
                     // load newGame cutscene :: sceneManager
                     asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("NewGame");
 
                     // load level 1 :: LevelManager
-                    asyncOperation = await levelmanager.LoadNewLevelAsync(CurrentLevel);
+                    asyncOperation = await levelmanager.LoadNewLevelAsync(GameLevelToInt(CurrentLevel));
                     if (asyncOperation)
                     {
                         // After level load is complete, change state to "Playing"
@@ -254,26 +262,28 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
 
                     break;
 
-                case GameState.LoadingNextLevel:
+                case GameState.LoadingNextLevel:    
                     Time.timeScale = 1;
-                    CurrentLevel++;
 
-                    if (CurrentLevel <= TotalLevels)
+                    asyncOperation = await IncrementCurrentLevel();
+
+                    if (CurrentLevel == GameLevel.BossBattle)
                     {
-                        string cutsceneRefName = "LevelTransition" + (CurrentLevel - 1).ToString() + CurrentLevel.ToString();
+                        // BOSS FIGHT!
+                        asyncOperation = await gameSceneManager.LoadUtilitySceneAsync("BossFight");
+
+                    }
+                    else
+                    {
+                        string cutsceneRefName = "LevelTransition" + (GameLevelToInt(CurrentLevel) - 1).ToString() + GameLevelToInt(CurrentLevel).ToString();
                         asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync(cutsceneRefName);
 
-                        asyncOperation = await levelmanager.LoadNewLevelAsync(CurrentLevel);
+                        asyncOperation = await levelmanager.LoadNewLevelAsync(GameLevelToInt(CurrentLevel));
                         if (asyncOperation)
                         {
                             // After level load is complete, change state to "Playing"
                             DeferStateChange(() => SetState(GameState.Playing));
                         }
-                    }
-                    else
-                    {
-                        // BOSS FIGHT!
-                        asyncOperation = await gameSceneManager.LoadUtilitySceneAsync("BossFight");
                     }
                     Debug.Log("PLAYERHP: " + PlayerHealtPercenatge);
                     Debug.Log("PLAYERPOINTS: " + PlayerPoints);
@@ -316,7 +326,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     Cursor.lockState = CursorLockMode.None;
                     Time.timeScale = 0;
 
-                    asyncOperation = await playerUpgradeManager.GenerateCurrentShopUpgradesAsync(CurrentLevel, PlayerHealtPercenatge);
+                    asyncOperation = await playerUpgradeManager.GenerateCurrentShopUpgradesAsync(GameLevelToInt(CurrentLevel), PlayerHealtPercenatge);
                     asyncOperation = await uiManager.LoadUpgradesShopUIAsync(playerUpgradeManager.CurrentShopUpgrades);
 
                     break;
@@ -346,5 +356,74 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     private void DeferStateChange(Func<Task> action)
     {
         deferredStateChanges.Enqueue(action);
+    }
+
+    public int GameLevelToInt(GameLevel gameLevel)
+    {
+        return (int)gameLevel+1;
+    }
+
+    public GameLevel IntToGameLevel(int levelValue)
+    {
+        if (Enum.IsDefined(typeof(GameLevel), levelValue))
+        {
+            return (GameLevel)levelValue;
+        }
+        else
+        {
+            throw new ArgumentException($"Invalid level value: {levelValue}");
+        }
+    }
+
+
+    async Task<bool> SetCurrentLevel(GameLevel level)
+    {
+        await Task.Yield();
+
+        try
+        {
+            CurrentLevel = level;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"ERROR DURING INCREMIENTING LEVEL! {ex.Message}");
+            return false;
+        }
+    }
+
+
+    async Task<bool> IncrementCurrentLevel()
+    {
+        await Task.Yield();
+
+        try
+        {
+            CurrentLevel++;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"ERROR DURING INCREMIENTING LEVEL! {ex.Message}");
+            return false;
+        }
+        
+    }
+
+
+    async Task<bool> ResetCurrentLevel()
+    {
+        await Task.Yield();
+
+        try
+        {
+            CurrentLevel = GameLevel.Level1;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"ERROR DURING INCREMIENTING LEVEL! {ex.Message}");
+            return false;
+        }
     }
 }
