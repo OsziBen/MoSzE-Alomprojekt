@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerSpawner : Assets.Scripts.SpawnerBase
+public class PlayerSpawner : MonoBehaviour
 {
     public PlayerController player; // Játékos karakter prefab
 
@@ -23,15 +23,12 @@ public class PlayerSpawner : Assets.Scripts.SpawnerBase
 
     /// <summary>
     /// Elhelyezi a játékos karaktert a pályán.
-    /// Az ősosztályból származó metódussal ellentétben van visszatérési érték.
-    /// Ez az érték maga az instanciált karakter, amihez hozzáköthetjük a kamerát.
+    /// A visszatérési érték maga az instanciált karakter, amihez hozzáköthetjük a kamerát.
     /// </summary>
     /// <returns></returns>
     public PlayerController PlacePlayer()
     {
-        base.Place();
-
-        var spawnedPlayer = Instantiate(player, spawnPosition, Quaternion.identity);
+        var spawnedPlayer = Instantiate(player, transform.position, Quaternion.identity);
 
         return spawnedPlayer;
     }
@@ -43,7 +40,7 @@ public class PlayerSpawner : Assets.Scripts.SpawnerBase
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(transform.position, spawnRadius);
+        Gizmos.DrawSphere(transform.position, 2);
     }
 
 }

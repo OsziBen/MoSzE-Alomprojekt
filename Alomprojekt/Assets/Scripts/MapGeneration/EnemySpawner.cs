@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemySpawner : Assets.Scripts.SpawnerBase
+public class EnemySpawner : MonoBehaviour
 {
-    public EnemyController enemy;
+    public EnemyController enemy; // A spawnolandó enemy object.
+
+    public float spawnRadius; // A kör, amelyben a spawner objektumokat helyezhet le.
+    public int numberOfSpawned; // A spawnolandó objektumok száma.
+    protected Vector2 randomPosition; // A spawn körön belül felvett random pozíció.
+    protected Vector2 spawnPosition; // Az előző random pozíció offsetelése a spawner pozíciójával.
 
     /// <summary>
     /// Mivel enemyből többet is elhelyezünk, egy külön, SpawnManager által meghívható
@@ -21,13 +26,14 @@ public class EnemySpawner : Assets.Scripts.SpawnerBase
     }
 
     /// <summary>
-    /// A SpawnerBase osztály Place() függvényének kiegészítése
-    /// a spawnerhez specifikus gameobject instanciálásával.
+    /// Enemy elhelyezése a spawnradius sugarú körön belüli random pontra.
     /// </summary>
-    public override void Place()
+    public void Place()
     {
-        base.Place();
-        EnemyController spawnedEnemy = Instantiate(enemy, spawnPosition, Quaternion.identity);
+        randomPosition = Random.insideUnitCircle * spawnRadius; // spawnRadius sugarú körben kiválaszt egy random koordinátát
+        spawnPosition = new Vector2(randomPosition.x, randomPosition.y) + (Vector2)transform.position; // a random koordinátához hozzáadjuk a spawner koordinátáit
+        
+        Instantiate(enemy, spawnPosition, Quaternion.identity);
     }
 
     /// <summary>
