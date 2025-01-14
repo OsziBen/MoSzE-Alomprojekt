@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cinemachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -32,11 +33,7 @@ public class SpawnManager : MonoBehaviour
 
         try
         {
-            // Begyűjtük listákba a SpawnManager gyermekeit.
-            enemySpawners = new List<EnemySpawner>(GetComponentsInChildren<EnemySpawner>());
-            obstacleSpawners = new List<ObstacleSpawner>(GetComponentsInChildren<ObstacleSpawner>());
-            playerSpawners = new List<PlayerSpawner>(GetComponentsInChildren<PlayerSpawner>());
-            jokerSpawners = new List<JokerSpawner>(GetComponentsInChildren<JokerSpawner>());
+            CollectSpawners(); // Begyűjtjük a pálya spawnereit.
 
             SpawnEntities(spawnManagerData.EnemySpawnData, spawnManagerData.PlayerPrefab, spawnManagerData.ObstaclePrefab, spawnManagerData.ActiveObstacleSpawners, 0); // A megadott paraméterek alapján végrehajtjuk a spawnokat.
             Cleanup(); // Kitöröljük a spawnereket, mivel már nincs szükség rájuk.
@@ -59,19 +56,34 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     /// <param name="loadData"></param>
     /// <returns></returns>
-    public async Task<bool> loadedLevelInit(List<GameObjectPosition> loadData)
+    public async Task<bool> LoadedLevelInit(List<GameObjectPosition> loadData)
     {
         await Task.Yield();
 
         try
         {
-            // gizmo törlése
-            // tényleges működés
+            CollectSpawners(); // Begyűjtjük a pálya spawnereit.
+            Cleanup(); // Előre töröljük a spawnereket, mivel betöltésnél nincs rájuk szükség.
+            
+            // Lehelyezzük a pályán a mentett listában szereplő gameobjecteket a mentett pozícióikban.
+            foreach (GameObjectPosition loadDataObject in loadData)
+            {
+                Instantiate(loadDataObject.gameObject, loadDataObject.position, Quaternion.identity);
+            }
+
+            // Hozzákötjük a lehelyezett player karaktert a kamerához.
+            PlayerController spawnedPlayer = FindObjectOfType<PlayerController>(); // Elmentjük az instanciált játékost egy változóba.
+            CinemachineVirtualCamera vcam = FindObjectOfType<CinemachineVirtualCamera>(); // Megkeressük a scene-ben a kamerát.
+            vcam.LookAt = spawnedPlayer.transform; // Ráállítjuk a kamera követését
+            vcam.Follow = spawnedPlayer.transform; // a játékos transformjára.
+
+            OnLevelGenerationFinished?.Invoke(); // Event a sikeres generálásról
+
             return true;
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Hiba történt a {nameof(loadedLevelInit)} metódusban: {ex.Message}");
+            Debug.LogError($"Hiba történt a {nameof(LoadedLevelInit)} metódusban: {ex.Message}");
             return false;
         }
     }
@@ -81,22 +93,45 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     /// <param name="bossLoadData"></param>
     /// <returns></returns>
-    public async Task<bool> bossLevelInit(List<GameObjectPosition> bossLoadData) // kételemű lista
+    public async Task<bool> BossLevelInit(List<GameObjectPosition> bossLoadData) // kételemű lista
     {
         await Task.Yield();
 
         try
         {
-            // gizmo törlése
-            // lehelyezés fix koordinátára
-            // tényleges működés
+            // Lehelyezzük a pályán a listában szereplő gameobjecteket a megadott pozícióikban. 2 elem: 1. a boss, 2. a player.
+            foreach (GameObjectPosition bossLoadDataObject in bossLoadData)
+            {
+                Instantiate(bossLoadDataObject.gameObject, bossLoadDataObject.position, Quaternion.identity);
+
+            }
+
+            // Hozzákötjük a lehelyezett player karaktert a kamerához.
+            PlayerController spawnedPlayer = FindObjectOfType<PlayerController>(); // Elmentjük az instanciált játékost egy változóba.
+            CinemachineVirtualCamera vcam = FindObjectOfType<CinemachineVirtualCamera>(); // Megkeressük a scene-ben a kamerát.
+            vcam.LookAt = spawnedPlayer.transform; // Ráállítjuk a kamera követését
+            vcam.Follow = spawnedPlayer.transform; // a játékos transformjára.
+
+            OnLevelGenerationFinished?.Invoke(); // Event a sikeres generálásról
+
             return true;
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Hiba történt a {nameof(bossLevelInit)} metódusban: {ex.Message}");
+            Debug.LogError($"Hiba történt a {nameof(BossLevelInit)} metódusban: {ex.Message}");
             return false;
         }
+    }
+
+    /// <summary>
+    /// Begyűjti listákba a különféle spawnereket.
+    /// </summary>
+    private void CollectSpawners()
+    {
+        enemySpawners = new List<EnemySpawner>(GetComponentsInChildren<EnemySpawner>());
+        obstacleSpawners = new List<ObstacleSpawner>(GetComponentsInChildren<ObstacleSpawner>());
+        playerSpawners = new List<PlayerSpawner>(GetComponentsInChildren<PlayerSpawner>());
+        jokerSpawners = new List<JokerSpawner>(GetComponentsInChildren<JokerSpawner>());
     }
 
 
@@ -107,7 +142,7 @@ public class SpawnManager : MonoBehaviour
     private void SpawnEntities(List<EnemyData.EnemySpawnInfo> enemyGroups, PlayerController playerPrefab, ObstacleController obstaclePrefab, int activeObstacleSpawners, int activeJokerSpawners)
     {
         // Végigiterálunk az enemyGroup listán, ez az ellenség spawnereket kezeli.
-        foreach (var enemyGroup in enemyGroups)
+        foreach (EnemyData.EnemySpawnInfo enemyGroup in enemyGroups)
         {
             int enemiesToSpawn = random.Next(enemyGroup.minNum, enemyGroup.maxNum) + 1; // Az enemyGroup objektumban megadott értékek alapján megadjuk a spawnolandó mennyiséget.
             int randomSpawnerIndex = random.Next(0, enemySpawners.Count); // Választunk egy random indexet a spawnerlistából.

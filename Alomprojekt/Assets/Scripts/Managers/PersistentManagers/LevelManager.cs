@@ -614,9 +614,9 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
         spawnManager = FindObjectOfType<SpawnManager>();
         // SpawnManager: prefabok + pozíciók átadása
-        //asyncOperation = await spawnManager.LoadedLevelInit(GetSpawnManagerLoadDataFromSaveData(saveData));
+        asyncOperation = await spawnManager.LoadedLevelInit(GetSpawnManagerLoadDataFromSaveData(saveData));
 
-        /*
+        
         // CharacterSetupManager - játékos és ellenségek értékeinek beállítása
         asyncOperation = await characterSetupManager.SetCharactersAsync(gameStateManager.GameLevelToInt(saveData.gameData.gameLevel));
         if (!asyncOperation)
@@ -644,7 +644,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
         {
             throw new Exception("UI setup failed.");
         }
-        */
+        
         return true;
     }
 
