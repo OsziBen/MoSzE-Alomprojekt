@@ -103,8 +103,40 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
     {
         foreach (var playerUpgrade in purchasedPlayerUpgrades)
         {
-            saveData.playerSaveData.upgradeIDs.Add(playerUpgrade.ID);
+            PlayerUpgradeSaveData playerUpgradeSaveData = new PlayerUpgradeSaveData();
+            playerUpgradeSaveData.upgradeID = playerUpgrade.ID;
+            playerUpgradeSaveData.upgradeLevel = playerUpgrade.currentUpgradeLevel;
+            saveData.playerSaveData.upgrades.Add(playerUpgradeSaveData);
         }
+    }
+
+    public async Task<bool> SetLoadDataAsync(SaveData loadData)
+    {
+        await Task.Yield();
+
+        try
+        {
+            foreach (var playerUpgradeSaveData in loadData.playerSaveData.upgrades)
+            {
+                PlayerUpgrade loadedUpgrade = GetPlayerUpgradeFromAvailablesByID(allPlayerUpgrades, playerUpgradeSaveData.upgradeID);
+                loadedUpgrade.SetCurrentPlayerUpgradeLevel(playerUpgradeSaveData.upgradeLevel);
+                purchasedPlayerUpgrades.Add(loadedUpgrade);
+                allPlayerUpgrades.Remove(loadedUpgrade);
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error during loading upgrade save data! {ex.Message}");
+            return false;
+        }
+
+    }
+
+    PlayerUpgrade GetPlayerUpgradeFromAvailablesByID(List<PlayerUpgrade> allPlayerUpgrades, string upgradeID)
+    {
+        return allPlayerUpgrades.Find(x => x.ID == upgradeID);
     }
 
     private void OnDestroy()
@@ -477,7 +509,7 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
     /// Kezeli egy játékos fejlesztésvásárlását, és frissíti az adatok listáját a vásárlás eredményeként.
     /// A mentési rendszeren keresztül történő kommunikáció később kerül implementálásra.
     /// </summary>
-    /// <param name="playerUpgrade">A megvásárolni kívánt fejlesztés objektuma.</param>         // string ID lesz a paraméter
+    /// <param name="playerUpgrade">A megvásárolni kívánt fejlesztés objektuma.</param>
     public async Task<bool> PurchasePlayerUpgrade(string playerUpgradeID)
     {
         await Task.Yield();
