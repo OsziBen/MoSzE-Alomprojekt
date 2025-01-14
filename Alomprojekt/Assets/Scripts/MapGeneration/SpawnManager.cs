@@ -7,7 +7,7 @@ using UnityEngine;
 using static LevelManager;
 using static SpawnManager;
 
-public class SpawnManager : MonoBehaviour
+public class SpawnManager : BaseTransientManager<SpawnManager>
 {
     private List<EnemySpawner> enemySpawners; // A manager-hez tartozó ellenség spawnerek listája.
     private List<ObstacleSpawner> obstacleSpawners; // A manager-hez tartozó obstacle spawnerek listája.
@@ -35,7 +35,7 @@ public class SpawnManager : MonoBehaviour
         {
             CollectSpawners(); // Begyűjtjük a pálya spawnereit.
 
-       //     SpawnEntities(spawnManagerData.EnemySpawnData, spawnManagerData.PlayerPrefab, spawnManagerData.ObstaclePrefab, spawnManagerData.ActiveObstacleSpawners, 0); // A megadott paraméterek alapján végrehajtjuk a spawnokat.
+            SpawnEntities(spawnManagerData.EnemySpawnData, spawnManagerData.PlayerPrefab, spawnManagerData.ObstaclePrefabs, spawnManagerData.ActiveObstacleSpawners, 2); // A megadott paraméterek alapján végrehajtjuk a spawnokat.
             Cleanup(); // Kitöröljük a spawnereket, mivel már nincs szükség rájuk.
 
             OnLevelGenerationFinished?.Invoke(); // Event a sikeres generálásról
@@ -139,7 +139,7 @@ public class SpawnManager : MonoBehaviour
     /// A spawnerek aktiválása.
     /// </summary>
     /// <param name="enemySpawnPlans">A megadott dictionary alapján spawnoljuk az ellenségeket.</param>
-    private void SpawnEntities(List<EnemyData.EnemySpawnInfo> enemyGroups, PlayerController playerPrefab, ObstacleController obstaclePrefab, int activeObstacleSpawners, int activeJokerSpawners)
+    private void SpawnEntities(List<EnemyData.EnemySpawnInfo> enemyGroups, PlayerController playerPrefab, List<ObstacleController> obstaclePrefabs, int activeObstacleSpawners, int activeJokerSpawners)
     {
         // Végigiterálunk az enemyGroup listán, ez az ellenség spawnereket kezeli.
         foreach (EnemyData.EnemySpawnInfo enemyGroup in enemyGroups)
@@ -148,7 +148,7 @@ public class SpawnManager : MonoBehaviour
             int randomSpawnerIndex = random.Next(0, enemySpawners.Count); // Választunk egy random indexet a spawnerlistából.
             EnemySpawner selectedSpawner = enemySpawners[randomSpawnerIndex]; // Kiválasztjuk az adott indexen lévő spawnert a listából.
 
-            selectedSpawner.enemy = enemyGroup.enemyPrefab; // Megadjuk a spawnernek a plan-ben szereplő ellenségtípust.
+            selectedSpawner.enemy = enemyGroup.enemyPrefab; // Megadjuk a spawnernek az enemygroup-ban szereplő ellenségtípust.
             selectedSpawner.numberOfSpawned = enemiesToSpawn; // Megadjuk a spawnernek a spawnolandó mennyiséget.
             selectedSpawner.Activate(); // Aktiváljuk a spawnert, elhelyezi a paraméterek alapján az ellenségeket.
 
@@ -161,8 +161,9 @@ public class SpawnManager : MonoBehaviour
             int randomObstacleIndex = random.Next(0, obstacleSpawners.Count); // Választunk egy random indexet a spawner listából.
 
             ObstacleSpawner selectedSpawner = obstacleSpawners[randomObstacleIndex]; // Kiválasztjuk az adott indexen lévő spawnert a listából.
-            selectedSpawner.obstacle = obstaclePrefab; // Levelmanager által adott obstacle prefabot spawnoljuk.
+            selectedSpawner.obstacles = obstaclePrefabs; // Levelmanager által adott obstacle prefabot spawnoljuk.
             selectedSpawner.Place(); // Aktiváljuk a spawnert, elhelyez egy obstacle-t.
+
 
             obstacleSpawners.Remove(selectedSpawner); // Használat után a spawnert töröljük a listából.
         }
@@ -175,16 +176,8 @@ public class SpawnManager : MonoBehaviour
             JokerSpawner selectedSpawner = jokerSpawners[randomJokerIndex]; // Kiválasztjuk az adott indexen lévő spawnert a listából.
 
             EnemyData.EnemySpawnInfo selectedEnemies = enemyGroups[random.Next(0, enemyGroups.Count)]; // Kiválasztunk egy random enemyGroup objektumot, amit átadunk a jokernek.
-            bool isHeads = UnityEngine.Random.Range(0, 2) == 0; // Random bool generálás.
             // A random bool alapján eldől, hogy a joker obstacle-t, vagy enemy-t fog elhelyezni.
-            if (isHeads)
-            {
-                selectedSpawner.SelectSpawner(isHeads, selectedEnemies, obstaclePrefab);
-            }
-            else
-            {
-                selectedSpawner.SelectSpawner(isHeads, selectedEnemies, obstaclePrefab);
-            }
+            selectedSpawner.SelectSpawner(selectedEnemies, obstaclePrefabs);
 
             jokerSpawners.Remove(selectedSpawner); // Használat után a spawnert töröljük a listából.
         }
