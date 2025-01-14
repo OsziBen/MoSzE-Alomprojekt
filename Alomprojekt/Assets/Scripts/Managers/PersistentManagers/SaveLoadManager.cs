@@ -1,3 +1,4 @@
+using GluonGui.WorkspaceWindow.Views.WorkspaceExplorer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
     /// Események
     /// </summary>
     public event Action<SaveData> OnSaveRequested;
-    public event Action<SaveData> OnLoadRequested;
+    //public event Action<SaveData> OnLoadRequested;
 
 
     /// <summary>
@@ -47,7 +48,7 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
     /// 
     /// </summary>
     /// <returns></returns>
-    public async Task<bool> NewGame()   // async + eventekhez kapcsolódni
+    public async Task<bool> NewGame()
     {
         await Task.Yield();
         _saveData = new SaveData();
@@ -59,30 +60,27 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
     /// 
     /// </summary>
     /// <returns></returns>
-    public async Task<bool> LoadGameAsync() // async + eventekhez kapcsolódni
+    public async Task<SaveData> LoadGameAsync()
     {
         try
         {
-            
+
             _saveData = await _dataHandler.LoadAsync();
 
             if (_saveData == null)
             {
                 Debug.Log("No data was found. Initializing data to default.");
-                return false; // No data found
+                return null;
             }
             else
             {
-                // Data loaded successfully
-                OnLoadRequested?.Invoke(_saveData);
-                return true;
+                return _saveData;
             }
         }
         catch (Exception ex)
         {
-            // Handle the exception, such as logging it and returning false
             Debug.LogError($"Exception during loading game data: {ex.Message}");
-            return false;
+            return null;
         }
     }
 
@@ -97,12 +95,33 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
         return File.Exists(fullPath);
     }
 
+    public async Task<bool> DeleteSaveFile()
+    {
+        await Task.Yield();
+
+        try
+        {
+            if (SaveFileExists())
+            {
+                string fullPath = Path.Combine(Application.persistentDataPath, _fileName);
+                File.Delete(fullPath);
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error during deleting existing save file! {ex.Message}");
+            return false;
+        }
+    }
+
 
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    public async Task<bool> SaveGame()  // async + eventekhez kapcsolódni
+    public async Task<bool> SaveGameAsync()
     {
         _saveData = new SaveData();
         OnSaveRequested?.Invoke(_saveData);
