@@ -30,7 +30,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
         }
 
         public PlayerController PlayerPrefab { get; set; }
-        public ObstacleController ObstaclePrefab { get; set; }
+        public List<ObstacleController> ObstaclePrefabs { get; set; }
         public int ActiveObstacleSpawners { get; set; }
         public int ActiveJokerSpawners { get; set; }
     }
@@ -80,7 +80,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
     [SerializeField]
     private PlayerController playerPrefab;
     [SerializeField]
-    private ObstacleController obstaclePrefab;
+    private List<ObstacleController> obstaclePrefabs;
     [SerializeField]
     private ObjectPoolForProjectiles objectPoolPrefab;
     [SerializeField]
@@ -211,7 +211,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
         spawnManagerData.EnemySpawnData = GetEnemySpawnDataFromCurrentLevelData(currentLevel);
         spawnManagerData.PlayerPrefab = playerPrefab;
-        spawnManagerData.ObstaclePrefab = obstaclePrefab;
+        spawnManagerData.ObstaclePrefabs = obstaclePrefabs;
         spawnManagerData.ActiveObstacleSpawners = currentLevel.zoneData.spawnZoneInfos.Find(x => x.zoneType == ZoneType.Obstacle).activeZoneCount;
         spawnManagerData.ActiveJokerSpawners = currentLevel.zoneData.spawnZoneInfos.Find(x => x.zoneType == ZoneType.Joker).activeZoneCount;
 
@@ -233,25 +233,41 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
         foreach (var prefabData in saveData.spawnerSaveData.prefabsData)
         {
-            // PLAYER
-            if (prefabData.prefabID == playerPrefab.ID)
+            GameObject go = GetPrefabGameObject(currentLevel, prefabData.prefabID);
+            if (go != null)
             {
-                gameObjectPositions.Add(new GameObjectPosition(playerPrefab.gameObject, prefabData.prefabPosition));
-            }
-            // OBSTACLE
-            else if (prefabData.prefabID == obstaclePrefab.ID)
-            {
-                gameObjectPositions.Add(new GameObjectPosition(obstaclePrefab.gameObject, prefabData.prefabPosition));
-            }
-            // ENEMY
-            else
-            {
-                GameObject go = currentLevel.enemyData.enemyInfos.Find(x => x.enemyPrefab.ID == prefabData.prefabID).enemyPrefab.gameObject;
                 gameObjectPositions.Add(new GameObjectPosition(go, prefabData.prefabPosition));
             }
         }
 
         return gameObjectPositions;
+    }
+
+
+    private GameObject GetPrefabGameObject(LevelData currentLevel, string prefabID)
+    {
+        // Handle PLAYER
+        if (prefabID == playerPrefab.ID)
+        {
+            return playerPrefab.gameObject;
+        }
+
+        // Handle OBSTACLE
+        var obstaclePrefab = obstaclePrefabs.Find(x => x.ID == prefabID);
+        if (obstaclePrefab != null)
+        {
+            return obstaclePrefab.gameObject;
+        }
+
+        // Handle ENEMY
+        var enemyPrefab = currentLevel.enemyData.enemyInfos.Find(x => x.enemyPrefab.ID == prefabID);
+        if (enemyPrefab != null)
+        {
+            return enemyPrefab.enemyPrefab.gameObject;
+        }
+
+        // Return null if no matching prefab was found
+        return null;
     }
 
 
