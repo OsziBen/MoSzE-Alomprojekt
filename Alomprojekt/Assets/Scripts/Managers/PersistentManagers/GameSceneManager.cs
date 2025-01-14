@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static GameStateManager;
 
 public class GameSceneManager : BasePersistentManager<GameSceneManager>
 {
@@ -88,18 +90,9 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
     {
         if (saveLoadManager != null)
         {
-            saveLoadManager.OnSaveRequested -= Save;            
+            saveLoadManager.OnSaveRequested -= Save;
         }
     }
-
-    /*
-    public bool IsCurrentSceneLevel()
-    {
-        bool b = levelScenes.Values.Any(x => x.Contains(SceneManager.GetActiveScene().name));
-        Debug.Log("LEVEL CONTAINMENT: " + b);
-        return true;
-    }
-    */
 
 
     /// <summary>
@@ -278,7 +271,7 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
             Debug.Log($"Betöltendő scene: {randomScene}");
 
             // Aszinkron scene betöltés (jelenleg tesztelési célból fixált "LevelTestScene" betöltése)
-            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(randomScene);
+            UnityEngine.AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(randomScene);
 
             // TEMP! - A teszteléshez ideiglenesen a "LevelTestScene" betöltése
             //AsyncOperation asyncOperation = SceneManager.LoadSceneAsync("Level1_Layout1");
@@ -320,7 +313,7 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
             Debug.Log($"Betöltendő utility scene: {cutsceneName}");
 
             // Aszinkron módon betöltjük a jelenetet
-            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(cutsceneName);
+            UnityEngine.AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(cutsceneName);
 
             // Várakozunk, amíg a betöltés be nem fejeződik
             while (!asyncOperation.isDone)
@@ -454,7 +447,7 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
             Debug.Log($"Betöltendő utility scene: {sceneName}");
 
             // Aszinkron módon betöltjük a scene-t
-            AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneName);
+            UnityEngine.AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(sceneName);
 
             // Várunk, amíg a scene teljesen betöltődik
             while (!asyncOperation.isDone)
@@ -471,6 +464,66 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
             Debug.LogError($"Nincs ilyen utility scene: {sceneKey}");
             return false; // Ha nem található a scene, nem sikerült betölteni
         }
+    }
+
+    public async Task<bool> LoadCutsceneByLevelNameAsync(string levelName)
+    {
+        bool asyncOperation;
+
+        try
+        {
+            int levelNum = ExtractLevelNumber(levelName);
+
+            if (levelNum == -1) // Boss Level
+            {
+                asyncOperation = await LoadAnimatedCutsceneAsync("LevelTransition34");
+            }
+            else if (levelNum == 1) // Első pálya
+            {
+                asyncOperation = await LoadAnimatedCutsceneAsync("NewGame");
+            }
+            else
+            {
+                string cutsceneRefName = "LevelTransition" + (levelNum - 1).ToString() + levelNum.ToString();
+                asyncOperation = await LoadAnimatedCutsceneAsync(cutsceneRefName);
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error during loading cutscene by level name! {ex.Message}");
+            return false;
+        }
+    }
+
+
+    public async Task<bool> LoadLevelSceneByNameAsync(string levelName)
+    {
+        try
+        {
+            if (levelName == GameLevel.BossBattle.ToString())
+            {
+                bool asyncOp = await LoadUtilitySceneAsync("BossFight");
+            }
+            else
+            {
+                UnityEngine.AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(levelName);
+                // Várunk, amíg a scene teljesen betöltődik
+                while (!asyncOperation.isDone)
+                {
+                    await Task.Yield(); // Aszinkron várakozás, hogy ne blokkoljuk a fő szálat
+                }
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error during loading saved scene data! {ex.Message}");
+            return false;
+        }
+
     }
 
 
