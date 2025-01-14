@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c2e07afe7c52554b808e6922200a018, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnRadius: 1
+  spawnRadius: 5
   numberOfSpawned: 0
-  obstacle: {fileID: 0}
+  obstacles: []

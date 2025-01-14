@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3744bae2443377947913bc3b8bb424e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnRadius: 3
-  numberOfSpawned: 0
   enemy: {fileID: 0}
+  spawnRadius: 4
+  numberOfSpawned: 0

@@ -2,20 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObstacleSpawner : Assets.Scripts.SpawnerBase
+public class ObstacleSpawner : MonoBehaviour
 {
-    public ObstacleController obstacle; // a spawnolandó objektum megadása
+    public List<ObstacleController> obstacles; // a spawnolandó objektum megadása
 
     /// <summary>
     /// A SpawnerBase osztály Place() függvényének kiegészítése
     /// a spawnerhez specifikus gameobject instanciálásával.
     /// </summary>
-    public override void Place()
+    public void Place()
     {
-        base.Place();
-
-        // Instantiate the enemy at the calculated position
-        Instantiate(obstacle, spawnPosition, Quaternion.identity);
+        bool isHeads = UnityEngine.Random.Range(0, 2) == 0; // Random bool generálás.
+        // Random bool alapján a 2 obstacle típus közül az egyiket lehelyezzük.
+        if(isHeads)
+        {
+            Instantiate(obstacles[0], transform.position, Quaternion.identity);
+        } else
+        {
+            Instantiate(obstacles[1], transform.position, Quaternion.identity);
+        }
 
         Destroy(gameObject);
     }
@@ -27,6 +32,6 @@ public class ObstacleSpawner : Assets.Scripts.SpawnerBase
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.blue;
-        Gizmos.DrawSphere(transform.position, spawnRadius);
+        Gizmos.DrawSphere(transform.position, 5);
     }
 }
