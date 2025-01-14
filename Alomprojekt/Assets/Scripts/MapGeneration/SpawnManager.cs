@@ -35,7 +35,7 @@ public class SpawnManager : MonoBehaviour
         {
             CollectSpawners(); // Begyűjtjük a pálya spawnereit.
 
-            SpawnEntities(spawnManagerData.EnemySpawnData, spawnManagerData.PlayerPrefab, spawnManagerData.ObstaclePrefab, spawnManagerData.ActiveObstacleSpawners, 0); // A megadott paraméterek alapján végrehajtjuk a spawnokat.
+       //     SpawnEntities(spawnManagerData.EnemySpawnData, spawnManagerData.PlayerPrefab, spawnManagerData.ObstaclePrefab, spawnManagerData.ActiveObstacleSpawners, 0); // A megadott paraméterek alapján végrehajtjuk a spawnokat.
             Cleanup(); // Kitöröljük a spawnereket, mivel már nincs szükség rájuk.
 
             OnLevelGenerationFinished?.Invoke(); // Event a sikeres generálásról

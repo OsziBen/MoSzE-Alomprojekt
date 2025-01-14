@@ -19,6 +19,7 @@ public class CharacterSetupManager : BaseTransientManager<CharacterSetupManager>
 
     public event Action<int> OnSetEnemyAttributes;
     public event Action<int, List<StatValuePair>, float> OnSetPlayerAttributes;
+    public event Action<int> OnSetObstacleAttributes;
 
 
     public async Task<bool> SetCharactersAsync(int level)
@@ -31,6 +32,7 @@ public class CharacterSetupManager : BaseTransientManager<CharacterSetupManager>
         {
             SetEnemyCharacters(level);
             SetPlayerCharacter(level);
+            SetObstacles(level);
             //taskCompletionSource.SetResult(true);
             return true;
         }
@@ -90,5 +92,16 @@ public class CharacterSetupManager : BaseTransientManager<CharacterSetupManager>
 
         OnSetPlayerAttributes?.Invoke(level, statValues, gameStateManager.PlayerHealtPercenatge);
         //player.SetPlayerAttributes(level, statValues, gameStateManager.PlayerHealtPercenatge);
+    }
+
+    void SetObstacles(int level)
+    {
+        List<ObstacleController> obstacles = new(FindObjectsOfType<ObstacleController>());
+        if (obstacles.Count == 0)
+        {
+            Debug.LogWarning("No obstacles found in the scene.");
+        }
+
+        OnSetObstacleAttributes?.Invoke(level);
     }
 }

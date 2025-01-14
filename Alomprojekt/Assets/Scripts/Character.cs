@@ -83,22 +83,6 @@ namespace Assets.Scripts
         /// </summary>
         protected Rigidbody2D rigidbody2d;  // Karakterhez kapcsolódó Rigidbody2D komponens
 
-        private Sprite currentSprite;
-        // -> SPRITE RENDERER!!!
-
-        [System.Serializable]
-        public class LevelSpritePair
-        {
-            [Range(1, 4)]
-            public int level;
-            public Sprite sprite;
-        }
-
-        [Header("Sprites")]
-        [SerializeField]
-        private List<LevelSpritePair> LevelSpritePairs;
-
-        private Dictionary<int, Sprite> levelSpriteDictionary;
 
         /// <summary>
         /// Getterek és Setterek
@@ -191,65 +175,17 @@ namespace Assets.Scripts
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="spriteList"></param>
-        /// <returns></returns>
-        private Dictionary<int, Sprite> SpriteListToDictionary(List<LevelSpritePair> spriteList)
-        {
-            Dictionary<int, Sprite> levelSpriteDictionary = new Dictionary<int, Sprite>();
-            foreach (var pair in spriteList)
-            {
-                if (!levelSpriteDictionary.ContainsKey(pair.level))
-                {
-                    levelSpriteDictionary.Add(pair.level, pair.sprite);
-                }
-            }
-
-            return levelSpriteDictionary;
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
         private void OnValidate()
         {
-            ValidateUniqueLevels();
             ValidateUniqueID();
         }
 
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private void ValidateUniqueLevels()
-        {
-            HashSet<int> levelSet = new HashSet<int>();
-            foreach (var pair in LevelSpritePairs)
-            {
-                if (!levelSet.Add(pair.level))
-                {
-                    Debug.LogError($"Duplicate level {pair.level} found in LevelSpritePairs.");
-                }
-            }
-        }
 
         private void ValidateUniqueID()
         {
             if (string.IsNullOrEmpty(prefabID))
             {
                 Debug.LogError("Prefab ID is empty! Please generate or assign a unique ID.", this);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="level"></param>
-        protected void SetCurrentSpriteByLevel(int level)
-        {
-            if (levelSpriteDictionary.ContainsKey(level))
-            {
-                currentSprite = levelSpriteDictionary[level];
             }
         }
 
