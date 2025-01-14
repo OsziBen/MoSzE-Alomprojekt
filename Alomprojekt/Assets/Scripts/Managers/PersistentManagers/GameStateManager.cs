@@ -138,6 +138,25 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         saveData.playerSaveData.currentHealtPercentage = PlayerHealtPercenatge;
     }
 
+    async Task<bool> SetLoadDataAsync(SaveData loadData)
+    {
+        try
+        {
+            await SetCurrentLevel(loadData.gameData.gameLevel);
+            PlayerPoints = loadData.gameData.points;
+            PlayerHealtPercenatge = loadData.playerSaveData.currentHealtPercentage;
+            await playerUpgradeManager.SetLoadDataAsync(loadData);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error during load setup in GameStateManager! {ex.Message}");
+            return false;
+        }
+
+    }
+
     private void OnDestroy()
     {
         if (saveLoadManager != null)
@@ -183,13 +202,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
             }
             else
             {
-                Debug.Log("GAME OVER!!!");
-                // change gameState
-                bool defeatSceneLoaded = await gameSceneManager.LoadUtilitySceneAsync("Defeat");
-                if (!defeatSceneLoaded)
-                {
-                    Debug.LogError("Level load failed!");
-                }
+                await SetState(GameState.GameOver);
             }
 
         }
@@ -239,6 +252,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                 case GameState.MainMenu:
                     asyncOperation = await gameSceneManager.LoadUtilitySceneAsync("MainMenu");
 
+                    asyncOperation = await playerUpgradeManager.ResetPlayerUpgradesListsAsync();
                     // UIManager gombokat beállító függvény hívása!
                     break;
 
@@ -247,7 +261,9 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     this.PlayerHealtPercenatge = 1f;
                     asyncOperation = await ResetCurrentLevel();
 
-                    asyncOperation = await playerUpgradeManager.ResetPlayerUpgradesListsAsync();
+                    // mentés törlése új játék esetén
+                    //asyncOperation = await saveLoadManager.DeleteSaveFile();
+
                     Time.timeScale = 1;
                     // load newGame cutscene :: sceneManager
                     asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("NewGame");
@@ -262,7 +278,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
 
                     break;
 
-                case GameState.LoadingNextLevel:    
+                case GameState.LoadingNextLevel:
                     Time.timeScale = 1;
 
                     asyncOperation = await IncrementCurrentLevel();
@@ -291,8 +307,25 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     break;
 
                 case GameState.LoadingSavedGame:
-                    Debug.Log("LOAD Game");
-                    // LoadManager -> LevelManager ?
+                    Time.timeScale = 1;
+
+                    SaveData loadData = await saveLoadManager.LoadGameAsync();
+                    if (loadData != null)
+                    {
+                        // GameStateManager adatok beállítása
+                        asyncOperation = await SetLoadDataAsync(loadData);
+                        // LevelManager hívása loadData-val
+                        asyncOperation = await levelmanager.LoadSavedLevelAsync(loadData);
+                        if (asyncOperation)
+                        {
+                            // After level load is complete, change state to "Playing"
+                            DeferStateChange(() => SetState(GameState.Playing));
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogError("LOAD DATA IS NULL!");
+                    }
 
                     break;
 
@@ -309,16 +342,25 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     break;
 
                 case GameState.GameOver:
+                    asyncOperation = await saveLoadManager.DeleteSaveFile();
+
                     // előtte/utána valami kattintható felület?
                     // csak akkor látszódjon a kisfilm, ha boss szinten vagyunk a halálkor!
-                    asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("Defeat");
-                    asyncOperation = await gameSceneManager.LoadUtilitySceneAsync("MainMenu");
+                    if (asyncOperation)
+                    {
+                        // After level load is complete, change state to "Playing"
+                        DeferStateChange(() => SetState(GameState.MainMenu));
+                    }
                     break;
 
                 case GameState.Victory:
                     // előtte/utána valami kattintható felület?
                     asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("Victory");
-                    asyncOperation = await gameSceneManager.LoadUtilitySceneAsync("MainMenu");
+                    if (asyncOperation)
+                    {
+                        // After level load is complete, change state to "Playing"
+                        DeferStateChange(() => SetState(GameState.Playing));
+                    }
                     break;
 
                 case GameState.PlayerUpgrade:
@@ -360,7 +402,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
 
     public int GameLevelToInt(GameLevel gameLevel)
     {
-        return (int)gameLevel+1;
+        return (int)gameLevel + 1;
     }
 
     public GameLevel IntToGameLevel(int levelValue)
@@ -407,7 +449,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
             Debug.LogError($"ERROR DURING INCREMIENTING LEVEL! {ex.Message}");
             return false;
         }
-        
+
     }
 
 
