@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.TextCore.Text;
 using Assets.Scripts.EnemyBehaviours;
 using static Cinemachine.DocumentationSortingAttribute;
+using System.Linq;
 
 public class EnemyController : Assets.Scripts.Character
 {
@@ -33,6 +34,12 @@ public class EnemyController : Assets.Scripts.Character
     private float pointValueScaleFactor;
 
     // TODO: IsMarkingOn implementálása
+
+
+    [Header("Sprites and Colliders")]
+    [SerializeField]
+    private List<SpriteLevelData> spriteLevelDataList;
+
 
 
     /// <summary>
@@ -90,7 +97,7 @@ public class EnemyController : Assets.Scripts.Character
 
     public void SetEnemyAttributesByLevel(int level)
     {
-        //SetCurrentSpriteByLevel(level);
+        SetCurrentEnemySpriteByLevel(level);
         SetCurrentEnemyValuesByLevel(level);
         characterSetupManager.OnSetEnemyAttributes -= SetEnemyAttributesByLevel;
     }
@@ -301,5 +308,43 @@ public class EnemyController : Assets.Scripts.Character
         }
     }
 
+
+    private void ValidateUniqueSpriteLevels()
+    {
+        HashSet<int> levelSet = new HashSet<int>();
+        foreach (var data in spriteLevelDataList)
+        {
+            if (levelSet.Contains(data.level))
+            {
+                Debug.LogError($"Duplicate level {data.level} found in LevelSpriteDataList.");
+            }
+            else
+            {
+                levelSet.Add(data.level);
+            }
+        }
+    }
+
+    private void OnValidate()
+    {
+        ValidateUniqueSpriteLevels();
+    }
+
+    void SetCurrentEnemySpriteByLevel(int level)
+    {
+        var currentSpriteLevelData = spriteLevelDataList.FirstOrDefault(x => x.level == level);
+
+        if (currentSpriteLevelData != null)
+        {
+            // If item is found, update the sprite and collider
+            this.GetComponent<SpriteRenderer>().sprite = currentSpriteLevelData.sprite;
+            currentSpriteLevelData.collider.enabled = true;
+        }
+        else
+        {
+            // Handle case where no matching level is found
+            Debug.LogWarning($"No SpriteLevelData found for level {level}. Make sure the level exists in the data list.");
+        }
+    }
 
 }
