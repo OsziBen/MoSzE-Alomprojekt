@@ -64,12 +64,25 @@ public class PrefabSaveData
 [System.Serializable]
 public class PlayerSaveData
 {
-    public List<string> upgradeIDs;
+    public List<PlayerUpgradeSaveData> upgrades;
     public float currentHealtPercentage;
 
     public PlayerSaveData()
     {
-        upgradeIDs = new List<string>();
+        upgrades = new List<PlayerUpgradeSaveData>();
         currentHealtPercentage = 100f;
+    }
+}
+
+[System.Serializable]
+public class PlayerUpgradeSaveData
+{
+    public string upgradeID;
+    public int upgradeLevel;
+
+    public PlayerUpgradeSaveData()
+    {
+        upgradeID = string.Empty;
+        upgradeLevel = 0;
     }
 }
