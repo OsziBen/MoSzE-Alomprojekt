@@ -18,11 +18,29 @@ public class CharacterSetupManager : BaseTransientManager<CharacterSetupManager>
 
 
     public event Action<int> OnSetEnemyAttributes;
-    public event Action<int, List<StatValuePair>, float> OnSetPlayerAttributes;
+    public event Action<List<StatValuePair>, float> OnSetPlayerAttributes;
     public event Action<int> OnSetObstacleAttributes;
 
 
-    public async Task<bool> SetCharactersAsync(int level)
+    public async Task<bool> SetBossLevelCharactersAsync()
+    {
+        await Task.Yield();
+
+        try
+        {
+            SetPlayerCharacter();
+            // BOSS?
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"{ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<bool> SetNormalLevelCharactersAsync(int level)
     {
         //var taskCompletionSource = new TaskCompletionSource<bool>();
 
@@ -31,7 +49,7 @@ public class CharacterSetupManager : BaseTransientManager<CharacterSetupManager>
         try
         {
             SetEnemyCharacters(level);
-            SetPlayerCharacter(level);
+            SetPlayerCharacter();
             SetObstacles(level);
             //taskCompletionSource.SetResult(true);
             return true;
@@ -59,7 +77,7 @@ public class CharacterSetupManager : BaseTransientManager<CharacterSetupManager>
     }
 
 
-    void SetPlayerCharacter(int level)
+    void SetPlayerCharacter()
     {
         player = FindObjectOfType<PlayerController>();
         if (player == null)
@@ -90,7 +108,7 @@ public class CharacterSetupManager : BaseTransientManager<CharacterSetupManager>
             .SelectMany(upgrade => upgrade.GetCurrentValues())
             .ToList();
 
-        OnSetPlayerAttributes?.Invoke(level, statValues, gameStateManager.PlayerHealtPercenatge);
+        OnSetPlayerAttributes?.Invoke(statValues, gameStateManager.PlayerHealtPercenatge);
         //player.SetPlayerAttributes(level, statValues, gameStateManager.PlayerHealtPercenatge);
     }
 
