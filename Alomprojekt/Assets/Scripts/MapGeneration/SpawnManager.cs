@@ -139,7 +139,7 @@ public class SpawnManager : BaseTransientManager<SpawnManager>
     /// A spawnerek aktiválása.
     /// </summary>
     /// <param name="enemySpawnPlans">A megadott dictionary alapján spawnoljuk az ellenségeket.</param>
-    private void SpawnEntities(List<EnemyData.EnemySpawnInfo> enemyGroups, PlayerController playerPrefab, List<ObstacleController> obstaclePrefabs, int activeObstacleSpawners, int activeJokerSpawners)
+    private void SpawnEntities(List<EnemyData.EnemySpawnInfo> enemyGroups, PlayerController playerPrefab, List<StaticObstacleController> obstaclePrefabs, int activeObstacleSpawners, int activeJokerSpawners)
     {
         // Végigiterálunk az enemyGroup listán, ez az ellenség spawnereket kezeli.
         foreach (EnemyData.EnemySpawnInfo enemyGroup in enemyGroups)
