@@ -114,7 +114,7 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -253,6 +253,7 @@ GameObject:
   - component: {fileID: 2427056379479227870}
   - component: {fileID: 7176024872123759401}
   - component: {fileID: 1054022019225314806}
+  - component: {fileID: 8449291040046149132}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -270,8 +271,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 132.05011, y: 106.34, z: -11.579486}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5111347756209772618}
   - {fileID: 8673394772104477732}
@@ -359,12 +360,29 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.0039031506, y: 0}
   serializedVersion: 2
   m_Radius: 1.45
+--- !u!114 &8449291040046149132
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6998818902686470411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cbe6e20b89657045800e6ea84bad354, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabID: 1991b353-d295-42b7-8a25-dd3007d78a9d
+  _maxHealth: 0
+  _movementSpeed: 0
+  _damage: 2
+  _attackCooldown: 0
 --- !u!1 &7247023397678159504
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,7 +497,7 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -720,7 +738,7 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

@@ -102,9 +102,9 @@ public class PlayerController : Assets.Scripts.Character
 
 
 
-    public void SetPlayerAttributes(int level, List<StatValuePair> statValues, float currentHealthPercentage)
+    public void SetPlayerAttributes(List<StatValuePair> statValues, float currentHealthPercentage)
     {
-        //SetCurrentSpriteByLevel(level);
+
         if (statValues.Count == 0)
         {
             SetDefaultPlayerAttributes(currentHealthPercentage);
