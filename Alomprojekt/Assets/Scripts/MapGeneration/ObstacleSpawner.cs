@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObstacleSpawner : MonoBehaviour
 {
-    public List<ObstacleController> obstacles; // a spawnolandó objektum megadása
+    public List<StaticObstacleController> obstacles; // a spawnolandó objektum megadása
 
     /// <summary>
     /// A SpawnerBase osztály Place() függvényének kiegészítése

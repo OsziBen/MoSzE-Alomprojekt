@@ -30,7 +30,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
         }
 
         public PlayerController PlayerPrefab { get; set; }
-        public List<ObstacleController> ObstaclePrefabs { get; set; }
+        public List<StaticObstacleController> ObstaclePrefabs { get; set; }
         public int ActiveObstacleSpawners { get; set; }
         public int ActiveJokerSpawners { get; set; }
     }
@@ -77,17 +77,21 @@ public class LevelManager : BasePersistentManager<LevelManager>
     PlayerController player;
     BossController boss;
 
-    [Header("Prefabs")]
+    [Header("Character Prefabs")]
     [SerializeField]
     private PlayerController playerPrefab;
     [SerializeField]
-    private List<ObstacleController> obstaclePrefabs;
+    private BossController bossPrefab;
+    [Header("Obstacle Prefabs")]
+    [SerializeField]
+    private List<StaticObstacleController> staticObstaclePrefabs;
+    [SerializeField]
+    private DynamicObstacleController dynamicObstaclePrefab;
+    [Header("Component Prefabs")]
     [SerializeField]
     private ObjectPoolForProjectiles objectPoolPrefab;
     [SerializeField]
     private CharacterSetupManager characterSetupManagerPrefab;
-    [SerializeField]
-    private BossController bossPrefab;
 
 
     /// <summary>
@@ -225,7 +229,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
         spawnManagerData.EnemySpawnData = GetEnemySpawnDataFromCurrentLevelData(currentLevel);
         spawnManagerData.PlayerPrefab = playerPrefab;
-        spawnManagerData.ObstaclePrefabs = obstaclePrefabs;
+        spawnManagerData.ObstaclePrefabs = staticObstaclePrefabs;
         spawnManagerData.ActiveObstacleSpawners = currentLevel.zoneData.spawnZoneInfos.Find(x => x.zoneType == ZoneType.Obstacle).activeZoneCount;
         spawnManagerData.ActiveJokerSpawners = currentLevel.zoneData.spawnZoneInfos.Find(x => x.zoneType == ZoneType.Joker).activeZoneCount;
 
@@ -267,7 +271,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
         }
 
         // Handle OBSTACLE
-        var obstaclePrefab = obstaclePrefabs.Find(x => x.ID == prefabID);
+        var obstaclePrefab = staticObstaclePrefabs.Find(x => x.ID == prefabID);
         if (obstaclePrefab != null)
         {
             return obstaclePrefab.gameObject;

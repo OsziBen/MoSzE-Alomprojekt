@@ -15,7 +15,7 @@ public class JokerSpawner : MonoBehaviour
     /// </summary>
     /// <param name="enemy"></param>
     /// <param name="obstacles"></param>
-    public void SelectSpawner(EnemyData.EnemySpawnInfo enemy, List<ObstacleController> obstacles)
+    public void SelectSpawner(EnemyData.EnemySpawnInfo enemy, List<StaticObstacleController> obstacles)
     {
         bool isHeads = UnityEngine.Random.Range(0, 2) == 0; // Random bool generálás.
         // Random bool alapján eldöntjük, hogy enemy-t, vagy obstacle-t helyezünk le.
