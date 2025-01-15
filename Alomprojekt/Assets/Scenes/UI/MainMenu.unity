@@ -1960,12 +1960,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 2495013396380952890, guid: 50465959c40b1d64da8af35764e3d84e, type: 3}
-  obstaclePrefabs:
-  - {fileID: 2796898700512823298, guid: 46c93a5ed1b7b354bae83da7a1534fb9, type: 3}
-  - {fileID: -3144869794669972271, guid: 54cddfb7de887cd45a1f8bb28a03fd5b, type: 3}
+  bossPrefab: {fileID: 8449291040046149132, guid: 32e8debbf569eba4b8255d9ee4936c61, type: 3}
+  staticObstaclePrefabs:
+  - {fileID: 6265013556940442242, guid: 46c93a5ed1b7b354bae83da7a1534fb9, type: 3}
+  - {fileID: 7371983264788650703, guid: 54cddfb7de887cd45a1f8bb28a03fd5b, type: 3}
+  dynamicObstaclePrefab: {fileID: 7572789713664982452, guid: c662362a80057994f9f22596f67d65b7, type: 3}
   objectPoolPrefab: {fileID: 5393207635186717751, guid: 6cda3a1755a062a4f9eb6af8f747c49e, type: 3}
   characterSetupManagerPrefab: {fileID: 4620309673005628627, guid: 6618e2a205a634b4081a52865669b237, type: 3}
-  bossPrefab: {fileID: 8449291040046149132, guid: 32e8debbf569eba4b8255d9ee4936c61, type: 3}
 --- !u!4 &1709834739
 Transform:
   m_ObjectHideFlags: 0
