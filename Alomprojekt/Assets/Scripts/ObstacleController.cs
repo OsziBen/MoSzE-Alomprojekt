@@ -4,7 +4,7 @@ using System.Linq;
 using System.Xml;
 using UnityEngine;
 
-public class ObstacleController : MonoBehaviour
+public abstract class ObstacleController : MonoBehaviour
 {
     [Header("Prefab ID")]
     [SerializeField]
@@ -20,18 +20,14 @@ public class ObstacleController : MonoBehaviour
     [SerializeField]
     private List<SpriteLevelData> spriteLevelDataList;
 
-    CharacterSetupManager characterSetupManager;
+
 
     public string ID
     {
         get { return prefabID; }
     }
 
-    private void Awake()
-    {
-        characterSetupManager = FindObjectOfType<CharacterSetupManager>();
-        characterSetupManager.OnSetObstacleAttributes += SetObstacleAttributesByLevel;
-    }
+    protected abstract void Awake();
 
     private void OnValidate()
     {
@@ -63,13 +59,9 @@ public class ObstacleController : MonoBehaviour
         }
     }
 
-    void SetObstacleAttributesByLevel(int level)
-    {
-        SetCurrentObstacleSpriteByLevel(level);
-        characterSetupManager.OnSetObstacleAttributes -= SetObstacleAttributesByLevel;
-    }
+    protected abstract void SetObstacleAttributesByLevel(int level);
 
-    void SetCurrentObstacleSpriteByLevel(int level)
+    protected void SetCurrentObstacleSpriteByLevel(int level)
     {
         foreach (var item in spriteLevelDataList)
         {
