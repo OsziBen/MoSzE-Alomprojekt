@@ -133,7 +133,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
 
     void Save(SaveData saveData)
     {
-        saveData.gameData.gameLevel = _currentLevel;
+        saveData.gameData.gameLevel = _currentLevel.ToString();
         saveData.gameData.points = PlayerPoints;
         saveData.playerSaveData.currentHealtPercentage = PlayerHealtPercenatge;
     }
@@ -142,7 +142,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     {
         try
         {
-            await SetCurrentLevel(loadData.gameData.gameLevel);
+            await SetCurrentLevel(LevelNameToGameLevel(loadData.gameData.gameLevel));
             PlayerPoints = loadData.gameData.points;
             PlayerHealtPercenatge = loadData.playerSaveData.currentHealtPercentage;
             await playerUpgradeManager.SetLoadDataAsync(loadData);
@@ -155,6 +155,18 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
             return false;
         }
 
+    }
+
+    public GameLevel LevelNameToGameLevel(string levelName)
+    {
+        if (Enum.TryParse(levelName, out GameLevel level))
+        {
+            return level;
+        }
+        else
+        {
+            throw new ArgumentException($"Invalid level value: {levelName}");
+        }
     }
 
     private void OnDestroy()
@@ -286,7 +298,12 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     if (CurrentLevel == GameLevel.BossBattle)
                     {
                         // BOSS FIGHT!
-                        asyncOperation = await gameSceneManager.LoadUtilitySceneAsync("BossFight");
+                        asyncOperation = await levelmanager.LoadBossLevelAsync();
+                        if (asyncOperation)
+                        {
+                            // After level load is complete, change state to "Playing"
+                            DeferStateChange(() => SetState(GameState.Playing));
+                        }
 
                     }
                     else
