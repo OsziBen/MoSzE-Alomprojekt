@@ -22,13 +22,13 @@ public class SaveData
 [System.Serializable]
 public class GameSaveData
 {
-    public GameLevel gameLevel;
+    public string gameLevel;
     public string levelLayoutName;
     public int points;
 
     public GameSaveData()
     {
-        gameLevel = 0;
+        gameLevel = string.Empty;
         levelLayoutName = string.Empty;
         points = 0;
     }
