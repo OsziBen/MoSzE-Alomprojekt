@@ -118,7 +118,7 @@ MonoBehaviour:
   maxDMGValue: 10
   minAttackCooldownValue: 0.5
   maxAttackCooldownValue: 5
-  basePointValue: 0
+  basePointValue: 10
   maxHealthScaleFactor: 1.2
   baseMovementSpeedScaleFactor: 1.2
   baseDMGScaleFactor: 1.2
