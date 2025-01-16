@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8673394772104477732}
   - component: {fileID: 7235934532014469593}
   - component: {fileID: 1033054082042203524}
+  - component: {fileID: 8048482267699872293}
   m_Layer: 0
   m_Name: RightArm
   m_TagString: Untagged
@@ -242,6 +243,18 @@ PolygonCollider2D:
       - {x: -0.64, y: 1.5999999}
       - {x: -0.65999997, y: 1.5799999}
   m_UseDelaunayMesh: 0
+--- !u!114 &8048482267699872293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3312293087997891758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35efa2121a698d1499a22c4a8ac50c04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6998818902686470411
 GameObject:
   m_ObjectHideFlags: 0
@@ -253,7 +266,7 @@ GameObject:
   - component: {fileID: 2427056379479227870}
   - component: {fileID: 7176024872123759401}
   - component: {fileID: 1054022019225314806}
-  - component: {fileID: 8449291040046149132}
+  - component: {fileID: 2739853896292724597}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -366,7 +379,7 @@ CircleCollider2D:
   m_Offset: {x: -0.0039031506, y: 0}
   serializedVersion: 2
   m_Radius: 1.45
---- !u!114 &8449291040046149132
+--- !u!114 &2739853896292724597
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -375,14 +388,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 6998818902686470411}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cbe6e20b89657045800e6ea84bad354, type: 3}
+  m_Script: {fileID: 11500000, guid: 3336a42068874ed4d8f06d7bb8444242, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   prefabID: 1991b353-d295-42b7-8a25-dd3007d78a9d
-  _maxHealth: 0
+  _maxHealth: 20
   _movementSpeed: 0
   _damage: 2
   _attackCooldown: 0
+  head: {fileID: 8477411664171374919}
+  leftArm: {fileID: 2952663060691800939}
+  rightArm: {fileID: 8048482267699872293}
 --- !u!1 &7247023397678159504
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,6 +410,7 @@ GameObject:
   - component: {fileID: 9137227510641647346}
   - component: {fileID: 8291441848271093514}
   - component: {fileID: 5439571734119789951}
+  - component: {fileID: 2952663060691800939}
   m_Layer: 0
   m_Name: LeftArm
   m_TagString: Untagged
@@ -624,6 +641,18 @@ PolygonCollider2D:
       - {x: 0.63, y: 1.5999999}
       - {x: 0.61, y: 1.5799999}
   m_UseDelaunayMesh: 0
+--- !u!114 &2952663060691800939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7247023397678159504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d148c2c1610b8e49a7f3d8238f39616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8718554157853687381
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,6 +664,7 @@ GameObject:
   - component: {fileID: 5111347756209772618}
   - component: {fileID: 620184033565240391}
   - component: {fileID: 534572060803758875}
+  - component: {fileID: 8477411664171374919}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -907,3 +937,15 @@ PolygonCollider2D:
       - {x: -2.09, y: -0.39999998}
       - {x: -2.1499999, y: -0.38}
   m_UseDelaunayMesh: 0
+--- !u!114 &8477411664171374919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8718554157853687381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38108ef1f7020ae4784f636f37a60bab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

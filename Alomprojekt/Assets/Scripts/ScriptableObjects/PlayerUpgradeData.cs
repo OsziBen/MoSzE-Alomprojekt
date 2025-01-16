@@ -153,7 +153,7 @@ public class PlayerUpgradeData : ScriptableObject
 
                 // Módosító értékének kiszámítása a szinttõl függõen
                 float calculatedModifierValue = modifiers[i].baseValue * Mathf.Pow(modifiers[i].scaleFactor, currentUpgradeLevel - minUpgradeLevel);
-                inputDescription = inputDescription.Replace($@"\m[{i}].value", calculatedModifierValue.ToString());  // Módosító érték helyõrzõ cseréje
+                inputDescription = inputDescription.Replace($@"\m[{i}].value", calculatedModifierValue.ToString("F2"));  // Módosító érték helyõrzõ cseréje
             }
         }
 

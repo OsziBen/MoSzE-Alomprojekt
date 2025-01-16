@@ -109,8 +109,9 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
 
         // Persistent Manager esemény-feliratkozások
         levelmanager.OnLevelCompleted += IsActualLevelCompleted;
-        saveLoadManager.OnSaveRequested += Save;
+        levelmanager.OnGameFinished += IsGameFinished;
         levelmanager.OnPointsAdded += AddPoints;
+        saveLoadManager.OnSaveRequested += Save;
         uiManager.OnStartNewGame += HandleStateChanged;
         uiManager.OnLoadGame += HandleStateChanged;
         uiManager.OnExitGame += HandleStateChanged;
@@ -180,6 +181,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         {
             levelmanager.OnLevelCompleted -= IsActualLevelCompleted;
             levelmanager.OnPointsAdded -= AddPoints;
+            levelmanager.OnGameFinished -= IsGameFinished;
         }
 
         if (uiManager != null)
@@ -198,6 +200,18 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     {
         this.PlayerPoints += points;
         OnPointsChanged?.Invoke(PlayerPoints);
+    }
+
+    async void IsGameFinished(bool isFinished)
+    {
+        if (isFinished)
+        {
+            await SetState(GameState.Victory);
+        }
+        else
+        {
+            await SetState(GameState.GameOver);
+        }
     }
 
 
@@ -363,20 +377,24 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
 
                     // előtte/utána valami kattintható felület?
                     // csak akkor látszódjon a kisfilm, ha boss szinten vagyunk a halálkor!
+                    if (CurrentLevel == GameLevel.BossBattle)
+                    {
+                        asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("Defeat");
+                    }
+
                     if (asyncOperation)
                     {
-                        // After level load is complete, change state to "Playing"
                         DeferStateChange(() => SetState(GameState.MainMenu));
                     }
                     break;
 
                 case GameState.Victory:
+                    asyncOperation = await saveLoadManager.DeleteSaveFile();
                     // előtte/utána valami kattintható felület?
                     asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("Victory");
                     if (asyncOperation)
                     {
-                        // After level load is complete, change state to "Playing"
-                        DeferStateChange(() => SetState(GameState.Playing));
+                        DeferStateChange(() => SetState(GameState.MainMenu));
                     }
                     break;
 

@@ -1,7 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using UnityEngine.Pool;
+using Assets.Scripts;
 
 public class BossController : MonoBehaviour
 {
@@ -29,6 +31,20 @@ public class BossController : MonoBehaviour
     [SerializeField]
     private float _attackCooldown;
 
+    [Header("Bodyparts")]
+    [SerializeField]
+    private BossBodypartController head;
+    [SerializeField]
+    private BossBodypartController leftArm;
+    [SerializeField]
+    private BossBodypartController rightArm;
+
+
+    /// <summary>
+    /// Komponensek
+    /// </summary>
+    ObjectPoolForProjectiles objectPool;
+    private List<Projectile> activeProjectiles = new List<Projectile>();
 
     /// <summary>
     /// Getterek és Setterek
@@ -80,17 +96,65 @@ public class BossController : MonoBehaviour
 
     private void Awake()
     {
+        CurrentHealth = MaxHealth;
+
         OnDeath += Die;
+        head.OnBodypartPlayerCollision += DealDamageToPlayer;
+        leftArm.OnBodypartPlayerCollision += DealDamageToPlayer;
+        rightArm.OnBodypartPlayerCollision += DealDamageToPlayer;
+
+        objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
+        objectPool.OnProjectileActivated += StartProjectileDetection;
+        objectPool.OnProjectileDeactivated += StopProjectileDetection;
+
+    }
+
+
+    void StartProjectileDetection(GameObject projectile)
+    {
+        Projectile proj = projectile.GetComponent<Projectile>();
+        // Avoid adding the same projectile twice
+        if (!activeProjectiles.Contains(proj))
+        {
+            proj.OnBossHit += HandleEnemyHit;
+            activeProjectiles.Add(proj);
+
+            Debug.Log($"Projectile detected: {proj}");
+        }
+    }
+
+
+    void StopProjectileDetection(GameObject projectile)
+    {
+        Projectile proj = projectile.GetComponent<Projectile>();
+        proj.OnBossHit -= HandleEnemyHit;
+
+        activeProjectiles.Remove(proj);
+        Debug.Log($"Projectile returned: {proj}");
+    }
+
+
+    void HandleEnemyHit(float damageAmount)
+    {
+        ChangeHealth(damageAmount);   //damageAmount!
+                            //OnBehaviourChange?.Invoke(this);
+
+
+    }
+
+    void DealDamageToPlayer()
+    {
+        OnPlayerCollision?.Invoke(-Damage);
     }
 
 
     void OnTriggerEnter2D(Collider2D trigger)
     {
-        //Debug.Log(player);
-        if (trigger.gameObject.TryGetComponent<PlayerController>(out var palyer))
+        if (trigger.gameObject.TryGetComponent<PlayerController>(out var player))
         {
+            Debug.Log(player);
             Debug.Log(Damage);
-            OnPlayerCollision?.Invoke(-Damage);
+            DealDamageToPlayer();
         }
     }
 
@@ -133,5 +197,11 @@ public class BossController : MonoBehaviour
     protected virtual void OnDestroy()
     {
         OnDeath -= Die;
+
+        if (objectPool != null)
+        {
+            objectPool.OnProjectileActivated -= StartProjectileDetection;
+            objectPool.OnProjectileDeactivated -= StopProjectileDetection;
+        }
     }
 }

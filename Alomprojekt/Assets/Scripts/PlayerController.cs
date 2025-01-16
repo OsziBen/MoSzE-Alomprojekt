@@ -34,7 +34,7 @@ public class PlayerController : Assets.Scripts.Character
 
     System.Random random = new System.Random();
 
-
+    BossController boss;
 
     /// <summary>
     /// Komponenesek
@@ -65,6 +65,7 @@ public class PlayerController : Assets.Scripts.Character
         characterSetupManager = FindObjectOfType<CharacterSetupManager>();
         spriteRenderer = GameObject.Find("Background").GetComponent<SpriteRenderer>();
         objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
+
         // Mozgási határok beállítása
         Vector2 spriteSize = spriteRenderer.bounds.size;
         Vector2 position = spriteRenderer.transform.position;
@@ -95,6 +96,13 @@ public class PlayerController : Assets.Scripts.Character
             enemy.OnPlayerCollision += ChangeHealth;
             enemy.OnEnemyDeath += StopListeningToEnemy;
         }
+
+        boss = FindObjectOfType<BossController>();
+        if (boss != null)
+        {
+            boss.OnPlayerCollision += ChangeHealth;
+        }
+        
 
         // Események hozzáadása
         launchAction.performed += Attack;
@@ -428,6 +436,8 @@ public class PlayerController : Assets.Scripts.Character
         MoveAction.Disable();
         launchAction.Disable();
         launchAction.performed -= Attack;
+
+        boss.OnPlayerCollision -= ChangeHealth;     // lehet máshol lesz...
 
         OnPlayerDeath?.Invoke();
         Destroy(gameObject);
