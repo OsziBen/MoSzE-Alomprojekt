@@ -99,7 +99,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
     /// </summary>
     public event Action<bool, float> OnLevelCompleted; // true: success; false: failure // player HP %: 0 or ]0;100]
     public event Action<int> OnPointsAdded;
-
+    public event Action<bool> OnGameFinished;
 
     /// <summary>
     /// 
@@ -681,8 +681,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
         boss.OnBossDeath -= BossKilled;
         player.OnPlayerDeath -= PlayerKilled;
         
-        float playerHealthPercentage = player.CurrentHealth / player.MaxHealth;
-        OnLevelCompleted?.Invoke(true, playerHealthPercentage);
+        OnGameFinished?.Invoke(true);
     }
 
 
@@ -693,12 +692,20 @@ public class LevelManager : BasePersistentManager<LevelManager>
     {
         player.OnPlayerDeath -= PlayerKilled;
 
-        foreach (var enemy in enemies)
+        if (enemies != null)        // ha vannak/maradtak enemy-k akkor normál pálya, amúgy Boss
         {
-            enemy.OnEnemyDeath -= EnemyKilled;
+            foreach (var enemy in enemies)
+            {
+                enemy.OnEnemyDeath -= EnemyKilled;
+            }
+        
+            OnLevelCompleted?.Invoke(false, 0f);
+        }
+        else
+        {
+            OnGameFinished?.Invoke(false);
         }
 
-        OnLevelCompleted?.Invoke(false, 0f);
     }
 
     void EnemyKilled(EnemyController enemy)
@@ -757,7 +764,6 @@ public class LevelManager : BasePersistentManager<LevelManager>
     }
 
 
-    // TODO!!!
     async Task<bool> LoadSavedBossLevelAsync(SaveData saveData)
     {
         bool asyncOperation;
