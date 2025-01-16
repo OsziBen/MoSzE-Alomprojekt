@@ -1960,7 +1960,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 2495013396380952890, guid: 50465959c40b1d64da8af35764e3d84e, type: 3}
-  bossPrefab: {fileID: 8449291040046149132, guid: 32e8debbf569eba4b8255d9ee4936c61, type: 3}
+  bossPrefab: {fileID: 2739853896292724597, guid: 32e8debbf569eba4b8255d9ee4936c61, type: 3}
   staticObstaclePrefabs:
   - {fileID: 6265013556940442242, guid: 46c93a5ed1b7b354bae83da7a1534fb9, type: 3}
   - {fileID: 7371983264788650703, guid: 54cddfb7de887cd45a1f8bb28a03fd5b, type: 3}
