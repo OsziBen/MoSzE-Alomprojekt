@@ -62,7 +62,8 @@ public class Projectile : MonoBehaviour
     /// </summary>
     /// </summary>
     public event Action<EnemyController, float> OnEnemyHit;  // Esemény, amely akkor hívódik meg, amikor a lövedék eltalál egy ellenséges karaktert
-
+    public event Action<float> OnBossHit;
+ 
 
     /// <summary>
     /// Inicializálja a Rigidbody2D komponenst és az objektumpool-t a fizikai interakciókhoz és lövedékek kezeléséhez.
@@ -160,6 +161,28 @@ public class Projectile : MonoBehaviour
             Debug.Log(IsMarked ? "MARKED!" : "UNMARKED!");
 
             OnEnemyHit?.Invoke(enemy, damage);
+        }
+
+        if (trigger.gameObject.TryGetComponent<BossBodypartController>(out var bodypart))
+        {
+            Debug.Log($"{bodypart.name}");
+
+            float damage = IsMarked
+                ? -ProjectileDMG - bodypart.GetComponentInParent<BossController>().MaxHealth * PercentageDMGValue
+                : -ProjectileDMG;
+            
+            OnBossHit?.Invoke(damage);
+        }
+
+        if (trigger.gameObject.TryGetComponent<BossController>(out var boss))
+        {
+            Debug.Log($"{boss.name}");
+
+            float damage = IsMarked
+                ? -ProjectileDMG - boss.MaxHealth * PercentageDMGValue
+                : -ProjectileDMG;
+
+            OnBossHit?.Invoke(damage);
         }
 
         DestroyProjectile();
