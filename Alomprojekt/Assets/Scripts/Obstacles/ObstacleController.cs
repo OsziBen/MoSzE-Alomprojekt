@@ -63,10 +63,6 @@ public abstract class ObstacleController : MonoBehaviour
 
     protected void SetCurrentObstacleSpriteByLevel(int level)
     {
-        foreach (var item in spriteLevelDataList)
-        {
-            Debug.Log(item.level);
-        }
         var currentSpriteLevelData = spriteLevelDataList.FirstOrDefault(x => x.level == level);
 
         if (currentSpriteLevelData != null)

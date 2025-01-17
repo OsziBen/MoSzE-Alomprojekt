@@ -25,12 +25,14 @@ public class GameSaveData
     public string gameLevel;
     public string levelLayoutName;
     public int points;
+    public float currentRunTime;
 
     public GameSaveData()
     {
         gameLevel = string.Empty;
         levelLayoutName = string.Empty;
         points = 0;
+        currentRunTime = 0f;
     }
 }
 
