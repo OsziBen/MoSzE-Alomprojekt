@@ -14,9 +14,9 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     private int _points = 0;
     private float _playerHealthPercentage = 1f;
     private GameLevel _currentLevel;
-    private int _minLevel = 1;
-    private int _totalLevels = 4;
     private bool _isStateChanging = false;
+
+    private float _currentRunTime = 0f;
 
     private Queue<Func<Task>> deferredStateChanges = new Queue<Func<Task>>();
 
@@ -53,6 +53,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     SaveLoadManager saveLoadManager;
     PlayerUpgradeManager playerUpgradeManager;
     UIManager uiManager;
+    Timer timer;
 
 
     /// <summary>
@@ -81,11 +82,12 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         set { _currentLevel = value; }
     }
 
-    public int TotalLevels
+    public float CurrentRunTime
     {
-        get { return _totalLevels; }
-        set { _totalLevels = value; }
+        get { return _currentRunTime; }
+        set { _currentRunTime = value; }
     }
+
 
     public GameState CurrentState { get; private set; } = GameState.MainMenu;
 
@@ -106,6 +108,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
         playerUpgradeManager = FindObjectOfType<PlayerUpgradeManager>();
         uiManager = FindAnyObjectByType<UIManager>();
+        timer = FindObjectOfType<Timer>();
 
         // Persistent Manager esemény-feliratkozások
         levelmanager.OnLevelCompleted += IsActualLevelCompleted;
@@ -137,6 +140,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         saveData.gameData.gameLevel = _currentLevel.ToString();
         saveData.gameData.points = PlayerPoints;
         saveData.playerSaveData.currentHealtPercentage = PlayerHealtPercenatge;
+        saveData.gameData.currentRunTime = CurrentRunTime;
     }
 
     async Task<bool> SetLoadDataAsync(SaveData loadData)
@@ -146,6 +150,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
             await SetCurrentLevel(LevelNameToGameLevel(loadData.gameData.gameLevel));
             PlayerPoints = loadData.gameData.points;
             PlayerHealtPercenatge = loadData.playerSaveData.currentHealtPercentage;
+            CurrentRunTime = loadData.gameData.currentRunTime;
             await playerUpgradeManager.SetLoadDataAsync(loadData);
 
             return true;
@@ -276,6 +281,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
             switch (CurrentState)
             {
                 case GameState.MainMenu:
+                    timer.StopTimer();
                     asyncOperation = await gameSceneManager.LoadUtilitySceneAsync("MainMenu");
 
                     asyncOperation = await playerUpgradeManager.ResetPlayerUpgradesListsAsync();
@@ -285,6 +291,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                 case GameState.LoadingNewGame:
                     this.PlayerPoints = 0;
                     this.PlayerHealtPercenatge = 1f;
+                    this.CurrentRunTime = 0f;
                     asyncOperation = await ResetCurrentLevel();
 
                     // mentés törlése új játék esetén
@@ -300,12 +307,14 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     {
                         // After level load is complete, change state to "Playing"
                         DeferStateChange(() => SetState(GameState.Playing));
+                        timer.RestartTimer();
                     }
 
                     break;
 
                 case GameState.LoadingNextLevel:
                     Time.timeScale = 1;
+                    CurrentRunTime = timer.GetElapsedTime();
 
                     asyncOperation = await IncrementCurrentLevel();
 
@@ -332,8 +341,6 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                             DeferStateChange(() => SetState(GameState.Playing));
                         }
                     }
-                    Debug.Log("PLAYERHP: " + PlayerHealtPercenatge);
-                    Debug.Log("PLAYERPOINTS: " + PlayerPoints);
 
                     break;
 
@@ -345,12 +352,14 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     {
                         // GameStateManager adatok beállítása
                         asyncOperation = await SetLoadDataAsync(loadData);
+                        Debug.Log(CurrentRunTime);
                         // LevelManager hívása loadData-val
                         asyncOperation = await levelmanager.LoadSavedLevelAsync(loadData);
                         if (asyncOperation)
                         {
                             // After level load is complete, change state to "Playing"
                             DeferStateChange(() => SetState(GameState.Playing));
+                            timer.SetTimer(CurrentRunTime);
                         }
                     }
                     else
@@ -362,19 +371,21 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
 
                 case GameState.Playing:
                     Time.timeScale = 1;
+                    timer.ResumeTimer();
                     //Cursor.visible = false;  // Hides the cursor
                     //Cursor.lockState = CursorLockMode.Locked;  // Locks the cursor in the center (optional)
                     break;
 
                 case GameState.Paused:
                     Time.timeScale = 0;
+                    timer.StopTimer();
                     //Cursor.visible = true;  // Shows the cursor
                     //Cursor.lockState = CursorLockMode.None;  // Unlocks the cursor (optional)
                     break;
 
                 case GameState.GameOver:
                     asyncOperation = await saveLoadManager.DeleteSaveFile();
-
+                    timer.StopTimer();
                     // előtte/utána valami kattintható felület?
                     // csak akkor látszódjon a kisfilm, ha boss szinten vagyunk a halálkor!
                     if (CurrentLevel == GameLevel.BossBattle)
@@ -389,6 +400,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     break;
 
                 case GameState.Victory:
+                    timer.StopTimer();
                     asyncOperation = await saveLoadManager.DeleteSaveFile();
                     // előtte/utána valami kattintható felület?
                     asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("Victory");
@@ -402,6 +414,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.None;
                     Time.timeScale = 0;
+                    timer.StopTimer();
 
                     asyncOperation = await playerUpgradeManager.GenerateCurrentShopUpgradesAsync(GameLevelToInt(CurrentLevel), PlayerHealtPercenatge);
                     asyncOperation = await uiManager.LoadUpgradesShopUIAsync(playerUpgradeManager.CurrentShopUpgrades);
