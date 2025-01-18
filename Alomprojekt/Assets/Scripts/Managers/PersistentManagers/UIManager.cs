@@ -67,6 +67,12 @@ public class UIManager : BasePersistentManager<UIManager>
     [SerializeField]
     private Button quitGameButton;
 
+    [Header("Scoreboard Menu Panels")]
+    [SerializeField]
+    private GameObject scoreboardPanel;
+    [SerializeField]
+    private GameObject scoreboardEntryPrefab;
+
 
     [Header("UI Panels")]
     public GameObject menuButtonUIPrefab;
@@ -719,6 +725,17 @@ public class UIManager : BasePersistentManager<UIManager>
     }
 
 
+    public void OpenScoreboardMenu()
+    {
+        scoreboardPanel.SetActive(true);
+    }
+
+    public void CloseScoreboardMenu()
+    {
+        scoreboardPanel.SetActive(false);
+    }
+
+
     /// <summary>
     /// 
     /// </summary>
@@ -734,12 +751,15 @@ public class UIManager : BasePersistentManager<UIManager>
     /// </summary>
     /// <param name="scene">A betöltött jelenet információi.</param>
     /// <param name="mode">A betöltés módja (pl. új jelenet betöltése vagy hozzáadás).</param>
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private async void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (IsMainMenuScene())
         {
+            await Task.Yield();
             // Beállítjuk a "Load Game" gomb referenciáját
             SetMainMenuButtonReferences();
+
+            SetScoreboardData(await saveLoadManager.LoadScoreboardAsync());
 
             // Frissítjük a gomb állapotát (aktív vagy inaktív)
             UpdateMainMenuButtons();
@@ -765,9 +785,74 @@ public class UIManager : BasePersistentManager<UIManager>
         newGameButton.onClick.AddListener(() => StartNewGameButton());
         loadGameButton.onClick.AddListener(() => LoadGameButton());
         UpdateLoadGameButtonAvailability();
-        // többi gomb is...
+        scoreboardButton.onClick.AddListener(() => OpenScoreboardMenu());
+        FindInChildrenIgnoreClone(scoreboardPanel.transform, "Back").GetComponent<Button>().onClick.AddListener(() => CloseScoreboardMenu());
         quitGameButton.onClick.AddListener(() => QuitGameButton());
     }
+
+
+    void SetScoreboardData(ScoreboardData scoreboardData)
+    {
+        scoreboardPanel = FindInChildrenIgnoreClone(FindObjectOfType<Canvas>().transform, "ScoreBoard");
+        GameObject scoreboardContentPanel = FindInChildrenIgnoreClone(scoreboardPanel.transform, "Content");
+
+        foreach (var data in scoreboardData.scoreboardEntries)
+        {
+            AddScoreEntryToPanel(scoreboardContentPanel, scoreboardEntryPrefab, data);
+        }
+
+    }
+
+    void AddScoreEntryToPanel(GameObject panel, GameObject scoreEntryPrefab, ScoreboardEntry entryData)
+    {
+        // Ellenõrizzük, hogy a szülõ GameObject nem null
+        if (panel == null)
+        {
+            Debug.LogError($"Parent panel is null. This might happen if the UI hierarchy is not properly initialized. Check the Canvas and Content GameObject.");
+            return;
+        }
+
+        // Ellenõrizzük, hogy a UI prefab nem null
+        if (scoreEntryPrefab == null)
+        {
+            Debug.LogError("UIPrefab reference is null. Assign a valid UI prefab.");
+            return; // Ha a UI prefab null, a metódus befejezõdik
+        }
+
+        // A prefab példányosítása a szülõ GameObject-hez adása
+        GameObject uiInstance = Instantiate(scoreEntryPrefab, panel.transform);
+
+        PopulateScoreEntry(uiInstance, entryData);
+
+        // Az új UI objektumot a szülõ objektum legutolsó gyermekeként állítjuk be
+        uiInstance.transform.SetAsLastSibling();
+    }
+
+
+    void PopulateScoreEntry(GameObject uiInstance, ScoreboardEntry entryData)
+    {
+        Dictionary<string, string> fieldValues = new Dictionary<string, string>()
+    {
+        { "Name", entryData.playerName },
+        { "Points", entryData.playerPoints.ToString() },
+        { "Time", entryData.finalTime },
+        { "Date", entryData.date }
+    };
+
+        foreach (var field in fieldValues)
+        {
+            GameObject fieldObject = FindInChildrenIgnoreClone(uiInstance.transform, field.Key);
+            if (fieldObject != null)
+            {
+                TMP_Text textComponent = fieldObject.GetComponent<TMP_Text>();
+                if (textComponent != null)
+                {
+                    textComponent.text = field.Value;
+                }
+            }
+        }
+    }
+
 
 
     /// <summary>
