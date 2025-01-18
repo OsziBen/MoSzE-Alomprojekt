@@ -10,9 +10,8 @@ public class ObstacleSpawner : MonoBehaviour
     /// A SpawnerBase osztály Place() függvényének kiegészítése
     /// a spawnerhez specifikus gameobject instanciálásával.
     /// </summary>
-    public void Place()
+    public void Place(bool isHeads)
     {
-        bool isHeads = UnityEngine.Random.Range(0, 2) == 0; // Random bool generálás.
         // Random bool alapján a 2 obstacle típus közül az egyiket lehelyezzük.
         if(isHeads)
         {
