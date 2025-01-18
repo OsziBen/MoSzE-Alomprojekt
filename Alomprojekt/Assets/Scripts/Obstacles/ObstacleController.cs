@@ -31,7 +31,7 @@ public abstract class ObstacleController : MonoBehaviour
 
     private void OnValidate()
     {
-        ValidateUniqueID();
+        // ValidateUniqueID(); // teszteléshez kikommentelni.
         //ValidateUniqueSpriteLevels();
     }
 

@@ -327,7 +327,7 @@ public class EnemyController : Assets.Scripts.Character
 
     private void OnValidate()
     {
-        ValidateUniqueSpriteLevels();
+        // ValidateUniqueSpriteLevels(); // tesztelés miatt kikommentelve
     }
 
     void SetCurrentEnemySpriteByLevel(int level)

@@ -162,7 +162,8 @@ public class SpawnManager : BaseTransientManager<SpawnManager>
 
             ObstacleSpawner selectedSpawner = obstacleSpawners[randomObstacleIndex]; // Kiválasztjuk az adott indexen lévő spawnert a listából.
             selectedSpawner.obstacles = obstaclePrefabs; // Levelmanager által adott obstacle prefabot spawnoljuk.
-            selectedSpawner.Place(); // Aktiváljuk a spawnert, elhelyez egy obstacle-t.
+            bool isHeads = UnityEngine.Random.Range(0, 2) == 0; // Random bool generálás.
+            selectedSpawner.Place(isHeads); // Aktiváljuk a spawnert, elhelyez egy obstacle-t.
 
 
             obstacleSpawners.Remove(selectedSpawner); // Használat után a spawnert töröljük a listából.
@@ -177,7 +178,8 @@ public class SpawnManager : BaseTransientManager<SpawnManager>
 
             EnemyData.EnemySpawnInfo selectedEnemies = enemyGroups[random.Next(0, enemyGroups.Count)]; // Kiválasztunk egy random enemyGroup objektumot, amit átadunk a jokernek.
             // A random bool alapján eldől, hogy a joker obstacle-t, vagy enemy-t fog elhelyezni.
-            selectedSpawner.SelectSpawner(selectedEnemies, obstaclePrefabs);
+            bool isHeads = UnityEngine.Random.Range(0, 2) == 0;
+            selectedSpawner.SelectSpawner(selectedEnemies, obstaclePrefabs, isHeads);
 
             jokerSpawners.Remove(selectedSpawner); // Használat után a spawnert töröljük a listából.
         }

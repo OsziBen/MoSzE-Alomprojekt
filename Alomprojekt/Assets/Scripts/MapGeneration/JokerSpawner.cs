@@ -15,9 +15,8 @@ public class JokerSpawner : MonoBehaviour
     /// </summary>
     /// <param name="enemy"></param>
     /// <param name="obstacles"></param>
-    public void SelectSpawner(EnemyData.EnemySpawnInfo enemy, List<StaticObstacleController> obstacles)
+    public void SelectSpawner(EnemyData.EnemySpawnInfo enemy, List<StaticObstacleController> obstacles, bool isHeads)
     {
-        bool isHeads = UnityEngine.Random.Range(0, 2) == 0; // Random bool generálás.
         // Random bool alapján eldöntjük, hogy enemy-t, vagy obstacle-t helyezünk le.
         if (isHeads)
         {
@@ -30,7 +29,8 @@ public class JokerSpawner : MonoBehaviour
         {
             var selectedSpawner = Instantiate(obstacleSpawner, transform.position, Quaternion.identity); // lehelyezzük az obstacle spawnert a jokerspawner helyére
             selectedSpawner.obstacles = obstacles; // megadjuk a spawnernek a 2 lespawnolható obstacle-t.
-            selectedSpawner.Place(); // aktiváljuk a lehelyezett obstacle spawnert.
+            bool isHeads2 = UnityEngine.Random.Range(0, 2) == 0; // Random bool generálás.
+            selectedSpawner.Place(isHeads2); // aktiváljuk a lehelyezett obstacle spawnert.
         }
 
         Destroy(gameObject); // töröljük a spawnert
