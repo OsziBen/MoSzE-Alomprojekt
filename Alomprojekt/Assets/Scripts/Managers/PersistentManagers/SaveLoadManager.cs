@@ -10,25 +10,35 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
     /// <summary>
     /// Változók
     /// </summary>
-    [Header("File Storage Config")]
+    [Header("Save File Config")]
     [SerializeField]
-    private string _fileName;
+    private string _gameStateFileName;
     [SerializeField]
-    private bool _useEncryption;
+    private bool _useSaveFileEncryption;
+
+    [Header("Scoreboard File Config")]
+    [SerializeField]
+    private string _scoreboardFileName;
+    [SerializeField]
+    private bool _useScoreboardFileEncryption;
 
     private SaveData _saveData;
+
+    private ScoreboardData _scoreboardData;
 
 
     /// <summary>
     /// Komponensek
     /// </summary>
-    private FileDataHandler _dataHandler;
+    private FileDataHandler _gameStateDataHandler;
+    private FileDataHandler _scoreboardDataHandler;
 
 
     /// <summary>
     /// Események
     /// </summary>
     public event Action<SaveData> OnSaveRequested;
+    public event Action<ScoreboardData> OnScoreboardUpdateRequested;
     //public event Action<SaveData> OnLoadRequested;
 
 
@@ -39,7 +49,9 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
     {
         await Task.Yield();
         base.Initialize();
-        _dataHandler = new FileDataHandler(Application.persistentDataPath, _fileName, _useEncryption);
+        _gameStateDataHandler = new FileDataHandler(Application.persistentDataPath, _gameStateFileName, _useSaveFileEncryption);
+        _scoreboardDataHandler = new FileDataHandler(Application.persistentDataPath, _scoreboardFileName, _useScoreboardFileEncryption);
+
     }
 
 
@@ -47,10 +59,11 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
     /// 
     /// </summary>
     /// <returns></returns>
-    public async Task<bool> NewGame()
+    public async Task<bool> NewGame()   // Kell-e?
     {
         await Task.Yield();
         _saveData = new SaveData();
+        _scoreboardData = new ScoreboardData();
 
         return true;
     }
@@ -64,7 +77,7 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
         try
         {
 
-            _saveData = await _dataHandler.LoadAsync();
+            _saveData = await _gameStateDataHandler.LoadGameDataAsync();
 
             if (_saveData == null)
             {
@@ -84,13 +97,51 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
     }
 
 
+    public async Task<ScoreboardData> LoadScoreboardDataAsync()
+    {
+        try
+        {
+            _scoreboardData = await _scoreboardDataHandler.LoadScoreboardDataAsync();
+            
+            if (_scoreboardData == null)
+            {
+                Debug.Log("No scoreboard data found. Initializing data to default.");
+                return null;
+            }
+            else
+            {
+                return _scoreboardData;
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Exception during loading scoreboard data: {ex.Message}");
+            return null;
+        }
+    }
+
+    public async Task<bool> UpdateScoreboardDataAsync()
+    {
+        _scoreboardData = await LoadScoreboardDataAsync();
+        OnScoreboardUpdateRequested?.Invoke(_scoreboardData);
+
+        bool saved = await _scoreboardDataHandler.SaveScoreboardDataAsync(_scoreboardData);
+        if (!saved)
+        {
+            Debug.LogError("SCOREBOARD SAVE ERROR");
+        }
+        Debug.Log(Application.persistentDataPath);
+        return true;
+    }
+
+
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
     public bool SaveFileExists()
     {
-        string fullPath = Path.Combine(Application.persistentDataPath, _fileName);
+        string fullPath = Path.Combine(Application.persistentDataPath, _gameStateFileName);
         return File.Exists(fullPath);
     }
 
@@ -102,7 +153,7 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
         {
             if (SaveFileExists())
             {
-                string fullPath = Path.Combine(Application.persistentDataPath, _fileName);
+                string fullPath = Path.Combine(Application.persistentDataPath, _gameStateFileName);
                 File.Delete(fullPath);
             }
 
@@ -124,7 +175,7 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
     {
         _saveData = new SaveData();
         OnSaveRequested?.Invoke(_saveData);
-        bool saved = await _dataHandler.SaveAsync(_saveData);
+        bool saved = await _gameStateDataHandler.SaveGameDataAsync(_saveData);
         if (!saved)
         {
             Debug.LogError("SAVE ERROR");
