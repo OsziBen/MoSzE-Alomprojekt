@@ -45,6 +45,8 @@ public class UIManager : BasePersistentManager<UIManager>
     private Dictionary<string, string> playerVariableValues = new Dictionary<string, string>();
 
 
+    bool isPauseMenuEnabled;
+
     /// <summary>
     /// Komponensek
     /// </summary>
@@ -86,6 +88,13 @@ public class UIManager : BasePersistentManager<UIManager>
     private GameObject healUpgradeUIPrefab;
 
 
+    [Header("Victory/Defeat Panels")]
+    [SerializeField]
+    private GameObject victoryPanelPrefab;
+    [SerializeField]
+    private GameObject defeatPanelPrefab;
+
+
     /// <summary>
     /// Események
     /// </summary>
@@ -97,7 +106,6 @@ public class UIManager : BasePersistentManager<UIManager>
     public event Action<GameState> OnBackToMainMenu;
     public event Action<string> OnPurchaseOptionChosen;
 
-
     /// <summary>
     /// 
     /// </summary>
@@ -106,7 +114,6 @@ public class UIManager : BasePersistentManager<UIManager>
         base.Initialize();
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
         gameStateManager = FindObjectOfType<GameStateManager>();
-
         gameStateManager.OnPointsChanged += UpdatePointsUIText;
     }
 
@@ -131,7 +138,7 @@ public class UIManager : BasePersistentManager<UIManager>
     private void Update()
     {
         // Ellenõrizzük, hogy lenyomták-e az Escape billentyût
-        if (pauseMenu != null && UnityEngine.Input.GetKeyDown(KeyCode.Escape))
+        if (isPauseMenuEnabled && pauseMenu != null && UnityEngine.Input.GetKeyDown(KeyCode.Escape))
         {
             // Ha az Escape billentyût lenyomták, aktiváljuk a szünet menüt
             SetPauseMenuActive();
@@ -185,6 +192,7 @@ public class UIManager : BasePersistentManager<UIManager>
             // A UI szövegek beállítása a megfelelõ értékekkel
             SetCurrentUITextValues(textMeshProElementReferences, playerVariableValues);
 
+            isPauseMenuEnabled = true;
 
             return true; // A UI sikeresen betöltõdött
         }
@@ -377,9 +385,6 @@ public class UIManager : BasePersistentManager<UIManager>
 
         // Eltávolítja az 'OnPlayerDeath' eseményfigyelõt, amely a játékos halálára reagál
         player.OnPlayerDeath -= StopPlayerHealthDetection;
-
-        // Eltávolítja az 'OnPointsChanged' eseményfigyelõt, amely a pontok változására reagál
-        gameStateManager.OnPointsChanged -= UpdatePointsUIText;
     }
 
 
@@ -790,6 +795,63 @@ public class UIManager : BasePersistentManager<UIManager>
             // A gomb interakciós állapotát beállítjuk a SaveLoadManager SaveFileExists metódusa alapján
             loadGameButton.interactable = saveLoadManager.SaveFileExists();
         }
+    }
+
+
+    public async Task<bool> DisplayVictoryPanelAsync()
+    {
+        await Task.Yield();
+
+        try
+        {
+            isPauseMenuEnabled = false;
+            Canvas victoryCanvas = CreateCanvas("Canvas", 10);
+            EnsureEventSystemExists();
+            AddUIPrefabToGameObject(victoryCanvas.gameObject, victoryPanelPrefab, true);
+            GameObject menuButton = FindInChildrenIgnoreClone(victoryCanvas.transform, "Back");
+            TMP_InputField inputField = FindInChildrenIgnoreClone(victoryCanvas.transform, "NameInputField").GetComponent<TMP_InputField>();
+            menuButton.GetComponent<Button>().onClick.AddListener(() => CloseVictoryPanel(inputField.text));
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"{ex.Message}");
+            return false;
+        }
+    }
+
+
+    public async Task<bool> DisplayDefeatPanelAsync()
+    {
+        await Task.Yield();
+
+        try
+        {
+            isPauseMenuEnabled = false;
+            Canvas defeatCanvas = CreateCanvas("Canvas", 10);
+            EnsureEventSystemExists();
+            AddUIPrefabToGameObject(defeatCanvas.gameObject, defeatPanelPrefab, true);
+            GameObject menuButton = FindInChildrenIgnoreClone(defeatCanvas.transform, "Back");
+            menuButton.GetComponent<Button>().onClick.AddListener(() => ExitToMainMenuButtonClicked());
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"{ex.Message}");
+            return false;
+        }
+        
+    }
+
+    public async void CloseVictoryPanel(string input)
+    {
+        Debug.Log(input);
+        gameStateManager.CurrentRunPlayerName = input;
+        bool asyncOperation = await saveLoadManager.UpdateScoreboardDataAsync();
+        
+        OnBackToMainMenu?.Invoke(GameState.MainMenu);
     }
 
 

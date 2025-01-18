@@ -14,7 +14,7 @@ public class Timer : BasePersistentManager<Timer>
         if (isTiming)
         {
             elapsedTime += Time.deltaTime;
-            Debug.Log("Elapsed Time: " + FormatTime(elapsedTime));
+            //Debug.Log("Elapsed Time: " + FormatTime(elapsedTime));
         }
     }
 
@@ -44,7 +44,7 @@ public class Timer : BasePersistentManager<Timer>
         elapsedTime = time;
     }
 
-    private string FormatTime(float time)
+    public string FormatTime(float time)
     {
         int minutes = Mathf.FloorToInt(time / 60); // Percek
         int seconds = Mathf.FloorToInt(time % 60); // Másodpercek
