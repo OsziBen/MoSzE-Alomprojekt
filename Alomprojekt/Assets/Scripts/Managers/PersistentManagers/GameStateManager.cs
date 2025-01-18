@@ -17,6 +17,8 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     private bool _isStateChanging = false;
 
     private float _currentRunTime = 0f;
+    private string _currentRunDate = string.Empty;
+    private string _currentRunPlayerName = string.Empty;
 
     private Queue<Func<Task>> deferredStateChanges = new Queue<Func<Task>>();
 
@@ -88,6 +90,18 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         set { _currentRunTime = value; }
     }
 
+    public string CurrentRunDate
+    {
+        get { return _currentRunDate; }
+        set { _currentRunDate = value; }
+    }
+
+    public string CurrentRunPlayerName
+    {
+        get { return _currentRunPlayerName; }
+        set { _currentRunPlayerName = value; }
+    }
+
 
     public GameState CurrentState { get; private set; } = GameState.MainMenu;
 
@@ -114,7 +128,8 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         levelmanager.OnLevelCompleted += IsActualLevelCompleted;
         levelmanager.OnGameFinished += IsGameFinished;
         levelmanager.OnPointsAdded += AddPoints;
-        saveLoadManager.OnSaveRequested += Save;
+        saveLoadManager.OnSaveRequested += SaveGameData;
+        saveLoadManager.OnScoreboardUpdateRequested += UpdateScoreboardData;
         uiManager.OnStartNewGame += HandleStateChanged;
         uiManager.OnLoadGame += HandleStateChanged;
         uiManager.OnExitGame += HandleStateChanged;
@@ -134,8 +149,18 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         await SetState(newState);
     }
 
+    void UpdateScoreboardData(ScoreboardData scoreboardData)
+    {
+        ScoreboardEntry newScoreboardEntry = new ScoreboardEntry(CurrentRunDate, CurrentRunPlayerName, PlayerPoints, timer.FormatTime(CurrentRunTime));
+        if (scoreboardData == null)
+        {
+            Debug.Log("ZVVVVVVVVVVVVVVVVVVV");
+        }
+        scoreboardData.scoreboardEntries.Add(newScoreboardEntry);
+    }
 
-    void Save(SaveData saveData)
+
+    void SaveGameData(SaveData saveData)
     {
         saveData.gameData.gameLevel = _currentLevel.ToString();
         saveData.gameData.points = PlayerPoints;
@@ -179,7 +204,8 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     {
         if (saveLoadManager != null)
         {
-            saveLoadManager.OnSaveRequested -= Save;
+            saveLoadManager.OnSaveRequested -= SaveGameData;
+            saveLoadManager.OnScoreboardUpdateRequested -= UpdateScoreboardData;
         }
 
         if (levelmanager != null)
@@ -211,10 +237,12 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     {
         if (isFinished)
         {
+            // itt jelenítjük meg a UI elemet
             await SetState(GameState.Victory);
         }
         else
         {
+            // itt jelenítjük meg a UI elemet
             await SetState(GameState.GameOver);
         }
     }
@@ -352,7 +380,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     {
                         // GameStateManager adatok beállítása
                         asyncOperation = await SetLoadDataAsync(loadData);
-                        Debug.Log(CurrentRunTime);
+
                         // LevelManager hívása loadData-val
                         asyncOperation = await levelmanager.LoadSavedLevelAsync(loadData);
                         if (asyncOperation)
@@ -385,29 +413,34 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
 
                 case GameState.GameOver:
                     asyncOperation = await saveLoadManager.DeleteSaveFile();
-                    timer.StopTimer();
-                    // előtte/utána valami kattintható felület?
+
                     // csak akkor látszódjon a kisfilm, ha boss szinten vagyunk a halálkor!
                     if (CurrentLevel == GameLevel.BossBattle)
                     {
                         asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("Defeat");
                     }
+                    Time.timeScale = 0;
+                    asyncOperation = await uiManager.DisplayDefeatPanelAsync();
 
-                    if (asyncOperation)
-                    {
-                        DeferStateChange(() => SetState(GameState.MainMenu));
-                    }
                     break;
 
                 case GameState.Victory:
                     timer.StopTimer();
+                    CurrentRunTime = timer.GetElapsedTime();
+                    Debug.Log(timer.FormatTime(CurrentRunTime));
+
+                    // végső idő
+                    CurrentRunTime = timer.GetElapsedTime();    // formázás stringként
+                    // aktuális dátum
+                    CurrentRunDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+                    
                     asyncOperation = await saveLoadManager.DeleteSaveFile();
-                    // előtte/utána valami kattintható felület?
+
                     asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("Victory");
-                    if (asyncOperation)
-                    {
-                        DeferStateChange(() => SetState(GameState.MainMenu));
-                    }
+                    Time.timeScale = 0;
+                    asyncOperation = await uiManager.DisplayVictoryPanelAsync();
+
                     break;
 
                 case GameState.PlayerUpgrade:
