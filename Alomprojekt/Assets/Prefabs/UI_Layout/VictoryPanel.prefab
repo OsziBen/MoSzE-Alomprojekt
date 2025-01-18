@@ -344,6 +344,7 @@ GameObject:
   - component: {fileID: 8901471301386319674}
   - component: {fileID: 8755857336855733849}
   - component: {fileID: 4899817766746949614}
+  - component: {fileID: 4577398301237552655}
   m_Layer: 5
   m_Name: VictoryPanel
   m_TagString: Untagged
@@ -409,6 +410,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4577398301237552655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3998049658049369567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1400d3aa78645342b51c35097c67d9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputField: {fileID: 1981062903352678393}
+  backButton: {fileID: 3518967827441715163}
 --- !u!1 &4202764196611415526
 GameObject:
   m_ObjectHideFlags: 0
@@ -1938,7 +1953,7 @@ MonoBehaviour:
   m_CharacterValidation: 0
   m_RegexValue: 
   m_GlobalPointSize: 14
-  m_CharacterLimit: 0
+  m_CharacterLimit: 15
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls: []
