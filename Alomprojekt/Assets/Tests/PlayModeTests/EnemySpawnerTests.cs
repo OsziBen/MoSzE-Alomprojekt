@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
+// FONTOS: EnemyController 330-as sorát ki kell kommentelni, hogy a teszt lefusson.
+
 public class EnemySpawnerTests
 {
     private GameObject spawnerObject;
