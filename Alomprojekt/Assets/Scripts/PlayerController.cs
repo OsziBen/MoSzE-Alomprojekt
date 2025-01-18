@@ -437,7 +437,10 @@ public class PlayerController : Assets.Scripts.Character
         launchAction.Disable();
         launchAction.performed -= Attack;
 
-        boss.OnPlayerCollision -= ChangeHealth;     // lehet máshol lesz...
+        if (boss != null)
+        {
+            boss.OnPlayerCollision -= ChangeHealth;     // lehet máshol lesz...
+        }
 
         OnPlayerDeath?.Invoke();
         Destroy(gameObject);
