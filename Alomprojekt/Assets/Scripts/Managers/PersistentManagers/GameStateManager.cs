@@ -152,10 +152,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     void UpdateScoreboardData(ScoreboardData scoreboardData)
     {
         ScoreboardEntry newScoreboardEntry = new ScoreboardEntry(CurrentRunDate, CurrentRunPlayerName, PlayerPoints, timer.FormatTime(CurrentRunTime));
-        if (scoreboardData == null)
-        {
-            Debug.Log("ZVVVVVVVVVVVVVVVVVVV");
-        }
+
         scoreboardData.scoreboardEntries.Add(newScoreboardEntry);
     }
 

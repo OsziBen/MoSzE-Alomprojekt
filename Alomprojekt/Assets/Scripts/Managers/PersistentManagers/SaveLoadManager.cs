@@ -97,11 +97,12 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
     }
 
 
-    public async Task<ScoreboardData> LoadScoreboardDataAsync()
+    public async Task<ScoreboardData> LoadScoreboardAsync()
     {
         try
         {
             _scoreboardData = await _scoreboardDataHandler.LoadScoreboardDataAsync();
+
             
             if (_scoreboardData == null)
             {
@@ -122,7 +123,7 @@ public class SaveLoadManager : BasePersistentManager<SaveLoadManager>
 
     public async Task<bool> UpdateScoreboardDataAsync()
     {
-        _scoreboardData = await LoadScoreboardDataAsync();
+        _scoreboardData = await LoadScoreboardAsync();
         OnScoreboardUpdateRequested?.Invoke(_scoreboardData);
 
         bool saved = await _scoreboardDataHandler.SaveScoreboardDataAsync(_scoreboardData);
