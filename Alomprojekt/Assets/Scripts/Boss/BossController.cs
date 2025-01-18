@@ -39,6 +39,10 @@ public class BossController : MonoBehaviour
     [SerializeField]
     private BossBodypartController rightArm;
 
+    [Header("Phases and Movesets")]
+    [SerializeField]
+    private List<string> KIDOLGOZNI;  // + saját adattípus
+
 
     /// <summary>
     /// Komponensek
