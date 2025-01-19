@@ -77,11 +77,17 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         Például a vásárlási képernyőn egy "Gyógyulási esély: 65%" felirat segíthet.
      */
 
+    /// <summary>
+    /// Inicializálja a PlayerUpgradeManager-t, betölti a játékos fejlesztés adatokat és regisztrálja a mentési eseményt.
+    /// </summary>
     protected override async void Initialize()
     {
+        // Az alap inicializálás meghívása (szülő osztály metódusának hívása)
         base.Initialize();
+        // A GameStateManager és SaveLoadManager keresése a jelenlegi jelenetben.
         gameStateManager = FindObjectOfType<GameStateManager>();
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
+        // Hozzáadjuk a mentési kérést a SaveLoadManager eseményhez.
         saveLoadManager.OnSaveRequested += Save;
 
         // Az összes játékos fejlesztés adatainak betöltése aszinkron módon. Ha nem sikerül, hibát loggolunk.
@@ -99,46 +105,77 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         }
     }
 
+    /// <summary>
+    /// A játékos által vásárolt fejlesztések mentésére szolgáló metódus.
+    /// </summary>
+    /// <param name="saveData">A mentéshez szükséges adatokat tartalmazó objektum.</param>
     void Save(SaveData saveData)
     {
+        // Végigiterálunk a vásárolt fejlesztéseken.
         foreach (var playerUpgrade in purchasedPlayerUpgrades)
         {
+            // Új PlayerUpgradeSaveData objektum létrehozása a fejlesztés mentéséhez.
             PlayerUpgradeSaveData playerUpgradeSaveData = new PlayerUpgradeSaveData();
+
+            // A fejlesztés ID-jának és szintjének elmentése.
             playerUpgradeSaveData.upgradeID = playerUpgrade.ID;
             playerUpgradeSaveData.upgradeLevel = playerUpgrade.currentUpgradeLevel;
+
+            // A fejlesztés mentése a saveData-ban található playerSaveData.upgrades listába.
             saveData.playerSaveData.upgrades.Add(playerUpgradeSaveData);
         }
     }
 
+    /// <summary>
+    /// A mentett fejlesztési adatokat betölti és alkalmazza a játékosra aszinkron módon.
+    /// </summary>
+    /// <param name="loadData">A betöltendő mentett adatokat tartalmazó objektum.</param>
+    /// <returns>Visszaadja, hogy sikerült-e a betöltés (true vagy false).</returns>
     public async Task<bool> SetLoadDataAsync(SaveData loadData)
     {
         await Task.Yield();
 
         try
         {
+            // Végigiterálunk a mentett fejlesztéseken.
             foreach (var playerUpgradeSaveData in loadData.playerSaveData.upgrades)
             {
+                // A fejlesztés betöltése az összes rendelkezésre álló fejlesztés közül az ID alapján.
                 PlayerUpgrade loadedUpgrade = GetPlayerUpgradeFromAvailablesByID(allPlayerUpgrades, playerUpgradeSaveData.upgradeID);
+                // A betöltött fejlesztés szintjének beállítása.
                 loadedUpgrade.SetCurrentPlayerUpgradeLevel(playerUpgradeSaveData.upgradeLevel);
+                // A betöltött fejlesztés hozzáadása a vásárolt fejlesztések listájához.
                 purchasedPlayerUpgrades.Add(loadedUpgrade);
+                // A betöltött fejlesztés eltávolítása az összes elérhető fejlesztés listájából.
                 allPlayerUpgrades.Remove(loadedUpgrade);
             }
 
-            return true;
+            return true; // Ha a betöltés sikerült, true-t adunk vissza.
         }
         catch (Exception ex)
         {
+            // Ha hiba történik a betöltés során, hibát loggolunk.
             Debug.LogError($"Error during loading upgrade save data! {ex.Message}");
-            return false;
+            return false; // Ha hiba történt, false-t adunk vissza.
         }
 
     }
 
+    /// <summary>
+    /// Az elérhető fejlesztések listájából keres egy fejlesztést az ID alapján.
+    /// </summary>
+    /// <param name="allPlayerUpgrades">A játékos összes elérhető fejlesztését tartalmazó lista.</param>
+    /// <param name="upgradeID">A keresett fejlesztés azonosítója.</param>
+    /// <returns>A keresett fejlesztést, ha található, egyébként null-t ad vissza.</returns>
     PlayerUpgrade GetPlayerUpgradeFromAvailablesByID(List<PlayerUpgrade> allPlayerUpgrades, string upgradeID)
     {
+        // Keresés a listában az ID alapján, és visszaadja az első találatot.
         return allPlayerUpgrades.Find(x => x.ID == upgradeID);
     }
 
+    /// <summary>
+    /// Destroy esetén leiratkozik eventekről.
+    /// </summary>
     private void OnDestroy()
     {
         if (saveLoadManager != null)
@@ -516,80 +553,115 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
     /// <param name="playerUpgrade">A megvásárolni kívánt fejlesztés objektuma.</param>
     public async Task<bool> PurchasePlayerUpgrade(string playerUpgradeID)
     {
-        await Task.Yield();
+        await Task.Yield(); // Az aszinkron feladatot átadja más feladatoknak, hogy ne blokkolja a szálat.
 
         try
         {
+            // Ellenőrizzük, hogy a fejlesztés ID-ja érvényes-e. Ha nem, átugorjuk a vásárlást.
             if (string.IsNullOrEmpty(playerUpgradeID))
             {
-                SkipPurchase();
+                SkipPurchase(); // Vásárlás átugrása, ha az ID üres vagy érvénytelen.
                 return true;
             }
 
+            // A boltban elérhető fejlesztés lekérése az ID alapján.
             PlayerUpgrade playerUpgrade = GetPlayerUpgradeFromShopByID(shopPlayerUpgrades, playerUpgradeID);
 
-            // Deduct player points
+            // A játékos pontjainak levonása a fejlesztés árával.
             DeductPlayerPoints(playerUpgrade.GetPrice());
 
-
+            // Ha a fejlesztés gyógyító típusú, akkor azt kezeljük külön.
             if (playerUpgrade.isHealing)
             {
-                HandleHealingUpgrade();
+                HandleHealingUpgrade(); // Gyógyító fejlesztés kezelése.
             }
             else
             {
-                HandleNonHealingUpgrade(playerUpgrade);
+                HandleNonHealingUpgrade(playerUpgrade); // Nem gyógyító fejlesztés kezelése.
             }
 
-            // Clear the shop list after purchase
+            // Miután a fejlesztést választották, kiürítjük a boltban elérhető fejlesztéseket.
             ClearShopPlayerUpgradesList();
 
-            return true;
+            return true; // A vásárlás sikeres volt.
         }
         catch (Exception ex)
         {
+            // Ha hiba történt a vásárlás során, hibát loggolunk.
             Debug.LogError($"Error during purchasing upgrade! {ex.Message}");
-            return false;
+            return false; // Ha hiba történt, false-t adunk vissza.
         }
     }
 
+    /// <summary>
+    /// Levonja a játékos pontjait a megadott árnak megfelelően.
+    /// </summary>
+    /// <param name="price">A levonandó pontok száma.</param>
     private void DeductPlayerPoints(int price)
     {
+        // A játékos pontjainak csökkentése a megadott ár szerint.
         gameStateManager.PlayerPoints -= price;
+
+        // A maradék pontok kiírása a konzolra.
         Debug.Log($"Remaining points: {gameStateManager.PlayerPoints}");
     }
 
+    /// <summary>
+    /// A játékos életerejét teljes mértékben helyreállítja.
+    /// </summary>
     private void HandleHealingUpgrade()
     {
+        // A játékos életerejét 100%-ra állítjuk.
         gameStateManager.PlayerHealtPercenatge = 1f;
+
+        // Kiírjuk, hogy a játékos életereje teljesen helyreállt.
         Debug.Log("Player health fully restored.");
     }
 
+    /// <summary>
+    /// Kezeli a nem gyógyító fejlesztéseket: ha új, hozzáadja a vásárolt fejlesztésekhez, ha már megvan, frissíti.
+    /// </summary>
+    /// <param name="playerUpgrade">A játékos által választott fejlesztés.</param>
     private void HandleNonHealingUpgrade(PlayerUpgrade playerUpgrade)
     {
-        // Check if the upgrade is already purchased
+        // Ellenőrizzük, hogy a fejlesztést már megvásárolták-e.
         var match = purchasedPlayerUpgrades.Find(x => x.ID == playerUpgrade.ID);
 
         if (match == null)
         {
+            // Ha még nem vásárolták meg, hozzáadjuk a vásárolt fejlesztések listájához,
+            // és eltávolítjuk az összes elérhető fejlesztés közül.
             purchasedPlayerUpgrades.Add(playerUpgrade);
             allPlayerUpgrades.RemoveAll(x => x.ID == playerUpgrade.ID);
+
+            // Kiírjuk a konzolra, hogy a fejlesztést hozzáadták.
             Debug.Log($"Upgrade {playerUpgrade.ID} added to purchased list.");
         }
         else
         {
+            // Ha a fejlesztés már meg van vásárolva, frissítjük a szintjét, és újra beállítjuk a leírást.
             match.currentUpgradeLevel = playerUpgrade.currentUpgradeLevel;
             match.RefreshDescription();
             match.IsTempCopy = false;
+
+            // Kiírjuk a konzolra, hogy a fejlesztést frissítettük.
             Debug.Log($"Upgrade {playerUpgrade.ID} updated to level {playerUpgrade.currentUpgradeLevel}.");
         }
     }
 
 
+    /// <summary>
+    /// A boltban elérhető fejlesztések listájából keres egy fejlesztést az ID alapján.
+    /// </summary>
+    /// <param name="ShopUpgrades">A boltban elérhető fejlesztéseket tartalmazó lista.</param>
+    /// <param name="upgradeID">A keresett fejlesztés azonosítója.</param>
+    /// <returns>A keresett fejlesztést, ha található, egyébként null-t ad vissza.</returns>
     PlayerUpgrade GetPlayerUpgradeFromShopByID(List<PlayerUpgrade> ShopUpgrades, string upgradeID)
     {
+        // Keresés a boltban elérhető fejlesztések listájában az ID alapján, és visszaadja az első találatot.
         return ShopUpgrades.Find(x => x.ID == upgradeID);
     }
+
 
 
     /// <summary>

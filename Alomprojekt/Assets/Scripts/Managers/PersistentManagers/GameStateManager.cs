@@ -109,7 +109,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     }
 
 
-    public GameState CurrentState { get; private set; }
+    public GameState CurrentState { get; private set; } // A jelenlegi gamestate.
 
 
     /// <summary>

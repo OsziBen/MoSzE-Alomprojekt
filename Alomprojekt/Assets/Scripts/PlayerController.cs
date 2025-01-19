@@ -36,7 +36,7 @@ public class PlayerController : Assets.Scripts.Character
 
     BossController boss;                        // Boss objektum.
 
-    BossObjectPool bossObjectPool;
+    BossObjectPool bossObjectPool;              // Boss külön objectpoolja.
     private List<EnemyProjetile> activeProjectiles = new List<EnemyProjetile>();    // Az aktívan megfigyelt lövedékek (Projectile) listája
 
 
@@ -128,7 +128,13 @@ public class PlayerController : Assets.Scripts.Character
     }
 
 
-
+    /// <summary>
+    /// Beállítja a játékos attribútumait, alapértelmezett értékekkel és/vagy megadott statisztikai értékekkel.
+    /// Ha a statValues lista üres, az alapértelmezett attribútumok kerülnek alkalmazásra.
+    /// Ezenkívül eltávolítja magát az OnSetPlayerAttributes eseményből, hogy a metódus csak egyszer fusson le.
+    /// </summary>
+    /// <param name="statValues">A játékos statisztikai értékeit tartalmazó lista.</param>
+    /// <param name="currentHealthPercentage">A játékos aktuális életerejének százalékos értéke.</param>
     public void SetPlayerAttributes(List<StatValuePair> statValues, float currentHealthPercentage)
     {
         // Ellenőrzés: Ha a statValues lista üres, akkor az alapértelmezett játékos attribútumokat állítja be.
@@ -148,6 +154,13 @@ public class PlayerController : Assets.Scripts.Character
         characterSetupManager.OnSetPlayerAttributes -= SetPlayerAttributes;
     }
 
+
+    /// <summary>
+    /// Az alapértelmezett játékos attribútumok beállítása.
+    /// Számításokat végez a játékos statisztikai értékeire vonatkozóan (például életerő, sebzés, mozgási sebesség stb.), 
+    /// és biztosítja, hogy ezek a megfelelő minimum és maximum értékek közé esnek.
+    /// </summary>
+    /// <param name="currentHealthPercentage">A játékos aktuális életerejének százalékos értéke, amely alapján a jelenlegi életerőt számítja ki.</param>
     void SetDefaultPlayerAttributes(float currentHealthPercentage)
     {
         // Jelenlegi HP beállítása.
@@ -517,16 +530,30 @@ public class PlayerController : Assets.Scripts.Character
         remainingAttackCooldown = CurrentAttackCooldown;
     }
 
+    /// <summary>
+    /// Elkezd egy lövedéket követni, hogy érzékelje, ha az eltalálja a játékost.
+    /// Biztosítja, hogy a lövedéket ne vegyük fel többször, és feliratkozik 
+    /// az OnPlayerHit eseményre, hogy kezelje, amikor a lövedék eltalálja a játékost.
+    /// </summary>
+    /// <param name="projectile">A követendő lövedék GameObject.</param>
     void StartProjectileDetection(GameObject projectile)
     {
+        // Megpróbálja lekérni az EnemyProjetile komponenst a megadott GameObjectből.
         EnemyProjetile proj = projectile.GetComponent<EnemyProjetile>();
-        // Avoid adding the same projectile twice
+
+        // Ellenőrzi, hogy a lövedék már szerepel-e az activeProjectiles listában.
+        // Ezzel elkerüljük, hogy ugyanazt a lövedéket többször adjuk hozzá.
         if (!activeProjectiles.Contains(proj))
         {
+            // Feliratkozik a lövedék OnPlayerHit eseményére.
+            // Ez lehetővé teszi, hogy reagáljunk, amikor a lövedék eltalálja a játékost.
             proj.OnPlayerHit += HandlePlayerHit;
+
+            // Hozzáadja a lövedéket az aktív lövedékeket nyomon követő listához.
             activeProjectiles.Add(proj);
 
-            Debug.Log($"Projectile detected: {proj}");
+            // Naplózza az új lövedék észlelését a hibakereséshez.
+            Debug.Log($"Lövedék érzékelve: {proj}");
         }
     }
 
@@ -545,8 +572,13 @@ public class PlayerController : Assets.Scripts.Character
         Debug.Log($"Projectile returned: {proj}");
     }
 
+    /// <summary>
+    /// Kezeli, ha a játékost eltalálja egy lövedék, és az okozott sebzést alkalmazza a játékos életerejére.
+    /// </summary>
+    /// <param name="damageAmount">A lövedék által okozott sebzés mértéke.</param>
     void HandlePlayerHit(float damageAmount)
     {
+        // Csökkenti a játékos életerejét a megadott sebzés mértékével.
         ChangeHealth(damageAmount);
     }
 
@@ -570,8 +602,6 @@ public class PlayerController : Assets.Scripts.Character
             bossObjectPool.OnProjectileActivated -= StartProjectileDetection;
             bossObjectPool.OnProjectileDeactivated -= StopProjectileDetection;
         }
-
-
         
         // A halál eseményt továbbítja a rendszer felé
         OnPlayerDeath?.Invoke();
