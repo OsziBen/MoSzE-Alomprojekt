@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,15 +10,15 @@ namespace Assets.Scripts
     public class ObjectPoolForProjectiles : BaseTransientManager<ObjectPoolForProjectiles>
     {
         /// <summary>
-        /// Változók
+        /// VÃ¡ltozÃ³k
         /// </summary>
-        public GameObject projectilePrefab; // A lövedék prefab, amelyet a poolba helyezett objektumok alapjául használunk.
-        public int poolSize = 25;   // A pool maximális mérete, amely meghatározza, hány lövedék lehet egyszerre az objektumpoolban.
-        private Queue<GameObject> pool; // A lövedékek tárolására használt queue (sor), amely a rendelkezésre álló és visszaadott lövedékeket tartalmazza.
+        public GameObject projectilePrefab; // A lÃ¶vedÃ©k prefab, amelyet a poolba helyezett objektumok alapjÃ¡ul hasznÃ¡lunk.
+        public int poolSize = 25;   // A pool maximÃ¡lis mÃ©rete, amely meghatÃ¡rozza, hÃ¡ny lÃ¶vedÃ©k lehet egyszerre az objektumpoolban.
+        private Queue<GameObject> pool; // A lÃ¶vedÃ©kek tÃ¡rolÃ¡sÃ¡ra hasznÃ¡lt queue (sor), amely a rendelkezÃ©sre Ã¡llÃ³ Ã©s visszaadott lÃ¶vedÃ©keket tartalmazza.
 
-        public int projectileMarkEveryNth = 4;  // n értéke, ahol minden n-edik lövedéket megjelöljük; TODO:clamp 1-x
-        private bool isMarkingEnabled;   // lövedékjelölés ki- és bekapcsolása
-        private int fireCounter = 0;    // lövedékszámláló a jelöléshez
+        public int projectileMarkEveryNth = 4;  // n Ã©rtÃ©ke, ahol minden n-edik lÃ¶vedÃ©ket megjelÃ¶ljÃ¼k; TODO:clamp 1-x
+        private bool isMarkingEnabled;   // lÃ¶vedÃ©kjelÃ¶lÃ©s ki- Ã©s bekapcsolÃ¡sa
+        private int fireCounter = 0;    // lÃ¶vedÃ©kszÃ¡mlÃ¡lÃ³ a jelÃ¶lÃ©shez
 
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Assets.Scripts
         private Camera mainCamera;
 
         /// <summary>
-        /// Getterek és Setterek
+        /// Getterek Ã©s Setterek
         /// </summary>
         public bool IsMarkingEnabled {
             get { return isMarkingEnabled; }
@@ -35,96 +35,119 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// Események
+        /// EsemÃ©nyek
         /// </summary>
-        public event Action<GameObject> OnProjectileActivated;  // Esemény, amely akkor aktiválódik, amikor egy lövedék elérhetõvé válik a poolban és használatba kerül.
-        public event Action<GameObject> OnProjectileDeactivated;    // Esemény, amely akkor aktiválódik, amikor egy lövedék deaktiválódik, miután visszakerült a poolba.
+        public event Action<GameObject> OnProjectileActivated;  // EsemÃ©ny, amely akkor aktivÃ¡lÃ³dik, amikor egy lÃ¶vedÃ©k elÃ©rhetÃµvÃ© vÃ¡lik a poolban Ã©s hasznÃ¡latba kerÃ¼l.
+        public event Action<GameObject> OnProjectileDeactivated;    // EsemÃ©ny, amely akkor aktivÃ¡lÃ³dik, amikor egy lÃ¶vedÃ©k deaktivÃ¡lÃ³dik, miutÃ¡n visszakerÃ¼lt a poolba.
 
 
         /// <summary>
-        /// Inicializálja a lövedékek pool-ját az elõre meghatározott méret alapján.
-        /// A 'poolSize' változó határozza meg, hogy hány lövedék fér el a poolban.
-        /// A 'pool' változó egy Queue típusú adatstruktúra, amely a lövedékek kezelésére szolgál.
-        /// A 'EnableMarking' metódus itt kerül meghívásra, hogy engedélyezze a jelölést.
+        /// InicializÃ¡lja a lÃ¶vedÃ©kek pool-jÃ¡t az elÃµre meghatÃ¡rozott mÃ©ret alapjÃ¡n.
+        /// A 'poolSize' vÃ¡ltozÃ³ hatÃ¡rozza meg, hogy hÃ¡ny lÃ¶vedÃ©k fÃ©r el a poolban.
+        /// A 'pool' vÃ¡ltozÃ³ egy Queue tÃ­pusÃº adatstruktÃºra, amely a lÃ¶vedÃ©kek kezelÃ©sÃ©re szolgÃ¡l.
+        /// A 'EnableMarking' metÃ³dus itt kerÃ¼l meghÃ­vÃ¡sra, hogy engedÃ©lyezze a jelÃ¶lÃ©st.
         /// </summary>
         protected override async void Initialize()
         {
+            // VÃ¡rakozÃ¡s a kÃ¶vetkezÅ‘ frissÃ­tÃ©sig.
             await Task.Yield();
+            // Az alapÃ©rtelmezett inicializÃ¡lÃ¡s meghÃ­vÃ¡sa a szÃ¼lÅ‘ osztÃ¡lyban
             base.Initialize();
+            // A fÅ‘ kamera hozzÃ¡rendelÃ©se
             mainCamera = Camera.main;
+            // A pool inicializÃ¡lÃ¡sa egy Queue tÃ­pusÃº adatstruktÃºrÃ¡val, amely a lÃ¶vedÃ©keket fogja tÃ¡rolni
             pool = new Queue<GameObject>(poolSize);
 
+            // LÃ©trehozza Ã©s deaktivÃ¡lja a lÃ¶vedÃ©keket a pool mÃ©retÃ©nek megfelelÅ‘en
             for (int i = 0; i < poolSize; i++)
             {
+                // A lÃ¶vedÃ©k pÃ©ldÃ¡nyosÃ­tÃ¡sa a prefab alapjÃ¡n
                 GameObject projectile = Instantiate(projectilePrefab);
+                // A lÃ¶vedÃ©k deaktivÃ¡lÃ¡sa, hogy ne jelenjen meg a jÃ¡tÃ©kban kezdetben
                 projectile.SetActive(false);
+                // A lÃ¶vedÃ©khez hozzÃ¡rendeljÃ¼k a fÅ‘ kamerÃ¡t
                 projectile.GetComponent<Projectile>().MainCamera = mainCamera;
+                // A lÃ¶vedÃ©k hozzÃ¡adÃ¡sa a pool-hoz
                 pool.Enqueue(projectile);
             }
         }
 
 
         /// <summary>
-        /// Inicializálja a lövedékek pool-ját azáltal, hogy elõállítja és deaktiválja a szükséges számú lövedéket.
-        /// A lövedékek a poolba kerülnek, és készen állnak a használatra.
+        /// InicializÃ¡lja a lÃ¶vedÃ©kek pool-jÃ¡t azÃ¡ltal, hogy elÃµÃ¡llÃ­tja Ã©s deaktivÃ¡lja a szÃ¼ksÃ©ges szÃ¡mÃº lÃ¶vedÃ©ket.
+        /// A lÃ¶vedÃ©kek a poolba kerÃ¼lnek, Ã©s kÃ©szen Ã¡llnak a hasznÃ¡latra.
         /// </summary>
 
 
 
         /// <summary>
-        /// Lekér egy lövedéket a poolból, vagy létrehoz egy újat, ha nincs elérhetõ inaktív lövedék.
-        /// Beállítja a lövedék pozícióját, forgatását és a sebzés értékét, majd aktiválja azt.
+        /// LekÃ©r egy lÃ¶vedÃ©ket a poolbÃ³l, vagy lÃ©trehoz egy Ãºjat, ha nincs elÃ©rhetÃµ inaktÃ­v lÃ¶vedÃ©k.
+        /// BeÃ¡llÃ­tja a lÃ¶vedÃ©k pozÃ­ciÃ³jÃ¡t, forgatÃ¡sÃ¡t Ã©s a sebzÃ©s Ã©rtÃ©kÃ©t, majd aktivÃ¡lja azt.
         /// </summary>
-        /// <param name="position">A lövedék kívánt pozíciója.</param>
-        /// <param name="rotation">A lövedék kívánt forgatása (orientációja).</param>
-        /// <param name="damageValue">A lövedék által okozott sebzés mértéke.</param>
-        /// <param name="percentageDMGValue">A sebzéshez tartozó százalékos érték, amely esetleg módosíthatja a sebzést.</param>
-        /// <returns>A lekért vagy létrehozott lövedék GameObject-je.</returns>
+        /// <param name="position">A lÃ¶vedÃ©k kÃ­vÃ¡nt pozÃ­ciÃ³ja.</param>
+        /// <param name="rotation">A lÃ¶vedÃ©k kÃ­vÃ¡nt forgatÃ¡sa (orientÃ¡ciÃ³ja).</param>
+        /// <param name="damageValue">A lÃ¶vedÃ©k Ã¡ltal okozott sebzÃ©s mÃ©rtÃ©ke.</param>
+        /// <param name="percentageDMGValue">A sebzÃ©shez tartozÃ³ szÃ¡zalÃ©kos Ã©rtÃ©k, amely esetleg mÃ³dosÃ­thatja a sebzÃ©st.</param>
+        /// <returns>A lekÃ©rt vagy lÃ©trehozott lÃ¶vedÃ©k GameObject-je.</returns>
         public GameObject GetProjectile(Vector2 position, Quaternion rotation, float damageValue, float percentageDMGValue)
         {
-
+            // Loop, hogy megnÃ©zze van-e inaktÃ­v lÃ¶vedÃ©k a pool-ban
             foreach (var projectile in pool)
             {
                 if (!projectile.activeInHierarchy)
                 {
+                    // Ha talÃ¡lunk inaktÃ­v lÃ¶vedÃ©ket, beÃ¡llÃ­tjuk annak pozÃ­ciÃ³jÃ¡t Ã©s forgatÃ¡sÃ¡t
                     projectile.transform.position = position;
                     projectile.transform.rotation = rotation;
 
+                    // A lÃ¶vedÃ©k tulajdonsÃ¡gainak frissÃ­tÃ©se (sebzÃ©s Ã©rtÃ©k, mÃ³dosÃ­tÃ³)
                     UpdateProjectileProperties(projectile, damageValue, percentageDMGValue);
 
+                    // A lÃ¶vedÃ©k aktivÃ¡lÃ¡sa a pool-bÃ³l
                     projectile.SetActive(true);
+                    // Az esemÃ©ny triggerelÃ©se, hogy a lÃ¶vedÃ©k aktivÃ¡lva lett
                     OnProjectileActivated?.Invoke(projectile);
+                    // Visszaadjuk a pool-bÃ³l lekÃ©rt lÃ¶vedÃ©ket
                     return projectile;
                 }
             }
 
+            // Ha nincs elÃ©rhetÅ‘ inaktÃ­v lÃ¶vedÃ©k, lÃ©trehozunk egy Ãºjat
             GameObject newProjectile = Instantiate(projectilePrefab, position, rotation);
+            // Az Ãºj lÃ¶vedÃ©k hozzÃ¡adÃ¡sa a pool-hoz
             pool.Enqueue(newProjectile);
 
+            // Az Ãºj lÃ¶vedÃ©k tulajdonsÃ¡gainak beÃ¡llÃ­tÃ¡sa
             UpdateProjectileProperties(newProjectile, damageValue, percentageDMGValue);
 
+            // Az esemÃ©ny triggerelÃ©se az Ãºj lÃ¶vedÃ©k aktivÃ¡lÃ¡sÃ¡hoz
             OnProjectileActivated?.Invoke(newProjectile);
 
+            // Visszaadjuk az Ãºj lÃ¶vedÃ©ket
             return newProjectile;
 
         }
 
 
         /// <summary>
-        /// Frissíti a lövedék tulajdonságait, például a sebzés értékét.
-        /// Beállítja a lövedék sebzését a megadott 'damageValue' és 'percentageDMGValue' alapján.
+        /// FrissÃ­ti a lÃ¶vedÃ©k tulajdonsÃ¡gait, pÃ©ldÃ¡ul a sebzÃ©s Ã©rtÃ©kÃ©t.
+        /// BeÃ¡llÃ­tja a lÃ¶vedÃ©k sebzÃ©sÃ©t a megadott 'damageValue' Ã©s 'percentageDMGValue' alapjÃ¡n.
         /// </summary>
-        /// <param name="projectile">A frissítendõ lövedék GameObject-je.</param>
-        /// <param name="damageValue">A lövedék új sebzés értéke.</param>
-        /// <param name="percentageDMGValue">A lövedékhez tartozó százalékos sebzés érték.</param>
+        /// <param name="projectile">A frissÃ­tendÃµ lÃ¶vedÃ©k GameObject-je.</param>
+        /// <param name="damageValue">A lÃ¶vedÃ©k Ãºj sebzÃ©s Ã©rtÃ©ke.</param>
+        /// <param name="percentageDMGValue">A lÃ¶vedÃ©khez tartozÃ³ szÃ¡zalÃ©kos sebzÃ©s Ã©rtÃ©k.</param>
         private void UpdateProjectileProperties(GameObject projectile, float damageValue, float percentageDMGValue)
         {
+            // A tÃ¼zelÃ©s szÃ¡mlÃ¡lÃ³ nÃ¶velÃ©se minden lÃ¶vedÃ©k frissÃ­tÃ©skor
             fireCounter++;
 
+            // A lÃ¶vedÃ©k komponensÃ©nek lekÃ©rÃ©se a GameObject-rÅ‘l
             Projectile proj = projectile.GetComponent<Projectile>();
+            // A lÃ¶vedÃ©k sebzÃ©sÃ©nek Ã©s szÃ¡zalÃ©kos sebzÃ©sÃ©nek beÃ¡llÃ­tÃ¡sa
             proj.ProjectileDMG = damageValue;
             proj.PercentageDMGValue = percentageDMGValue;
 
+            // Ha a jelÃ¶lÃ©s engedÃ©lyezve van, jelÃ¶ljÃ¼k meg a lÃ¶vedÃ©ket
             if (isMarkingEnabled)
             {
                 MarkProjectile(proj);
@@ -134,32 +157,38 @@ namespace Assets.Scripts
 
 
         /// <summary>
-        /// Beállítja, hogy a lövedék jelölve legyen-e, a 'fireCounter' és a 'projectileMarkEveryNth' alapján.
-        /// Ha a lövések száma eléri a beállított intervallumot, a lövedék jelölve lesz.
+        /// BeÃ¡llÃ­tja, hogy a lÃ¶vedÃ©k jelÃ¶lve legyen-e, a 'fireCounter' Ã©s a 'projectileMarkEveryNth' alapjÃ¡n.
+        /// Ha a lÃ¶vÃ©sek szÃ¡ma elÃ©ri a beÃ¡llÃ­tott intervallumot, a lÃ¶vedÃ©k jelÃ¶lve lesz.
         /// </summary>
-        /// <param name="projectile">A lövedék, amelynek a jelölését frissítjük.</param>
+        /// <param name="projectile">A lÃ¶vedÃ©k, amelynek a jelÃ¶lÃ©sÃ©t frissÃ­tjÃ¼k.</param>
         void MarkProjectile(Projectile projectile)
         {
+            // EllenÅ‘rzi, hogy a lÃ¶vÃ©sek szÃ¡ma elÃ©rte-e a beÃ¡llÃ­tott intervallumot (projectileMarkEveryNth)
             if (fireCounter % projectileMarkEveryNth == 0)
             {
+                // Ha elÃ©rte az intervallumot, a lÃ¶vedÃ©k jelÃ¶lve lesz
                 projectile.IsMarked = true;
+                // A tÃ¼zelÃ©s szÃ¡mlÃ¡lÃ³ visszaÃ¡llÃ­tÃ¡sa nullÃ¡ra, hogy Ãºjrainduljon az intervallum
                 fireCounter = 0;
             }
             else
             {
+                // Ha nem Ã©rte el az intervallumot, a lÃ¶vedÃ©k nem lesz jelÃ¶lve
                 projectile.IsMarked = false;
             }
         }
 
 
         /// <summary>
-        /// Engedélyezi vagy letiltja a lövedékek jelölését.
-        /// Ha a jelölés le van tiltva, a lövések számlálója (fireCounter) visszaállítódik.
+        /// EngedÃ©lyezi vagy letiltja a lÃ¶vedÃ©kek jelÃ¶lÃ©sÃ©t.
+        /// Ha a jelÃ¶lÃ©s le van tiltva, a lÃ¶vÃ©sek szÃ¡mlÃ¡lÃ³ja (fireCounter) visszaÃ¡llÃ­tÃ³dik.
         /// </summary>
-        /// <param name="enable">Ha igaz (true), engedélyezi a jelölést, ha hamis (false), letiltja azt.</param>
+        /// <param name="enable">Ha igaz (true), engedÃ©lyezi a jelÃ¶lÃ©st, ha hamis (false), letiltja azt.</param>
         public void EnableMarking(bool enable)
         {
+            // A jelÃ¶lÃ©s engedÃ©lyezÃ©sÃ©nek beÃ¡llÃ­tÃ¡sa
             IsMarkingEnabled = enable;
+            // Ha a jelÃ¶lÃ©s le van tiltva, a tÃ¼zelÃ©s szÃ¡mlÃ¡lÃ³ visszaÃ¡llÃ­tÃ³dik nullÃ¡ra
             if (!isMarkingEnabled)
             {
                 fireCounter = 0;
@@ -168,16 +197,21 @@ namespace Assets.Scripts
 
 
         /// <summary>
-        /// Visszaad egy lövedéket a poolba: deaktiválja azt, és nullázza a sebzés értékét.
-        /// Eseményt hív, hogy jelezze a lövedék deaktiválódását.
+        /// Visszaad egy lÃ¶vedÃ©ket a poolba: deaktivÃ¡lja azt, Ã©s nullÃ¡zza a sebzÃ©s Ã©rtÃ©kÃ©t.
+        /// EsemÃ©nyt hÃ­v, hogy jelezze a lÃ¶vedÃ©k deaktivÃ¡lÃ³dÃ¡sÃ¡t.
         /// </summary>
-        /// <param name="projectile">A visszaadott lövedék GameObject-je.</param>
+        /// <param name="projectile">A visszaadott lÃ¶vedÃ©k GameObject-je.</param>
         public void ReturnProjectile(GameObject projectile)
         {
+            // A lÃ¶vedÃ©k deaktivÃ¡lÃ¡sa, hogy visszakerÃ¼ljÃ¶n a pool-ba
             projectile.SetActive(false);
+            // A lÃ¶vedÃ©k komponensÃ©nek lekÃ©rÃ©se
             Projectile proj = projectile.GetComponent<Projectile>();
+            // A lÃ¶vedÃ©k sebzÃ©sÃ©nek nullÃ¡zÃ¡sa, hogy ne tartalmazzon Ã©rvÃ©nyes sebzÃ©st a kÃ¶vetkezÅ‘ hasznÃ¡lat elÅ‘tt
             proj.ProjectileDMG = 0f;
+            // A lÃ¶vedÃ©k jelÃ¶lÃ©sÃ©nek tÃ¶rlÃ©se
             proj.IsMarked = false;
+            // Az esemÃ©ny triggerelÃ©se, hogy jelezze a lÃ¶vedÃ©k deaktivÃ¡lÃ³dÃ¡sÃ¡t
             OnProjectileDeactivated?.Invoke(projectile);
         }
 

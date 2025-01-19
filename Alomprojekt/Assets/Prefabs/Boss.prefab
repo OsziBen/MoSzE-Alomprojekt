@@ -267,6 +267,7 @@ GameObject:
   - component: {fileID: 7176024872123759401}
   - component: {fileID: 1054022019225314806}
   - component: {fileID: 2739853896292724597}
+  - component: {fileID: 5419311468828956555}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Untagged
@@ -393,12 +394,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabID: 1991b353-d295-42b7-8a25-dd3007d78a9d
   _maxHealth: 20
-  _movementSpeed: 0
+  _movementSpeed: 2
   _damage: 2
-  _attackCooldown: 0
   head: {fileID: 8477411664171374919}
   leftArm: {fileID: 2952663060691800939}
   rightArm: {fileID: 8048482267699872293}
+  offsetDistance: 6
+  deviationRadius: 2
+  targetUpdateInterval: 2
+  shotTravelSpeed: 300
+  intervalStart: 1.125
+--- !u!50 &5419311468828956555
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6998818902686470411}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &7247023397678159504
 GameObject:
   m_ObjectHideFlags: 0

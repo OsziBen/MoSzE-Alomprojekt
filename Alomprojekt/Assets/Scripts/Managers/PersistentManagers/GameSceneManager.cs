@@ -10,13 +10,28 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static GameStateManager;
 
+/// <summary>
+/// Játékjelenet-kezelő osztály, amely a BasePersistentManager osztályból származik
+/// és singleton mintát követ a GameSceneManager típussal
+/// </summary>
 public class GameSceneManager : BasePersistentManager<GameSceneManager>
 {
+    /// <summary>
+    /// Átvezető jelenetek (cutscene) adatainak tárolására szolgáló belső osztály
+    /// </summary>
     public class CutsceneData
     {
+        // Az átvezető jelenet hivatkozási neve (referencia név)
         public string CutsceneRefName { get; set; }
+
+        // Az átvezető jelenet teljes neve
         public string CutsceneFullName { get; set; }
 
+        /// <summary>
+        /// CutsceneData konstruktor
+        /// </summary>
+        /// <param name="refName">A jelenet hivatkozási neve</param>
+        /// <param name="fullName">A jelenet teljes neve</param>
         public CutsceneData(string refName, string fullName)
         {
             CutsceneRefName = refName;
@@ -40,14 +55,23 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
     // Jelenlegi cutscene-hez tartozó képek, ezeket fogjuk később animálni
     private List<Image> currentAnimatedCutsceneImages;
 
+    // Az animációk beállításait tartalmazó szekció
     [Header("Animation Settings")]
+    // Az első halványítás előtti várakozási idő másodpercben
     [SerializeField]
-    private float bufferTimeBeforeFirstFade; // New variable for the buffer time
+    private float bufferTimeBeforeFirstFade;
+
+    // A halványítási effekt időtartama másodpercben 
     [SerializeField]
-    private float fadeDuration; // Duration for each image fade effect in seconds
+    private float fadeDuration;
+
+    // Két halványítás közötti várakozási idő másodpercben
     [SerializeField]
-    private float waitDuration; // Duration to wait before starting next image fade
-    private float targetAlpha = 1f; // Set the target alpha to max (fully opaque)
+    private float waitDuration;
+
+    // A halványítás célértéke (átlátszóság szintje)
+    // Alapértelmezett érték: 1 (teljesen látható)
+    private float targetAlpha = 1f;
 
     // System.Random
     private readonly System.Random random = new System.Random();
@@ -63,31 +87,53 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
     /// </summary>
     //public event Action<bool> OnSceneLoaded;  // -> invoke() !
 
-
+    /// <summary>
+    /// Az osztály inicializálását végző metódus.
+    /// Betölti a jeleneteket az építési beállításokból és beállítja a mentési rendszert.
+    /// </summary>
     protected override async void Initialize()
     {
+        // Vár egy frame-et az aszinkron művelet előtt
         await Task.Yield();
+        // Meghívja az ősosztály inicializáló metódusát
         base.Initialize();
+        // Betölti a jeleneteket a build beállításokból
         LoadScenesFromBuildSettings();
+        // Megkeresi és eltárolja a mentéskezelő komponenst
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
+        // Feliratkozik a mentési eseményre
         saveLoadManager.OnSaveRequested += Save;
         //LogCutscenes(cutscenes);
     }
 
-
+    /// <summary>
+    /// A játékállás mentését végző metódus.
+    /// Elmenti az aktuális jelenet nevét a mentési adatok közé.
+    /// </summary>
+    /// <param name="saveData">A mentési adatokat tartalmazó objektum</param>
     void Save(SaveData saveData)
     {
+        // Az aktuális jelenet nevét elmenti a játékadatok közé
         saveData.gameData.levelLayoutName = GetCurrentSceneName();
     }
 
-
+    /// <summary>
+    /// Az aktuálisan betöltött jelenet nevének lekérdezése.
+    /// </summary>
+    /// <returns>Az aktív jelenet neve string formátumban</returns>
     string GetCurrentSceneName()
     {
+        // Visszaadja az aktív jelenet nevét
         return SceneManager.GetActiveScene().name;
     }
 
+    /// <summary>
+    /// Az objektum megsemmisülésekor lefutó metódus.
+    /// Eltávolítja a mentési eseményre való feliratkozást.
+    /// </summary>
     private void OnDestroy()
     {
+        // Ha létezik mentéskezelő, leiratkozik a mentési eseményről
         if (saveLoadManager != null)
         {
             saveLoadManager.OnSaveRequested -= Save;
@@ -209,12 +255,14 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
     /// <returns>Az átvezető nevének kinyert része, vagy null, ha az index érvénytelen.</returns>
     private string ExtractCutscenePart(string cutsceneName, int index)
     {
+        // Ha a bemeneti string üres vagy csak whitespace karaktereket tartalmaz, null-t ad vissza
         if (string.IsNullOrWhiteSpace(cutsceneName))
         {
             return null;
         }
-
+        // A teljes nevet feldarabolja az alulvonás karakterek mentén
         string[] parts = cutsceneName.Split('_');
+        // Ha létezik a kért indexű rész, visszaadja azt, egyébként null-t ad vissza
         return parts.Length > index ? parts[index] : null;
     }
 
@@ -466,48 +514,66 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
         }
     }
 
+    /// <summary>
+    /// Ez a függvény egy adott pályanév alapján betölti a megfelelő animált átvezető jelenetet.
+    /// </summary>
+    /// <param name="levelName">A pálya neve, amely alapján meghatározzuk az átvezető jelenetet.</param>
+    /// <returns>Visszatérési érték: igaz, ha sikerült betölteni az átvezetőt, hamis, ha hiba történt.</returns>
     public async Task<bool> LoadCutsceneByLevelNameAsync(string levelName)
     {
         bool asyncOperation;
 
         try
         {
+            // Pályanév alapján megszerezzük a pálya számát
             int levelNum = ExtractLevelNumber(levelName);
 
-            if (levelNum == -1) // Boss Level
+            // Ha a pálya szám -1 (Boss szint), akkor egy speciális átvezető jelenetet töltünk be
+            if (levelNum == -1)
             {
                 asyncOperation = await LoadAnimatedCutsceneAsync("LevelTransition34");
             }
-            else if (levelNum == 1) // Első pálya
+            // Ha az első pálya, akkor a "NewGame" átvezetőt tölti be
+            else if (levelNum == 1)
             {
                 asyncOperation = await LoadAnimatedCutsceneAsync("NewGame");
             }
             else
             {
+                // Ha nem első vagy boss szint, akkor az előző szint és az aktuális szint átvezetőjét tölti be
                 string cutsceneRefName = "LevelTransition" + (levelNum - 1).ToString() + levelNum.ToString();
                 asyncOperation = await LoadAnimatedCutsceneAsync(cutsceneRefName);
             }
 
+            // Sikerült az átvezető betöltése
             return true;
         }
         catch (Exception ex)
         {
+            // Hiba történt, ha kivétel keletkezett, akkor azt logoljuk
             Debug.LogError($"Error during loading cutscene by level name! {ex.Message}");
             return false;
         }
     }
 
-
+    /// <summary>
+    /// Ez a függvény egy adott pályanév alapján betölti a megfelelő jelenetet. Ha a pálya a Boss Battle, akkor speciális kezelést alkalmaz.
+    /// </summary>
+    /// <param name="levelName">A pálya neve, amelyet be szeretnénk tölteni.</param>
+    /// <returns>Visszatérési érték: igaz, ha sikerült betölteni a jelenetet, hamis, ha hiba történt.</returns>
     public async Task<bool> LoadLevelSceneByNameAsync(string levelName)
     {
         try
         {
+            // Ha a pálya neve a "BossBattle", akkor egy speciális jelenetet töltünk be
             if (levelName == GameLevel.BossBattle.ToString())
             {
+                // A "BossFight" nevű jelenetet töltjük be
                 bool asyncOp = await LoadUtilitySceneAsync("BossFight");
             }
             else
             {
+                // Egyéb esetben a megadott pályát (levelName) töltjük be
                 UnityEngine.AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(levelName);
                 // Várunk, amíg a scene teljesen betöltődik
                 while (!asyncOperation.isDone)
@@ -516,10 +582,12 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
                 }
             }
 
+            // A jelenet sikeresen betöltődött
             return true;
         }
         catch (Exception ex)
         {
+            // Hiba történt, ha kivétel keletkezett, azt logoljuk
             Debug.LogError($"Error during loading saved scene data! {ex.Message}");
             return false;
         }
@@ -595,16 +663,22 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
         }
     }
 
-
+    /// <summary>
+    /// Ez a függvény naplózza az átvezető jeleneteket, kategóriák szerint csoportosítva.
+    /// </summary>
+    /// <param name="cutscenes">A betöltött átvezető jelenetek, kategóriákra bontva.</param>
     private void LogCutscenes(Dictionary<string, List<CutsceneData>> cutscenes)
     {
+        // A cutscenes dictionary minden kategóriáját végigiteráljuk
         foreach (var category in cutscenes)
         {
             string categoryName = category.Key;
             Debug.Log($"Category: {categoryName}");
 
+            // Az adott kategórián belüli összes átvezetőt végigiteráljuk
             foreach (var cutscene in category.Value)
             {
+                // Az átvezető referencia neve és teljes neve logolása
                 Debug.Log($"    Cutscene Ref Name: {cutscene.CutsceneRefName}, Full Name: {cutscene.CutsceneFullName}");
             }
         }

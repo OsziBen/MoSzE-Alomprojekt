@@ -9,140 +9,140 @@ using UnityEngine.InputSystem;
 
 namespace Assets.Scripts
 {
-    // TODO: Mozg·s Ès mozg·si sebessÈg kezelÈse
-    // TODO: v·ltozÛk/metÛdusok hozz·fÈrÈsi szintjÈnek fel¸lvizsg·lata tesztelÈseket kˆvetıen
-    // TODO: Player Ès Enemy t·mad·s ˆsszefÈs¸lÈse
+    // TODO: Mozg√°s √©s mozg√°si sebess√©g kezel√©se
+    // TODO: v√°ltoz√≥k/met√≥dusok hozz√°f√©r√©si szintj√©nek fel√ºlvizsg√°lata tesztel√©seket k√∂vet√µen
+    // TODO: Player √©s Enemy t√°mad√°s √∂sszef√©s√ºl√©se
     public abstract class Character : MonoBehaviour
     {
         /// <summary>
-        /// V·ltozÛk
+        /// V√°ltoz√≥k
         /// </summary>
         [Header("Prefab ID")]
         [SerializeField]
-        protected string prefabID;
+        protected string prefabID; // Az objektum egyedi azonos√≠t√≥ja
 
         [ContextMenu("Generate guid for ID")]
         private void GenerateGuid()
         {
-            prefabID = System.Guid.NewGuid().ToString();
+            prefabID = System.Guid.NewGuid().ToString(); // √öj GUID gener√°l√°sa az objektum azonos√≠t√≥j√°hoz
         }
 
 
         [Header("Base Stats")]
         [SerializeField]
-        protected float maxHealth;    // Karakter maxim·lis Èletereje
-        protected float additionalHealth = 0f; // Karakter hozz·adott Èletereje
-        protected float _currentHealth;   // Karakter aktu·lis Èletereje
+        protected float maxHealth;    // Karakter maxim√°lis √©letereje
+        protected float additionalHealth = 0f; // Karakter hozz√°adott √©letereje
+        protected float _currentHealth;   // Karakter aktu√°lis √©letereje
         [SerializeField]
-        protected float baseMovementSpeed = 3.0f;  // Karakter alap mozg·si sebessÈge
-        protected float additionalMovementSpeed = 0f;  // Karakter hoz·adott mozg·si sebessÈge
-        protected float _currentMovementSpeed;  // Karakter aktu·lis mozg·si sebessÈge
+        protected float baseMovementSpeed = 3.0f;  // Karakter alap mozg√°si sebess√©ge
+        protected float additionalMovementSpeed = 0f;  // Karakter hoz√°adott mozg√°si sebess√©ge
+        protected float _currentMovementSpeed;  // Karakter aktu√°lis mozg√°si sebess√©ge
         [SerializeField]
-        protected float baseDMG = 1f;  // Karakter alap sebzÈsÈrtÈke
-        protected float additionalDMG = 0f; // Karakter hozz·adott sebzÈsÈrtÈke
-        protected float _currentDMG;    // Karakter aktu·lis sebzÈsÈrtÈke
+        protected float baseDMG = 1f;  // Karakter alap sebz√©s√©rt√©ke
+        protected float additionalDMG = 0f; // Karakter hozz√°adott sebz√©s√©rt√©ke
+        protected float _currentDMG;    // Karakter aktu√°lis sebz√©s√©rt√©ke
         [SerializeField]
-        protected float baseAttackCooldown = 0.5f; // Karakter alap t·mad·s-visszatˆltıdÈsi ideje
-        protected float attackCooldownReduction = 0f;  // Karakter hozz·adott t·mad·s-visszatˆltıdÈsi ideje
-        protected float _currentAttackCooldown; // Karakter aktu·lis t·mad·s-visszatˆltıdÈsi ideje
+        protected float baseAttackCooldown = 0.5f; // Karakter alap t√°mad√°s-visszat√∂lt√µd√©si ideje
+        protected float attackCooldownReduction = 0f;  // Karakter hozz√°adott t√°mad√°s-visszat√∂lt√µd√©si ideje
+        protected float _currentAttackCooldown; // Karakter aktu√°lis t√°mad√°s-visszat√∂lt√µd√©si ideje
         [SerializeField]
-        protected float baseCriticalHitChance = 0.05f;  // Karakter alap kritikussebzÈs esÈlye (%)
-        protected float additionalCriticalHitChance = 0.2f; // Karakter hozz·adott kritikussebzÈs esÈlye (%)
-        protected float _currentCriticalHitChance;  // Karakter aktu·lis kritikussebzÈs esÈlye (%)
+        protected float baseCriticalHitChance = 0.05f;  // Karakter alap kritikussebz√©s es√©lye (%)
+        protected float additionalCriticalHitChance = 0.2f; // Karakter hozz√°adott kritikussebz√©s es√©lye (%)
+        protected float _currentCriticalHitChance;  // Karakter aktu√°lis kritikussebz√©s es√©lye (%)
         [SerializeField]
-        protected float basePercentageBasedDMG = 0f;    // Karakter alap sz·zalÈkos sebzÈsÈrtÈke (%)
-        protected float additionalPercentageBasedDMG = 0.07f;   // Karakter hozz·adott sz·zalÈkos sebzÈsÈrtÈke (%)
-        protected float _currentPercentageBasedDMG; // Karakter aktu·lis sz·zalÈkos sebzÈsÈrtÈke (%)
+        protected float basePercentageBasedDMG = 0f;    // Karakter alap sz√°zal√©kos sebz√©s√©rt√©ke (%)
+        protected float additionalPercentageBasedDMG = 0.07f;   // Karakter hozz√°adott sz√°zal√©kos sebz√©s√©rt√©ke (%)
+        protected float _currentPercentageBasedDMG; // Karakter aktu√°lis sz√°zal√©kos sebz√©s√©rt√©ke (%)
 
         [Header("Max Values (temp)")]
         [SerializeField]
-        protected float minHealthValue = 5f;
+        protected float minHealthValue = 5f; // Minim√°lis eg√©szs√©g√©rt√©k
         [SerializeField]
-        protected float maxHealthValue = 10f;
+        protected float maxHealthValue = 10f; // Maxim√°lis eg√©szs√©g√©rt√©k
         [SerializeField]
-        protected float minMovementSpeedValue = 3.0f;
+        protected float minMovementSpeedValue = 3.0f; // Minim√°lis mozg√°si sebess√©g
         [SerializeField]
-        protected float maxMovementSpeedValue = 10.0f;
+        protected float maxMovementSpeedValue = 10.0f; // Maxim√°lis mozg√°si sebess√©g
         [SerializeField]
-        protected float minDMGValue = 1f;
+        protected float minDMGValue = 1f; // Minim√°lis sebz√©s√©rt√©k
         [SerializeField]
-        protected float maxDMGValue = 10f;
+        protected float maxDMGValue = 10f; // Maxim√°lis sebz√©s√©rt√©k
         [SerializeField]
-        protected float minAttackCooldownValue = 0.5f;
+        protected float minAttackCooldownValue = 0.5f; // Minim√°lis t√°mad√°s-visszat√∂lt√µd√©si id≈ë
         [SerializeField]
-        protected float maxAttackCooldownValue = 5.0f;
+        protected float maxAttackCooldownValue = 5.0f; // Maxim√°lis t√°mad√°s-visszat√∂lt√µd√©si id≈ë
 
-        protected float minCriticalHitChanceValue = 0.0f;
-        protected float maxCriticalHitChanceValue = 0.5f; // Kritikus tal·lat esÈlye sz·zalÈkban (0% - 100%)
+        protected float minCriticalHitChanceValue = 0.0f; // Minim√°lis kritikus tal√°lat es√©ly
+        protected float maxCriticalHitChanceValue = 0.5f; // Maxim√°lis kritikus tal√°lat es√©lye sz√°zal√©kban (0% - 100%)
 
-        protected float minPercentageBasedDMGValue = 0.0f;
-        protected float maxPercentageBasedDMGValue = 0.5f;
+        protected float minPercentageBasedDMGValue = 0.0f; // Minim√°lis sz√°zal√©kos sebz√©s
+        protected float maxPercentageBasedDMGValue = 0.5f; // Maxim√°lis sz√°zal√©kos sebz√©s
 
         /// <summary>
         /// Komponenesek
         /// </summary>
         [SerializeField]
-        protected Rigidbody2D _rigidbody2d;  // Karakterhez kapcsolÛdÛ Rigidbody2D komponens
+        protected Rigidbody2D _rigidbody2d;  // Karakterhez kapcsol√≥d√≥ Rigidbody2D komponens
 
 
         /// <summary>
-        /// Getterek Ès Setterek
+        /// Getterek √©s Setterek
         /// </summary>
         /// 
-        public string ID
+        public string ID // Prefab egyedi azonos√≠t√≥ja.
         {
             get { return prefabID; }
         }
 
-        public float CurrentHealth  // Aktu·lis Èleterı
+        public float CurrentHealth  // Aktu√°lis √©leter√µ
         {
             get { return _currentHealth; }
             set { _currentHealth = value; }
         }
 
-        public float MaxHealth  // Maxim·lis Èleterı
+        public float MaxHealth  // Maxim√°lis √©leter√µ
         {
             get { return maxHealth; }
             set { maxHealth = value; }
         }
 
-        public float CurrentMovementSpeed   // Aktu·lis mozg·si sebessÈg
+        public float CurrentMovementSpeed   // Aktu√°lis mozg√°si sebess√©g
         {
             get { return _currentMovementSpeed; }
             set { _currentMovementSpeed = value; }
         }
 
-        public float CurrentDMG // Aktu·lis sebzÈsÈrtÈk
+        public float CurrentDMG // Aktu√°lis sebz√©s√©rt√©k
         {
             get { return _currentDMG; }
             set { _currentDMG = value; }
         }
 
-        public float BaseDMG    // Alap sebzÈsÈrtÈk
+        public float BaseDMG    // Alap sebz√©s√©rt√©k
         {
             get { return baseDMG; }
             set { baseDMG = value; }
         }
 
-        public float CurrentAttackCooldown  // Aktu·lis sezÈs-visszatˆltıdÈsi idı
+        public float CurrentAttackCooldown  // Aktu√°lis sez√©s-visszat√∂lt√µd√©si id√µ
         {
             get { return _currentAttackCooldown; }
             set { _currentAttackCooldown = value; }
         }
 
-        public float CurrentCriticalHitChance   // Aktu·lis kritikussebzÈs esÈly (5)
+        public float CurrentCriticalHitChance   // Aktu√°lis kritikussebz√©s es√©ly (5)
         {
             get { return _currentCriticalHitChance; }
             set { _currentCriticalHitChance = value; }
         }
 
-        public float CurrentPercentageBasedDMG  // Aktu·lis sz·zalÈkos sebzÈsÈrtÈk (%)
+        public float CurrentPercentageBasedDMG  // Aktu√°lis sz√°zal√©kos sebz√©s√©rt√©k (%)
         {
             get { return _currentPercentageBasedDMG; }
             set { _currentPercentageBasedDMG = value; }
         }
 
-        public Rigidbody2D rigidbody2d
+        public Rigidbody2D rigidbody2d // Az objektum rigidbody2d-je.
         {
             get { return _rigidbody2d; }
             protected set { _rigidbody2d = value; }
@@ -150,15 +150,15 @@ namespace Assets.Scripts
 
 
         /// <summary>
-        /// EsemÈnyek
+        /// Esem√©nyek
         /// </summary>
-        protected event Action OnDeath;    // Karakter hal·la
-        public event Action<float> OnHealthChanged;  // Karakter ÈleterejÈnek megv·ltoz·sa
+        protected event Action OnDeath;    // Karakter hal√°la
+        public event Action<float> OnHealthChanged;  // Karakter √©leterej√©nek megv√°ltoz√°sa
 
 
         /// <summary>
-        /// Inicializ·lja a GameObject v·ltozÛit Ès komponenseit, valamint feliratkozik a sz¸ksÈges esemÈnyekre.
-        /// Ez a metÛdus akkor ker¸l meghÌv·sra, amikor a szkript elıszˆr betˆltıdik vagy pÈld·nyosul, jellemzıen a j·tÈk elejÈn.
+        /// Inicializ√°lja a GameObject v√°ltoz√≥it √©s komponenseit, valamint feliratkozik a sz√ºks√©ges esem√©nyekre.
+        /// Ez a met√≥dus akkor ker√ºl megh√≠v√°sra, amikor a szkript el√µsz√∂r bet√∂lt√µdik vagy p√©ld√°nyosul, jellemz√µen a j√°t√©k elej√©n.
         /// </summary>
         protected virtual void Awake()
         {
@@ -172,50 +172,55 @@ namespace Assets.Scripts
             CurrentCriticalHitChance = baseCriticalHitChance + additionalCriticalHitChance;
             CurrentPercentageBasedDMG = basePercentageBasedDMG + additionalPercentageBasedDMG;
             */
+            // rigidbody2d komponens referencia.
             rigidbody2d = GetComponent<Rigidbody2D>();
-            // event subscriptions
+            // Die met√≥dous feliratkoztat√°sa az OnDeath eventre.
             OnDeath += Die;
         }
 
 
         /// <summary>
-        /// 
+        /// Ellen≈ërzi, hogy az objektum egyedi azonos√≠t√≥ja √©rv√©nyes-e.
         /// </summary>
         private void OnValidate()
         {
-            ValidateUniqueID();
+            //ValidateUniqueID();
         }
 
-
+        /// <summary>
+        /// Ellen≈ërzi, hogy a prefab ID √©rv√©nyes-e. Ha nem, hiba√ºzenetet gener√°l.
+        /// </summary>
         private void ValidateUniqueID()
         {
             if (string.IsNullOrEmpty(prefabID))
             {
-                Debug.LogError("Prefab ID is empty! Please generate or assign a unique ID.", this);
+                Debug.LogError("Prefab ID is empty! Please generate or assign a unique ID.", this); // Hiba√ºzenet, ha az ID √ºres vagy √©rv√©nytelen
             }
         }
 
 
         /// <summary>
-        /// Kezeli a karakter Èleterı-v·ltoz·s·t, figyeli a kapcsolÛdÛ esemÈnyeket,
-        /// Ès ellenırzi, hogy a karakter meghalt-e.
+        /// Kezeli a karakter √©leter√µ-v√°ltoz√°s√°t, figyeli a kapcsol√≥d√≥ esem√©nyeket,
+        /// √©s ellen√µrzi, hogy a karakter meghalt-e.
         /// </summary>
-        /// <param name="amount">Az Èleterı v·ltoz·sa; lehet pozitÌv (gyÛgyul·s), vagy negatÌv (sebzÈs)</param>
+        /// <param name="amount">Az √©leter√µ v√°ltoz√°sa; lehet pozit√≠v (gy√≥gyul√°s), vagy negat√≠v (sebz√©s)</param>
         public virtual void ChangeHealth(float amount)
         {
+            // Az √∫j √©leter≈ë sz√°m√≠t√°sa √©s a minim√°lis/maxim√°lis √©rt√©kek korl√°toz√°sa
             CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, MaxHealth);
+            // Az √©leter≈ëv√°ltoz√°s event √©rtes√≠t√©se
             OnHealthChanged?.Invoke(CurrentHealth);
 
             Debug.Log(CurrentHealth + " / " + MaxHealth);
             if (CurrentHealth == 0f)
             {
-                OnDeath?.Invoke();
+                OnDeath?.Invoke(); // Ha az √©leter≈ë null√°ra cs√∂kkent, akkor az OnDeath event megh√≠v√°sa
             }
         }
 
 
         /// <summary>
-        /// Kezeli a karakter hal·l·t, Ès tˆrli a GameObject-et.
+        /// Kezeli a karakter hal√°l√°t, √©s t√∂rli a GameObject-et.
         /// </summary>
         protected virtual void Die()
         {
@@ -225,12 +230,12 @@ namespace Assets.Scripts
 
 
         /// <summary>
-        /// A karakterhez kapcsolÛdÛ GameObject tˆrlÈsÈt megelızıen leiratkoz·s a kapcsolÛdÛ
-        /// OnDeath esemÈnyrıl, hogy elker¸lj¸k az esetleges memÛria sziv·rg·st vagy hib·kat.
+        /// A karakterhez kapcsol√≥d√≥ GameObject t√∂rl√©s√©t megel√µz√µen leiratkoz√°s a kapcsol√≥d√≥
+        /// OnDeath esem√©nyr√µl, hogy elker√ºlj√ºk az esetleges mem√≥ria sziv√°rg√°st vagy hib√°kat.
         /// </summary>
         protected virtual void OnDestroy()
         {
-            OnDeath -= Die;
+            OnDeath -= Die; // Die f√ºggv√©ny leiratkoztat√°sa az OnDeath eventr≈ël.
         }
     }
 }

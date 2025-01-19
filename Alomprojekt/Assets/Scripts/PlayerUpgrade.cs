@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,41 +9,44 @@ using StatValuePair = System.Collections.Generic.KeyValuePair<PlayerUpgradeData.
 public class PlayerUpgrade
 {
     /// <summary>
-    /// Változók
+    /// VÃ¡ltozÃ³k
     /// </summary>
     private string _uniqueID;
-    public string upgradeName;  // A fejlesztés neve
-    public Sprite icon;         // A fejlesztés ikonjának helye
-    public bool isHealing;  // Ha igaz, a fejlesztés gyógyító jellegû
-    public string description;  // A fejlesztés leírása
-    public string customDescription;  // Leírás, amely tartalmazhat helyettesítõ szövegeket
-    public int minUpgradeLevel;  // A minimális szint, amelyen elérhetõ a fejlesztés
-    public int maxUpgradeLevel;  // A maximális szint, ameddig a fejlesztés növelhetõ
-    public int currentUpgradeLevel;  // Az aktuális fejlesztési szint
-    public int basePrice;  // A fejlesztés alapára
-    public float priceScaleFactor;  // Az ár növelésének tényezõje a szint növekedésével
-    private readonly int maxPrice = 150;  // A fejlesztés maximális ára
-    public List<StatModifierData> modifiers;  // A fejlesztéshez tartozó statisztikai módosítók
-    public bool isTempCopy = false; // Ideiglenes másolat-e?
+    public string upgradeName;  // A fejlesztÃ©s neve
+    public Sprite icon;         // A fejlesztÃ©s ikonjÃ¡nak helye
+    public bool isHealing;  // Ha igaz, a fejlesztÃ©s gyÃ³gyÃ­tÃ³ jellegÃ»
+    public string description;  // A fejlesztÃ©s leÃ­rÃ¡sa
+    public string customDescription;  // LeÃ­rÃ¡s, amely tartalmazhat helyettesÃ­tÃµ szÃ¶vegeket
+    public int minUpgradeLevel;  // A minimÃ¡lis szint, amelyen elÃ©rhetÃµ a fejlesztÃ©s
+    public int maxUpgradeLevel;  // A maximÃ¡lis szint, ameddig a fejlesztÃ©s nÃ¶velhetÃµ
+    public int currentUpgradeLevel;  // Az aktuÃ¡lis fejlesztÃ©si szint
+    public int basePrice;  // A fejlesztÃ©s alapÃ¡ra
+    public float priceScaleFactor;  // Az Ã¡r nÃ¶velÃ©sÃ©nek tÃ©nyezÃµje a szint nÃ¶vekedÃ©sÃ©vel
+    private readonly int maxPrice = 150;  // A fejlesztÃ©s maximÃ¡lis Ã¡ra
+    public List<StatModifierData> modifiers;  // A fejlesztÃ©shez tartozÃ³ statisztikai mÃ³dosÃ­tÃ³k
+    public bool isTempCopy = false; // Ideiglenes mÃ¡solat-e?
 
 
     [System.Serializable]
     public class StatModifierData
     {
-        public PlayerUpgradeData.StatType type;  // A módosító típusa (pl. életerõ, sebzés)
-        public float baseValue;  // A módosító alapértéke
-        public float scaleFactor;  // A módosító szorzója, amely a szinttel növekszik
+        public PlayerUpgradeData.StatType type;  // A mÃ³dosÃ­tÃ³ tÃ­pusa (pl. Ã©leterÃµ, sebzÃ©s)
+        public float baseValue;  // A mÃ³dosÃ­tÃ³ alapÃ©rtÃ©ke
+        public float scaleFactor;  // A mÃ³dosÃ­tÃ³ szorzÃ³ja, amely a szinttel nÃ¶vekszik
     }
 
-    // Konstruktor, amely a PlayerUpgradeData objektum adatait használja a PlayerUpgrade objektum létrehozásához
+    // Konstruktor, amely a PlayerUpgradeData objektum adatait hasznÃ¡lja a PlayerUpgrade objektum lÃ©trehozÃ¡sÃ¡hoz
     public PlayerUpgrade(PlayerUpgradeData upgrade)
     {
+        // EllenÅ‘rzi, hogy az upgrade paramÃ©ter null-e
         if (upgrade == null)
         {
+            // HibaÃ¼zenet jelenik meg, ha a paramÃ©ter null
             Debug.LogError("PlayerUpgrade object is null in UpgradeData constructor.");
-            return;
+            return; // KilÃ©p a konstruktorbÃ³l
         }
 
+        // InicializÃ¡lja a PlayerUpgrade mezÅ‘it a PlayerUpgradeData mezÅ‘ibÅ‘l
         ID = upgrade.ID;
         upgradeName = upgrade.upgradeName;
         icon = upgrade.icon;
@@ -55,23 +58,27 @@ public class PlayerUpgrade
         currentUpgradeLevel = upgrade.currentUpgradeLevel;
         basePrice = upgrade.basePrice;
         priceScaleFactor = upgrade.priceScaleFactor;
+
+        // A PlayerUpgrade pÃ©ldÃ¡ny nem ideiglenes mÃ¡solatkÃ©nt kerÃ¼l lÃ©trehozÃ¡sra
         isTempCopy = false;
 
+        // InicializÃ¡lja a mÃ³dosÃ­tÃ³k listÃ¡jÃ¡t
         modifiers = new List<StatModifierData>();
 
+        // VÃ©gigmegy az UpgradeData mÃ³dosÃ­tÃ³in
         foreach (var modifier in upgrade.modifiers)
         {
-            // A módosítók másolása
+            // LemÃ¡solja az egyes mÃ³dosÃ­tÃ³kat egy Ãºj StatModifierData objektumba, Ã©s hozzÃ¡adja a listÃ¡hoz
             modifiers.Add(new StatModifierData
             {
-                type = modifier.type,
-                baseValue = modifier.baseValue,
-                scaleFactor = modifier.scaleFactor
+                type = modifier.type, // BeÃ¡llÃ­tja a tÃ­pusÃ¡t
+                baseValue = modifier.baseValue, // BeÃ¡llÃ­tja az alapÃ©rtÃ©kÃ©t
+                scaleFactor = modifier.scaleFactor // BeÃ¡llÃ­tja a skÃ¡lÃ¡zÃ¡si tÃ©nyezÅ‘t
             });
         }
     }
 
-    // Konstruktor, amely egy meglévõ PlayerUpgrade másolatát hozza létre
+    // Konstruktor, amely egy meglÃ©vÃµ PlayerUpgrade mÃ¡solatÃ¡t hozza lÃ©tre
     public PlayerUpgrade(PlayerUpgrade original)
     {
         this.ID = original.ID;
@@ -90,7 +97,7 @@ public class PlayerUpgrade
     }
 
     /// <summary>
-    /// Getterek és setterek
+    /// Getterek Ã©s setterek
     /// </summary>
     public string ID
     {
@@ -106,8 +113,8 @@ public class PlayerUpgrade
 
 
     /// <summary>
-    /// Frissíti a fejlesztés leírását az egyéni leírás alapján,
-    /// helyettesítve a paramétereket (pl. ár, szint).
+    /// FrissÃ­ti a fejlesztÃ©s leÃ­rÃ¡sÃ¡t az egyÃ©ni leÃ­rÃ¡s alapjÃ¡n,
+    /// helyettesÃ­tve a paramÃ©tereket (pl. Ã¡r, szint).
     /// </summary>
     public void RefreshDescription()
     {
@@ -117,106 +124,106 @@ public class PlayerUpgrade
             return;
         }
 
-        // Az egyéni leírás helyettesítésekkel való frissítése
+        // Az egyÃ©ni leÃ­rÃ¡s helyettesÃ­tÃ©sekkel valÃ³ frissÃ­tÃ©se
         description = ReplacePlaceholders(customDescription);
     }
 
 
     /// <summary>
-    /// A megadott szövegben (inputDescription) helyettesíti a helyõrzõket a megfelelõ értékekkel.
-    /// A helyettesítések a fejlõdés szintjei, árak és módosítók alapján történnek.
+    /// A megadott szÃ¶vegben (inputDescription) helyettesÃ­ti a helyÃµrzÃµket a megfelelÃµ Ã©rtÃ©kekkel.
+    /// A helyettesÃ­tÃ©sek a fejlÃµdÃ©s szintjei, Ã¡rak Ã©s mÃ³dosÃ­tÃ³k alapjÃ¡n tÃ¶rtÃ©nnek.
     /// </summary>
-    /// <param name="inputDescription">A helyettesítendõ szöveg.</param>
-    /// <returns>A helyettesített szöveg.</returns>
+    /// <param name="inputDescription">A helyettesÃ­tendÃµ szÃ¶veg.</param>
+    /// <returns>A helyettesÃ­tett szÃ¶veg.</returns>
     private string ReplacePlaceholders(string inputDescription)
     {
-        // Általános helyõrzõk cseréje a megfelelõ értékekre.
-        inputDescription = inputDescription.Replace(@"\name", upgradeName);  // A fejlesztés neve
-        inputDescription = inputDescription.Replace(@"\minUpgradeLevel", minUpgradeLevel.ToString());  // Minimális fejlesztési szint
-        inputDescription = inputDescription.Replace(@"\maxUpgradeLevel", maxUpgradeLevel.ToString());  // Maximális fejlesztési szint
-        inputDescription = inputDescription.Replace(@"\currentUpgradeLevel", currentUpgradeLevel.ToString());  // Jelenlegi fejlesztési szint
-        inputDescription = inputDescription.Replace(@"\basePrice", basePrice.ToString());  // Alapár
-        inputDescription = inputDescription.Replace(@"\priceScaleFactor", priceScaleFactor.ToString());  // Ár skálázási faktor
+        // ÃltalÃ¡nos helyÃµrzÃµk cserÃ©je a megfelelÃµ Ã©rtÃ©kekre.
+        inputDescription = inputDescription.Replace(@"\name", upgradeName);  // A fejlesztÃ©s neve
+        inputDescription = inputDescription.Replace(@"\minUpgradeLevel", minUpgradeLevel.ToString());  // MinimÃ¡lis fejlesztÃ©si szint
+        inputDescription = inputDescription.Replace(@"\maxUpgradeLevel", maxUpgradeLevel.ToString());  // MaximÃ¡lis fejlesztÃ©si szint
+        inputDescription = inputDescription.Replace(@"\currentUpgradeLevel", currentUpgradeLevel.ToString());  // Jelenlegi fejlesztÃ©si szint
+        inputDescription = inputDescription.Replace(@"\basePrice", basePrice.ToString());  // AlapÃ¡r
+        inputDescription = inputDescription.Replace(@"\priceScaleFactor", priceScaleFactor.ToString());  // Ãr skÃ¡lÃ¡zÃ¡si faktor
 
-        // A fejlesztés árának kiszámítása, figyelembe véve a szintet és az árskálázási tényezõt
+        // A fejlesztÃ©s Ã¡rÃ¡nak kiszÃ¡mÃ­tÃ¡sa, figyelembe vÃ©ve a szintet Ã©s az Ã¡rskÃ¡lÃ¡zÃ¡si tÃ©nyezÃµt
         int calculatedPriceValue = GetPrice();
-        inputDescription = inputDescription.Replace($@"\price", calculatedPriceValue.ToString());  // Ár helyõrzõ cseréje
+        inputDescription = inputDescription.Replace($@"\price", calculatedPriceValue.ToString());  // Ãr helyÃµrzÃµ cserÃ©je
 
-        // Dinamikusan a módosítók helyõrzõinek cseréje, ha van módosító
+        // Dinamikusan a mÃ³dosÃ­tÃ³k helyÃµrzÃµinek cserÃ©je, ha van mÃ³dosÃ­tÃ³
         if (modifiers != null && modifiers.Count > 0)
         {
             for (int i = 0; i < modifiers.Count; i++)
             {
-                // Módosító típusának, alapértékének és skálázási tényezõjének cseréje
+                // MÃ³dosÃ­tÃ³ tÃ­pusÃ¡nak, alapÃ©rtÃ©kÃ©nek Ã©s skÃ¡lÃ¡zÃ¡si tÃ©nyezÃµjÃ©nek cserÃ©je
                 inputDescription = inputDescription.Replace($@"\m[{i}].type", modifiers[i].type.ToString());
                 inputDescription = inputDescription.Replace($@"\m[{i}].baseValue", modifiers[i].baseValue.ToString());
                 inputDescription = inputDescription.Replace($@"\m[{i}].scaleFactor", modifiers[i].scaleFactor.ToString());
 
-                // Módosító értékének kiszámítása a szinttõl függõen
+                // MÃ³dosÃ­tÃ³ Ã©rtÃ©kÃ©nek kiszÃ¡mÃ­tÃ¡sa a szinttÃµl fÃ¼ggÃµen
                 float calculatedModifierValue = modifiers[i].baseValue * Mathf.Pow(modifiers[i].scaleFactor, currentUpgradeLevel - minUpgradeLevel);
-                inputDescription = inputDescription.Replace($@"\m[{i}].value", calculatedModifierValue.ToString("F2"));  // Módosító érték helyõrzõ cseréje
+                inputDescription = inputDescription.Replace($@"\m[{i}].value", calculatedModifierValue.ToString("F2"));  // MÃ³dosÃ­tÃ³ Ã©rtÃ©k helyÃµrzÃµ cserÃ©je
             }
         }
 
-        return inputDescription;  // A végleges, helyettesített szöveg visszaadása
+        return inputDescription;  // A vÃ©gleges, helyettesÃ­tett szÃ¶veg visszaadÃ¡sa
     }
 
     /// <summary>
-    /// Növeli a fejlesztés szintjét, ha még nem értük el a maximális szintet.
+    /// NÃ¶veli a fejlesztÃ©s szintjÃ©t, ha mÃ©g nem Ã©rtÃ¼k el a maximÃ¡lis szintet.
     /// </summary>
     public void IncreaseCurrentPlayerUpgradeLevel()
     {
         if (currentUpgradeLevel < maxUpgradeLevel)
         {
-            currentUpgradeLevel++;  // Ha nem a maximális szinten vagyunk, növeljük a szintet
+            currentUpgradeLevel++;  // Ha nem a maximÃ¡lis szinten vagyunk, nÃ¶veljÃ¼k a szintet
         }
         else
         {
-            Debug.LogWarning("[PlayerUpgrade] Already at max level.");  // Ha már a max szinten vagyunk
+            Debug.LogWarning("[PlayerUpgrade] Already at max level.");  // Ha mÃ¡r a max szinten vagyunk
         }
     }
 
 
     /// <summary>
-    /// Beállítja a fejlesztés szintjét egy adott szintre, amely a minLevel és maxLevel közötti tartományban van.
+    /// BeÃ¡llÃ­tja a fejlesztÃ©s szintjÃ©t egy adott szintre, amely a minLevel Ã©s maxLevel kÃ¶zÃ¶tti tartomÃ¡nyban van.
     /// </summary>
-    /// <param name="level">A kívánt szint</param>
+    /// <param name="level">A kÃ­vÃ¡nt szint</param>
     public void SetCurrentPlayerUpgradeLevel(int newLevel)
     {
-        currentUpgradeLevel = Mathf.Clamp(newLevel, minUpgradeLevel, maxUpgradeLevel);  // Beállítja a szintet a tartományon belül
+        currentUpgradeLevel = Mathf.Clamp(newLevel, minUpgradeLevel, maxUpgradeLevel);  // BeÃ¡llÃ­tja a szintet a tartomÃ¡nyon belÃ¼l
     }
 
     /// <summary>
-    /// Kiszámítja és visszaadja a fejlesztés módosítóinak aktuális értékeit.
-    /// Az értékek a szint függvényében skálázódnak.
+    /// KiszÃ¡mÃ­tja Ã©s visszaadja a fejlesztÃ©s mÃ³dosÃ­tÃ³inak aktuÃ¡lis Ã©rtÃ©keit.
+    /// Az Ã©rtÃ©kek a szint fÃ¼ggvÃ©nyÃ©ben skÃ¡lÃ¡zÃ³dnak.
     /// </summary>
-    /// <returns>A statisztikai módosítók aktuális értékei</returns>
+    /// <returns>A statisztikai mÃ³dosÃ­tÃ³k aktuÃ¡lis Ã©rtÃ©kei</returns>
     public List<StatValuePair> GetCurrentValues()
     {
-        List<StatValuePair> values = new List<StatValuePair>();  // Az eredmények tárolására egy lista
+        List<StatValuePair> values = new List<StatValuePair>();  // Az eredmÃ©nyek tÃ¡rolÃ¡sÃ¡ra egy lista
 
-        // Végigiterálunk a módosítókon
+        // VÃ©gigiterÃ¡lunk a mÃ³dosÃ­tÃ³kon
         foreach (var modifier in modifiers)
         {
-            // Az aktuális érték kiszámítása a baseValue és a scaleFactor segítségével
+            // Az aktuÃ¡lis Ã©rtÃ©k kiszÃ¡mÃ­tÃ¡sa a baseValue Ã©s a scaleFactor segÃ­tsÃ©gÃ©vel
             float scaledValue = modifier.baseValue * Mathf.Pow(modifier.scaleFactor, currentUpgradeLevel - minUpgradeLevel);
-            // A típus és a kiszámított érték párosát hozzáadjuk az eredményeket tartalmazó listához
+            // A tÃ­pus Ã©s a kiszÃ¡mÃ­tott Ã©rtÃ©k pÃ¡rosÃ¡t hozzÃ¡adjuk az eredmÃ©nyeket tartalmazÃ³ listÃ¡hoz
             values.Add(new StatValuePair(modifier.type, scaledValue));
         }
 
-        return values;  // Visszaadjuk az összegyûjtött értékeket
+        return values;  // Visszaadjuk az Ã¶sszegyÃ»jtÃ¶tt Ã©rtÃ©keket
     }
 
 
     /// <summary>
-    /// A fejlesztés árának kiszámítása az alapár, árskálázási faktor és az aktuális fejlesztési szint alapján.
-    /// Az ár egy korlátozott tartományban van, amely a `basePrice` és a `maxPrice` (150) között helyezkedik el.
+    /// A fejlesztÃ©s Ã¡rÃ¡nak kiszÃ¡mÃ­tÃ¡sa az alapÃ¡r, Ã¡rskÃ¡lÃ¡zÃ¡si faktor Ã©s az aktuÃ¡lis fejlesztÃ©si szint alapjÃ¡n.
+    /// Az Ã¡r egy korlÃ¡tozott tartomÃ¡nyban van, amely a `basePrice` Ã©s a `maxPrice` (150) kÃ¶zÃ¶tt helyezkedik el.
     /// </summary>
-    /// <returns>A kiszámított ár, mint egész szám.</returns>
+    /// <returns>A kiszÃ¡mÃ­tott Ã¡r, mint egÃ©sz szÃ¡m.</returns>
     public int GetPrice()
     {
-        // Az ár kiszámítása: alapár * (árskálázási faktor)^(jelenlegi szint - minimális szint)
-        // Az eredmény korlátozása a `basePrice` és `maxPrice` (150) közötti tartományra.
+        // Az Ã¡r kiszÃ¡mÃ­tÃ¡sa: alapÃ¡r * (Ã¡rskÃ¡lÃ¡zÃ¡si faktor)^(jelenlegi szint - minimÃ¡lis szint)
+        // Az eredmÃ©ny korlÃ¡tozÃ¡sa a `basePrice` Ã©s `maxPrice` (150) kÃ¶zÃ¶tti tartomÃ¡nyra.
         return (int)Mathf.Clamp(basePrice * Mathf.Pow(priceScaleFactor, currentUpgradeLevel - minUpgradeLevel), basePrice, maxPrice);
     }
 

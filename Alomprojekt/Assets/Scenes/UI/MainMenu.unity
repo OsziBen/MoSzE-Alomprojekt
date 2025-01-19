@@ -1407,107 +1407,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1174872269}
   m_CullTransparentMesh: 1
---- !u!1 &1200162061 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1546569477961377753, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-  m_PrefabInstance: {fileID: 1349649220}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &1200162065
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1200162061}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &1206959647
 GameObject:
   m_ObjectHideFlags: 0
@@ -1894,201 +1793,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: sounds.Array.data[1].name
-      value: EnemyShoot
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
       propertyPath: soundEffectInput.Array.size
       value: 17
       objectReference: {fileID: 0}
     - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: backgroundMusicInput.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[0].name
-      value: enemydeath
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[1].name
-      value: enemyshoot
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[2].name
-      value: playerdeath
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[3].name
-      value: playershoot
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[4].name
-      value: criticalhit
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[5].name
-      value: giantkiller
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[6].name
-      value: playerdamage
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[7].name
-      value: bossappearance
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[8].name
-      value: bossdeath
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[9].name
-      value: bosslaser
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[10].name
-      value: commondamage
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[11].name
-      value: dreamtrans12
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[12].name
-      value: dreamtrans23
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[13].name
-      value: dreamtrans34
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[14].name
-      value: mouseclick
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[15].name
-      value: objectdestruction
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[16].name
+      propertyPath: soundEffectInput.Array.data[17].name
       value: upgrade
       objectReference: {fileID: 0}
     - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: backgroundMusicInput.Array.data[0].name
-      value: menu
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: backgroundMusicInput.Array.data[1].name
-      value: lvl1
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: backgroundMusicInput.Array.data[2].name
-      value: lvl2
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: backgroundMusicInput.Array.data[3].name
-      value: lvl3
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: backgroundMusicInput.Array.data[4].name
-      value: lvl4
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: backgroundMusicInput.Array.data[5].name
-      value: boss
-      objectReference: {fileID: 0}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[0].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 5f57726f649598a4f98fdebf03d1cc96, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[1].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 4c48da1920a52c94dbfe539e904aa65f, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[2].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 77d70d27bc5c67749b81b7b1c28af40c, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[3].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 4220504a5218b234b9f4a948c0df2d06, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[4].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 14aeda7a1a875a54a9598ef3c7ff2745, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[5].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 08130ec1514928248b7677ba840ec320, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[6].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 81c2b612515b5ac4fb0d766aca07760a, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[7].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 6ca7dd62ab805d64da074864f98b4239, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[8].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 3b8eed5056f724941b3c2d8b3d7dee5d, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[9].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 15d73623818aba14c9d1cef80a92f2d5, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[10].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 4f013fac5c2b0554abadf34805e2c7b5, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[11].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 9cbfbc6c850126c41baff2ee8d1dc213, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[12].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: b03955ff6234bc142b9674d8e72966a1, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[13].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 465a38495ded12747bef21c803c61c08, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[14].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 478d0f4e27a47c745b58c980f5a1f90d, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[15].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 36ce39895ffdac645bb7b3c7f465ddcf, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: soundEffectInput.Array.data[16].audioclip
+      propertyPath: soundEffectInput.Array.data[17].audioclip
       value: 
       objectReference: {fileID: 8300000, guid: a98fac2ae568326449e33cbae9847e94, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: backgroundMusicInput.Array.data[0].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 1cfaf0d37c7a2b44ca0807f2d05e30e4, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: backgroundMusicInput.Array.data[1].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 63362777095a4de4cb7789874fc0cb82, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: backgroundMusicInput.Array.data[2].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 0128ae25740fa63469c7cb9b26df69a1, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: backgroundMusicInput.Array.data[3].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: 4c81525a3eae2ad448fc72947beecfb6, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: backgroundMusicInput.Array.data[4].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: d7f76d0e67d14ed439befa537826e61f, type: 3}
-    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: backgroundMusicInput.Array.data[5].audioclip
-      value: 
-      objectReference: {fileID: 8300000, guid: abf89d549ca929949a19c9ad26a96e86, type: 3}
     - target: {fileID: 1546569477961377753, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
       propertyPath: m_Name
       value: AudioManager
@@ -2133,17 +1848,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9050705619280124721, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      propertyPath: Loop
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1546569477961377753, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
-      insertIndex: 1
-      addedObject: {fileID: 1200162065}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
 --- !u!1 &1434963187
 GameObject:
@@ -2778,6 +2486,7 @@ MonoBehaviour:
   - {fileID: 7371983264788650703, guid: 54cddfb7de887cd45a1f8bb28a03fd5b, type: 3}
   dynamicObstaclePrefab: {fileID: 7572789713664982452, guid: c662362a80057994f9f22596f67d65b7, type: 3}
   objectPoolPrefab: {fileID: 5393207635186717751, guid: 6cda3a1755a062a4f9eb6af8f747c49e, type: 3}
+  bossObjectPoolPrefab: {fileID: -4040492527641492155, guid: 3ae571e987f3828489cf309d36bfa1c7, type: 3}
   characterSetupManagerPrefab: {fileID: 4620309673005628627, guid: 6618e2a205a634b4081a52865669b237, type: 3}
 --- !u!4 &1709834739
 Transform:
