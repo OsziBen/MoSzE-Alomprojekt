@@ -109,7 +109,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     }
 
 
-    public GameState CurrentState { get; private set; } = GameState.MainMenu;
+    public GameState CurrentState { get; private set; }
 
 
     /// <summary>
@@ -149,6 +149,11 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         uiManager.OnBackToMainMenu += HandleStateChanged; // Visszatérés a főmenübe esemény feliratkozás
         uiManager.OnPurchaseOptionChosen += IsPurchaseOptionChosen; // Vásárlási opció kiválasztása esemény feliratkozás
 
+    }
+
+    private void Start()
+    {
+        CurrentState = GameState.MainMenu;
         OnStateChanged?.Invoke(CurrentState);
     }
 
