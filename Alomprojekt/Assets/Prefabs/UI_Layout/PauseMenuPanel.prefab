@@ -914,11 +914,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Le\xEDr\xE1s, mely alapvet\u0151 inform\xE1ci\xF3kat tartalmaz a j\xE1t\xE9kr\xF3l,
-    m\u0171k\xF6d\xE9sekr\u0151l, mechanik\xE1kr\xF3l.\n\nLe\xEDrja ki, kivel, mit
-    \xE9s mivel. Val\xF3sz\xEDn\u0171leg ez a sz\xF6veg hosszabb lesz, \xE9s szebben
-    fog kin\xE9zni egy ekkora sz\xF6vegdobozban. de lehet nem...\n\nIde m\xE9g \xEDrok
-    egy sort, h\xE1tha seg\xEDt valamit. Na mindegy, ez van."
+  m_text: "A j\xE1t\xE9k sor\xE1n n\xE9gy, fokozatosan nehezed\u0151 p\xE1ly\xE1n
+    kell felkutatnod \xE9s elpuszt\xEDtanod az \xF6sszes ellens\xE9get. Minden meg\xF6lt
+    ellens\xE9g ut\xE1n pontot kapsz, amelyb\u0151l fejleszt\xE9seket v\xE1s\xE1rolhatsz
+    a szintek v\xE9g\xE9n.\n\nA j\xE1t\xE9k v\xE9g\xE9n megmaradt pontsz\xE1m lesz
+    a v\xE9gs\u0151 pontsz\xE1mod, \xEDgy b\xF6lcsen v\xE1lassz fejleszt\xE9st vagy
+    hagyd ki azt.\n\nA negyedik p\xE1lya ut\xE1n, egy f\xE9lelmetes f\u0151ellens\xE9ggel
+    kell megk\u0171zdened. K\xE9szen \xE1llsz?\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -945,7 +947,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36.65
+  m_fontSize: 32.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
