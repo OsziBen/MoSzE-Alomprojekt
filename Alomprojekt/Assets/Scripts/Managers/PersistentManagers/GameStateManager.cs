@@ -20,6 +20,8 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     private string _currentRunDate = string.Empty; // Az aktuális játék dátuma (pl. ha van mentett játék)
     private string _currentRunPlayerName = string.Empty; // Az aktuális játékos neve
 
+    string cutsceneRefName;
+
     // Várakozó állapotváltozások sorba rendezve
     private Queue<Func<Task>> deferredStateChanges = new Queue<Func<Task>>();
 
@@ -58,6 +60,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     SaveLoadManager saveLoadManager;
     PlayerUpgradeManager playerUpgradeManager;
     UIManager uiManager;
+    AudioManager audioManager;
     Timer timer;
 
 
@@ -112,8 +115,10 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
     /// <summary>
     /// Események
     /// </summary>
-    //public event Action<GameState> OnStateChanged;
+    public event Action<GameState> OnStateChanged;
     public event Action<int> OnPointsChanged;
+    public event Action<GameLevel> OnLevelLoaded;
+    public event Action<string> OnCutsceneLoaded;
 
     /// <summary>
     /// Inicializálja a GameStateManager-t, összegyűjti a Persistent Manager referenciákat és feliratkozik az eseményekre.
@@ -127,6 +132,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
         playerUpgradeManager = FindObjectOfType<PlayerUpgradeManager>();
         uiManager = FindAnyObjectByType<UIManager>();
+        audioManager = FindObjectOfType<AudioManager>();
         timer = FindObjectOfType<Timer>();
 
         // Persistent Manager esemény-feliratkozások
@@ -143,7 +149,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
         uiManager.OnBackToMainMenu += HandleStateChanged; // Visszatérés a főmenübe esemény feliratkozás
         uiManager.OnPurchaseOptionChosen += IsPurchaseOptionChosen; // Vásárlási opció kiválasztása esemény feliratkozás
 
-        //await Task.Yield();
+        OnStateChanged?.Invoke(CurrentState);
     }
 
     /// <summary>
@@ -378,7 +384,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
             }
 
             CurrentState = newState; // Beállítja az új állapotot
-            //OnStateChanged?.Invoke(CurrentState);
+            OnStateChanged?.Invoke(CurrentState);
 
             bool asyncOperation;
             switch (CurrentState)
@@ -403,16 +409,21 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
 
                     // Animált bevezető betöltése
                     Time.timeScale = 1;
+                    cutsceneRefName = "NewGame";
+                    OnCutsceneLoaded?.Invoke(cutsceneRefName);
+
                     // load newGame cutscene :: sceneManager
-                    asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync("NewGame");
+                    asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync(cutsceneRefName);
 
                     // // Az első szint betöltése :: LevelManager
                     asyncOperation = await levelmanager.LoadNewLevelAsync(GameLevelToInt(CurrentLevel));
+
                     if (asyncOperation)
                     {
                         // Ha a szint sikeresen betöltődött, állapotot váltunk a "Playing"-re
                         DeferStateChange(() => SetState(GameState.Playing));
                         timer.RestartTimer(); // Újraindítja az időzítőt
+                        OnLevelLoaded?.Invoke(CurrentLevel);
                     }
 
                     break;
@@ -432,13 +443,17 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                         {
                             // Ha a szint betöltődött, váltunk "Playing" állapotra
                             DeferStateChange(() => SetState(GameState.Playing));
+                            OnLevelLoaded?.Invoke(CurrentLevel);
                         }
 
                     }
                     else
                     {
                         // Egyéb szintek esetén animált átvezetők betöltése
-                        string cutsceneRefName = "LevelTransition" + (GameLevelToInt(CurrentLevel) - 1).ToString() + GameLevelToInt(CurrentLevel).ToString();
+                        cutsceneRefName = "LevelTransition" + (GameLevelToInt(CurrentLevel) - 1).ToString() + GameLevelToInt(CurrentLevel).ToString();
+
+                        OnCutsceneLoaded?.Invoke(cutsceneRefName);
+
                         asyncOperation = await gameSceneManager.LoadAnimatedCutsceneAsync(cutsceneRefName);
 
                         asyncOperation = await levelmanager.LoadNewLevelAsync(GameLevelToInt(CurrentLevel));
@@ -446,12 +461,17 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                         {
                             // Ha a szint betöltődött, váltunk "Playing" állapotra
                             DeferStateChange(() => SetState(GameState.Playing));
+                            OnLevelLoaded?.Invoke(CurrentLevel);
                         }
                     }
                     break;
 
                 case GameState.LoadingSavedGame:
                     Time.timeScale = 1;
+                    if (audioManager.IsBackgroundMusicPlaying())
+                    {
+                        audioManager.StopBGM();
+                    }
                     // Mentett játék betöltése
                     SaveData loadData = await saveLoadManager.LoadGameAsync(); // Mentett adat betöltése
                     if (loadData != null)
@@ -466,6 +486,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                             // Ha a szint sikeresen betöltődött, váltunk "Playing" állapotra
                             DeferStateChange(() => SetState(GameState.Playing));
                             timer.SetTimer(CurrentRunTime); // Beállítja a korábbi időt
+                            OnLevelLoaded?.Invoke(CurrentLevel);
                         }
                     }
                     else
@@ -479,6 +500,11 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                 case GameState.Playing:
                     Time.timeScale = 1; // A játék folytatása
                     timer.ResumeTimer(); // Folytatja az időzítőt
+
+                    if (!audioManager.IsBackgroundMusicPlaying())
+                    {
+                        audioManager.ResumeBGM();                        
+                    }
                     //Cursor.visible = false;  // Elrejti a kurzort
                     //Cursor.lockState = CursorLockMode.Locked;  // A kurzort középre zárja
                     break;
@@ -486,6 +512,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                 case GameState.Paused:
                     Time.timeScale = 0; // A játék megállítása, időzítő leállítása
                     timer.StopTimer();
+                    audioManager.PauseBGM();
                     //Cursor.visible = true;  // Megjeleníti a kurzort
                     //Cursor.lockState = CursorLockMode.None;  // Unlockolja a kurzort
                     break;

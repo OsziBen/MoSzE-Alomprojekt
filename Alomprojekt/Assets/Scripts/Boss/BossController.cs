@@ -59,11 +59,11 @@ public class BossController : MonoBehaviour
     [SerializeField]
     private float offsetDistance;  // This defines how far from the center the projectile should start
     [SerializeField]
-    private float deviationRadius = 2f; // A célpont eltolásának maximális távolsága
+    private float deviationRadius; // A célpont eltolásának maximális távolsága
     [SerializeField]
-    private float targetUpdateInterval = 2f; // Milyen gyakran frissüljön a célpont
+    private float targetUpdateInterval; // Milyen gyakran frissüljön a célpont
     [SerializeField]
-    private float shotTravelSpeed = 500.0f;
+    private float shotTravelSpeed;
     [SerializeField]
     private float intervalStart;
 
@@ -217,7 +217,7 @@ public class BossController : MonoBehaviour
 
     void Attack()
     {
-        if (rb == null) return; // Early exit if the rigidbody is null
+        if (rb == null || player == null) return; // Early exit if the rigidbody is null
 
         // Get the player position (ensure you have a reference to the player)
         Vector2 playerPosition = player.position;

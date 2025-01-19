@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using static GameStateManager;
 
 public class AudioManager : BasePersistentManager<AudioManager>
 {
@@ -12,6 +13,10 @@ public class AudioManager : BasePersistentManager<AudioManager>
 
     private Dictionary<string, AudioClip> soundEffects; // A hangeffekteket tároló dictionary.
     private Dictionary<string, AudioClip> backgroundMusic; // A háttérzenéket tároló dictionary.
+
+    private GameStateManager gameStateManager;
+    private LevelManager levelManager;
+    private GameSceneManager gameSceneManager;
 
     // Mivel a Unity editorban nem lehet dictionary-t szerkeszteni, először custom NamedAudio structokból felépülő listákba vesszük fel a hangeffekteket.
     [Serializable]
@@ -24,11 +29,12 @@ public class AudioManager : BasePersistentManager<AudioManager>
     public NamedAudio[] backgroundMusicInput;
 
     /// <summary>
-    /// A start feladata lényegében csak annyi, hogy assignolja a megfelelő AudioSource komponenseket a megfelelő változóhoz.
+    /// Az Initialize feladata lényegében csak annyi, hogy assignolja a megfelelő AudioSource komponenseket a megfelelő változóhoz.
     /// Illetve beolvassa a listaként megadott audioclipeket a dictionary-kba.
     /// </summary>
-    public void Start()
+    protected override void Initialize()
     {
+        base.Initialize();
         AudioSource[] audioSources = gameObject.GetComponents<AudioSource>();
         SoundEffectPlayer = audioSources[0];
         BackgroundMusicPlayer = audioSources[1];
@@ -41,7 +47,32 @@ public class AudioManager : BasePersistentManager<AudioManager>
             item => item.name,
             item => item.audioclip
         );
+
+        gameStateManager = FindObjectOfType<GameStateManager>();
+        gameStateManager.OnStateChanged += PlayMenuBGM;
+        gameStateManager.OnStateChanged += PlayUpgradeSound;
+        gameStateManager.OnStateChanged += PlayVictoryBGM;
+        gameStateManager.OnStateChanged += PlayDefeatBGM;
+        gameStateManager.OnLevelLoaded += PlayLevel1BGM;
+        gameStateManager.OnLevelLoaded += PlayLevel2BGM;
+        gameStateManager.OnLevelLoaded += PlayLevel3BGM;
+        gameStateManager.OnLevelLoaded += PlayLevel4BGM;
+        gameStateManager.OnLevelLoaded += PlayBossBGM;
+        gameStateManager.OnCutsceneLoaded += PlayIntroBGM;
+        gameStateManager.OnCutsceneLoaded += PlayDreamTrans12Sound;
+        gameStateManager.OnCutsceneLoaded += PlayDreamTrans23Sound;
+        gameStateManager.OnCutsceneLoaded += PlayDreamTrans34Sound;
+        levelManager = FindObjectOfType<LevelManager>();
+        levelManager.OnLevelLoaded += PlayBossBGM;
+        gameSceneManager = FindObjectOfType<GameSceneManager>();
+        gameSceneManager.OnCutsceneLoaded += PlayIntroBGM;
+        gameSceneManager.OnCutsceneLoaded += PlayDreamTrans12Sound;
+        gameSceneManager.OnCutsceneLoaded += PlayDreamTrans23Sound;
+        gameSceneManager.OnCutsceneLoaded += PlayDreamTrans34Sound;
     }
+
+    // async fgv feliratkozás
+    // async fgv leiratkozás -- esetleg lvlManager
 
     /// <summary>
     /// Lejátssza a paraméterben megadott nevű hangeffektet.
@@ -91,35 +122,112 @@ public class AudioManager : BasePersistentManager<AudioManager>
         }
     }
 
+
+    public void PauseBGM()
+    {
+        if (BackgroundMusicPlayer.isPlaying)
+        {
+            BackgroundMusicPlayer.Pause();
+        }
+        else
+        {
+            Debug.LogWarning("A háttérzene nem szüneteltethető, mivel nem is megy.");
+        }
+    }
+
+    public void ResumeBGM()
+    {
+        if (!BackgroundMusicPlayer.isPlaying)
+        {
+            BackgroundMusicPlayer.UnPause();
+        }
+        else
+        {
+            Debug.LogWarning("A háttérzene nem folytatható, mivel nem is megy.");
+        }
+    }
+
+    public bool IsBackgroundMusicPlaying()
+    {
+        return BackgroundMusicPlayer.isPlaying;
+    }
+
     // Az összes háttérzene lejátszó függvényei
-    public void PlayMenuBGM()
+    public void PlayMenuBGM(GameState gameState)
     {
-        PlayBGM("menu");
+
+        if (gameState == GameState.MainMenu)
+        {
+            PlayBGM("menu");            
+        }
+
     }
 
-    public void PlayLevel1BGM()
+    public void PlayLevel1BGM(GameLevel gameLevel)
     {
-        PlayBGM("lvl1");
+        if (gameLevel == GameLevel.Level1)
+        {
+            PlayBGM("lvl1");                        
+        }
     }
 
-    public void PlayLevel2BGM()
+    public void PlayLevel2BGM(GameLevel gamelevel)
     {
-        PlayBGM("lvl2");
+        if (gamelevel == GameLevel.Level2)
+        {
+            PlayBGM("lvl2");
+        }
+
     }
 
-    public void PlayLevel3BGM()
+    public void PlayLevel3BGM(GameLevel gamelevel)
     {
-        PlayBGM("lvl3");
+        if (gamelevel == GameLevel.Level3)
+        {
+            PlayBGM("lvl3");
+        }
+
     }
 
-    public void PlayLevel4BGM()
+    public void PlayLevel4BGM(GameLevel gamelevel)
     {
-        PlayBGM("lvl4");
+        if (gamelevel == GameLevel.Level4)
+        {
+            PlayBGM("lvl4");
+        }
+
     }
 
-    public void PlayBossBGM()
+    public void PlayBossBGM(GameLevel gameLevel)
     {
-        PlayBGM("boss");
+        if (gameLevel == GameLevel.BossBattle)
+        {
+            PlayBGM("boss");
+        }
+    }
+
+    public void PlayIntroBGM(string cutsceneName)
+    {
+        if (cutsceneName == "NewGame")
+        {
+            PlayBGM("intro");            
+        }
+    }
+
+    public void PlayVictoryBGM(GameState gameState)
+    {
+        if (gameState == GameState.Victory)
+        {
+            PlayBGM("victory");
+        }
+    }
+
+    public void PlayDefeatBGM(GameState gameState)
+    {
+        if (gameState == GameState.GameOver)
+        {
+            PlayBGM("defeat");
+        }
     }
 
     // Az összes hangeffekt lejátszó függvényei.
@@ -178,19 +286,28 @@ public class AudioManager : BasePersistentManager<AudioManager>
         PlaySoundEffect("commondamage");
     }
 
-    public void PlayDreamTrans12Sound()
+    public void PlayDreamTrans12Sound(string cutsceneName)
     {
-        PlaySoundEffect("dreamtrans12");
+        if (cutsceneName == "LevelTransition12")
+        {
+            PlaySoundEffect("dreamtrans12");            
+        }
     }
 
-    public void PlayDreamTrans23Sound()
+    public void PlayDreamTrans23Sound(string cutsceneName)
     {
-        PlaySoundEffect("dreamtrans23");
+        if (cutsceneName == "LevelTransition23")
+        {
+            PlaySoundEffect("dreamtrans23");            
+        }
     }
 
-    public void PlayDreamTrans34Sound()
+    public void PlayDreamTrans34Sound(string cutsceneName)
     {
-        PlaySoundEffect("dreamtrans34");
+        if (cutsceneName == "LevelTransition34")
+        {
+            PlaySoundEffect("dreamtrans34");            
+        }
     }
 
     public void PlayMouseClickSound()
@@ -203,8 +320,47 @@ public class AudioManager : BasePersistentManager<AudioManager>
         PlaySoundEffect("objectdestruction");
     }
 
-    public void PlayUpgradeSound()
+    public void PlayUpgradeSound(GameState gameState)
     {
-        PlaySoundEffect("upgrade");
+        if (gameState == GameState.PlayerUpgrade)
+        {
+            StopBGM();
+            PlaySoundEffect("upgrade");            
+        }
+    }
+
+
+
+    private void OnDestroy()
+    {
+        if (gameStateManager != null)
+        {
+            gameStateManager.OnStateChanged -= PlayMenuBGM;
+            gameStateManager.OnStateChanged -= PlayUpgradeSound;
+            gameStateManager.OnStateChanged -= PlayVictoryBGM;
+            gameStateManager.OnStateChanged -= PlayDefeatBGM;
+            gameStateManager.OnLevelLoaded -= PlayLevel1BGM;
+            gameStateManager.OnLevelLoaded -= PlayLevel2BGM;
+            gameStateManager.OnLevelLoaded -= PlayLevel3BGM;
+            gameStateManager.OnLevelLoaded -= PlayLevel4BGM;
+            gameStateManager.OnLevelLoaded -= PlayBossBGM;
+            gameStateManager.OnCutsceneLoaded -= PlayIntroBGM;
+            gameStateManager.OnCutsceneLoaded -= PlayDreamTrans12Sound;
+            gameStateManager.OnCutsceneLoaded -= PlayDreamTrans23Sound;
+            gameStateManager.OnCutsceneLoaded -= PlayDreamTrans34Sound;
+        }
+
+        if(levelManager != null)
+        {
+            levelManager.OnLevelLoaded -= PlayBossBGM;
+        }
+
+        if(gameSceneManager != null)
+        {
+            gameSceneManager.OnCutsceneLoaded -= PlayIntroBGM;
+            gameSceneManager.OnCutsceneLoaded -= PlayDreamTrans12Sound;
+            gameSceneManager.OnCutsceneLoaded -= PlayDreamTrans23Sound;
+            gameSceneManager.OnCutsceneLoaded -= PlayDreamTrans34Sound;
+        }
     }
 }
