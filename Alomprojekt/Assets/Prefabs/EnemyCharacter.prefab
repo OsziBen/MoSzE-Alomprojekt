@@ -139,18 +139,18 @@ MonoBehaviour:
   baseCriticalHitChance: 0.05
   basePercentageBasedDMG: 0
   minHealthValue: 5
-  maxHealthValue: 10
+  maxHealthValue: 100
   minMovementSpeedValue: 1
   maxMovementSpeedValue: 10
   minDMGValue: 1
-  maxDMGValue: 10
+  maxDMGValue: 25
   minAttackCooldownValue: 0.5
   maxAttackCooldownValue: 5
   _rigidbody2d: {fileID: 0}
   basePointValue: 10
-  maxHealthScaleFactor: 1.2
+  maxHealthScaleFactor: 1.35
   baseMovementSpeedScaleFactor: 1
-  baseDMGScaleFactor: 1.2
+  baseDMGScaleFactor: 1.25
   baseAttackCooldownScaleFactor: 1.2
   baseCriticalHitChanceScaleFactor: 1.2
   basePercentageBasedDMGScaleFactor: 1.2
@@ -168,7 +168,7 @@ MonoBehaviour:
   - level: 4
     sprite: {fileID: 21300000, guid: a1b3b61d42e37c94a82458a7bf4c07f4, type: 3}
     collider: {fileID: 4578177045666149082}
-  detectionRange: 3
+  detectionRange: 6
   passiveBehaviour: {fileID: 3830059035659017838}
   hostileBehaviour: {fileID: 203574436219418284}
 --- !u!114 &3830059035659017838
