@@ -1,0 +1,511 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="hu">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.13.2"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Álomprojekt: C:/Users/ati/Desktop/MOSZE3/MoSzE-Alomprojekt/Alomprojekt/Assets/Scripts/EnemyController.cs Forrásfájl</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="navtreedata.js"></script>
+<script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(function() { init_search(); });
+/* @license-end */
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">Álomprojekt
+   </div>
+   <div id="projectbrief">MOSZE féléves házi feladat</div>
+  </td>
+    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <span id="MSearchSelect"                onmouseover="return searchBox.OnSearchSelectShow()"                onmouseout="return searchBox.OnSearchSelectHide()">&#160;</span>
+          <input type="text" id="MSearchField" value="" placeholder="Keresés" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Készítette Doxygen 1.13.2 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+</div><!-- top -->
+<div id="side-nav" class="ui-resizable side-nav-resizable">
+  <div id="nav-tree">
+    <div id="nav-tree-contents">
+      <div id="nav-sync" class="sync"></div>
+    </div>
+  </div>
+  <div id="splitbar" style="-moz-user-select:none;" 
+       class="ui-resizable-handle">
+  </div>
+</div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){initNavTree('_enemy_controller_8cs_source.html',''); initResizable(true); });
+/* @license-end */
+</script>
+<div id="doc-content">
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">Betöltés...</div>
+<div class="SRStatus" id="Searching">Keresés...</div>
+<div class="SRStatus" id="NoMatches">Nincs egyezés</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="header">
+  <div class="headertitle"><div class="title">EnemyController.cs</div></div>
+</div><!--header-->
+<div class="contents">
+<a href="_enemy_controller_8cs.html">Ugrás a fájl dokumentációjához.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="keyword">using </span><a class="code hl_namespace" href="namespace_assets_1_1_scripts.html">Assets.Scripts</a>;</div>
+<div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="keyword">using </span>System.Collections.Generic;</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="keyword">using </span>System;</div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="keyword">using </span>UnityEngine;</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="keyword">using </span>UnityEngine.TextCore.Text;</div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">using </span>Assets.Scripts.EnemyBehaviours;</div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="keyword">using </span>static Cinemachine.DocumentationSortingAttribute;</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">using </span>System.Linq;</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="foldopen" id="foldopen00010" data-start="{" data-end="};">
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno"><a class="line" href="class_enemy_controller.html">   10</a></span><span class="keyword">public</span> <span class="keyword">class </span><a class="code hl_class" href="class_enemy_controller.html">EnemyController</a> : <a class="code hl_namespace" href="namespace_assets.html">Assets</a>.<a class="code hl_namespace" href="namespace_assets_1_1_scripts.html">Scripts</a>.<a class="code hl_class" href="class_assets_1_1_scripts_1_1_character.html">Character</a></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>{</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <span class="comment">// Pont érték beállításai</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    [Header(<span class="stringliteral">&quot;Pont érték&quot;</span>)]</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    [SerializeField]</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    <span class="keyword">private</span> <span class="keywordtype">int</span> basePointValue; <span class="comment">// Alap pont érték</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    <span class="keyword">private</span> <span class="keywordtype">int</span> _currentPointValue; <span class="comment">// Jelenlegi pont érték</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keyword">private</span> <span class="keywordtype">int</span> minPointValue = 10; <span class="comment">// Minimum pont érték</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">private</span> <span class="keywordtype">int</span> maxPointValue = 1000; <span class="comment">// Maximum pont érték</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="comment">// Skálázási tényezők</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    [Header(<span class="stringliteral">&quot;Skálázási tényezők&quot;</span>)]</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    [SerializeField, Range(1f, 2f)]</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    <span class="keyword">private</span> <span class="keywordtype">float</span> maxHealthScaleFactor; <span class="comment">// Maximális életerő skálázási tényező</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    [SerializeField, Range(1f, 2f)]</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keyword">private</span> <span class="keywordtype">float</span> baseMovementSpeedScaleFactor; <span class="comment">// Alap mozgási sebesség skálázási tényező</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    [SerializeField, Range(1f, 2f)]</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">private</span> <span class="keywordtype">float</span> baseDMGScaleFactor; <span class="comment">// Alap sebzés skálázási tényező</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    [SerializeField, Range(1f, 2f)]</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="keyword">private</span> <span class="keywordtype">float</span> baseAttackCooldownScaleFactor; <span class="comment">// Alap támadás cooldown skálázási tényező</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    [SerializeField, Range(1f, 2f)]</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keyword">private</span> <span class="keywordtype">float</span> baseCriticalHitChanceScaleFactor; <span class="comment">// Alap kritikus találat esélyének skálázása</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    [SerializeField, Range(1f, 2f)]</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keyword">private</span> <span class="keywordtype">float</span> basePercentageBasedDMGScaleFactor; <span class="comment">// Alap százalékos alapú sebzés skálázása</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    [SerializeField, Range(1f, 2f)]</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">private</span> <span class="keywordtype">float</span> pointValueScaleFactor; <span class="comment">// Pont érték skálázási tényező</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    <span class="comment">// TODO: IsMarkingOn implementálása</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    [Header(<span class="stringliteral">&quot;Sprites and Colliders&quot;</span>)]</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    [SerializeField]</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keyword">private</span> List&lt;SpriteLevelData&gt; spriteLevelDataList; <span class="comment">// A szintenként eltérő sprite-okat tároló objektum.</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    <span class="keyword">private</span> List&lt;Projectile&gt; activeProjectiles = <span class="keyword">new</span> List&lt;Projectile&gt;();    <span class="comment">// Az aktívan megfigyelt lövedékek (Projectile) listája</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    <span class="keyword">private</span> <span class="keywordtype">bool</span> hasDetectedPlayer = <span class="keyword">false</span>; <span class="comment">// bool, amely tárolja, hogy az enemy érzékelt-e playert.</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span></div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">private</span> <a class="code hl_class" href="class_assets_1_1_scripts_1_1_object_pool_for_projectiles.html">ObjectPoolForProjectiles</a> objectPool;  <span class="comment">// A lövedékek kezelésére szolgáló ObjectPool objektum</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>    <span class="keyword">private</span> <a class="code hl_class" href="class_player_controller.html">PlayerController</a> player; <span class="comment">// A játékos irányításáért felelős PlayerController</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    <span class="keyword">private</span> CharacterSetupManager characterSetupManager;  <span class="comment">// A karakter beállításokat kezelő manager</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">private</span> EnemyBehaviour currentBehaviour; <span class="comment">// Az aktuális ellenség viselkedését meghatározó változó</span></div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    [Header(<span class="stringliteral">&quot;Enemy Behaviour&quot;</span>)]</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    [SerializeField]</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <span class="keyword">private</span> <span class="keywordtype">float</span> detectionRange; <span class="comment">// Az észlelési távolság, ami meghatározza, hogy az ellenség mikor reagál</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    [SerializeField]</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    <span class="keyword">private</span> PassiveEnemyBehaviour passiveBehaviour; <span class="comment">// Az ellenség passzív viselkedését kezelő objektum</span></div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    [SerializeField]</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <span class="keyword">private</span> HostileEnemyBehaviour hostileBehaviour; <span class="comment">// Az ellenség agresszív viselkedését kezelő objektum</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span></div>
+<div class="foldopen" id="foldopen00073" data-start="{" data-end="};">
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="class_enemy_controller.html#ad7bb54783c8fe2abd5ce9880a6ba933e">   73</a></span>    <span class="keyword">public</span> <span class="keywordtype">int</span> <a class="code hl_property" href="class_enemy_controller.html#ad7bb54783c8fe2abd5ce9880a6ba933e">CurrentPointValue</a>  <span class="comment">// Aktuális pontérték</span></div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    {</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>        <span class="keyword">get</span> { <span class="keywordflow">return</span> _currentPointValue; }</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>        <span class="keyword">set</span> { _currentPointValue = value; }</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    }</div>
+</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="class_enemy_controller.html#a09900f45d3c2536bb4a153de9c918879">   83</a></span>    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;float&gt; <a class="code hl_event" href="class_enemy_controller.html#a09900f45d3c2536bb4a153de9c918879">OnPlayerCollision</a>; <span class="comment">// Játékossal való ütközés eseménye</span></div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="class_enemy_controller.html#aa6676bbd2b8cae359ac9c8eddb8e23bc">   84</a></span>    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;EnemyController&gt; <a class="code hl_event" href="class_enemy_controller.html#aa6676bbd2b8cae359ac9c8eddb8e23bc">OnEnemyDeath</a>;   <span class="comment">// Ellenség halála eseménye</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span> </div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="class_enemy_controller.html#ad4340e48c68be453dc8a1201584c476d">   86</a></span>    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;EnemyController&gt; <a class="code hl_event" href="class_enemy_controller.html#ad4340e48c68be453dc8a1201584c476d">OnBehaviourChange</a>; <span class="comment">// Ellenség viselkedésének változása esemény</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="class_enemy_controller.html#a5f6edd1f6aa856a4770bdb31608932f2">   87</a></span>    <span class="keyword">public</span> <span class="keyword">event</span> Action&lt;EnemyController&gt; <a class="code hl_event" href="class_enemy_controller.html#a5f6edd1f6aa856a4770bdb31608932f2">OnPlayerInRange</a>;  <span class="comment">// Esemény, amely akkor aktiválódik, amikor a játékos az ellenség közelébe kerül</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span></div>
+<div class="foldopen" id="foldopen00093" data-start="{" data-end="}">
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="class_enemy_controller.html#ab6deef38df6828a5152e1fd0c73061d8">   93</a></span>    <span class="keyword">protected</span> <span class="keyword">override</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemy_controller.html#ab6deef38df6828a5152e1fd0c73061d8">Awake</a>()</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    {</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>        <span class="comment">// Az ősosztály Awake metódusának meghívása, hogy az alapértelmezett inicializálás megtörténjen</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>        base.Awake(); </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>        <span class="comment">// Az OnBehaviourChange eseményhez hozzáadjuk a viselkedés kezelését végző metódust</span></div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>        <a class="code hl_event" href="class_enemy_controller.html#ad4340e48c68be453dc8a1201584c476d">OnBehaviourChange</a> += HandleBehaviourChange;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>        <span class="comment">// Az OnPlayerInRange eseményhez is hozzárendeljük ugyanazt a metódust, hogy reagáljon, ha a játékos a közelben van</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>        <a class="code hl_event" href="class_enemy_controller.html#a5f6edd1f6aa856a4770bdb31608932f2">OnPlayerInRange</a> += HandleBehaviourChange;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>        <span class="comment">// Beállítjuk az alapértelmezett passzív viselkedést az ellenség számára</span></div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>        <a class="code hl_function" href="class_enemy_controller.html#a601523220ce990e4f631a03c719e1a9d">SetBehaviour</a>(passiveBehaviour);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    }</div>
+</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span></div>
+<div class="foldopen" id="foldopen00112" data-start="{" data-end="}">
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="class_enemy_controller.html#a38e80a740cfb72d0483598d654a82cbe">  112</a></span>    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemy_controller.html#a38e80a740cfb72d0483598d654a82cbe">SetEnemyAttributesByLevel</a>(<span class="keywordtype">int</span> level)</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    {</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>        SetCurrentEnemySpriteByLevel(level);  <span class="comment">// Az ellenség sprite-jának beállítása a szint alapján</span></div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>        SetCurrentEnemyValuesByLevel(level);  <span class="comment">// Az ellenség értékeinek (pl. sebzés, életerő) beállítása a szint alapján</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>        characterSetupManager.OnSetEnemyAttributes -= <a class="code hl_function" href="class_enemy_controller.html#a38e80a740cfb72d0483598d654a82cbe">SetEnemyAttributesByLevel</a>;  <span class="comment">// Leválasztjuk az eseményt, miután az ellenség attribútumait beállítottuk</span></div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    }</div>
+</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>    <span class="keywordtype">void</span> SetCurrentEnemyValuesByLevel(<span class="keywordtype">int</span> level)</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    {</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>        <span class="comment">// Ha a szint érvénytelen (0 vagy kisebb), figyelmeztetést írunk ki, és alapértelmezett szintre állítjuk</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>        <span class="keywordflow">if</span> (level &lt;= 0)</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>        {</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            Debug.LogWarning($<span class="stringliteral">&quot;Invalid level: {level}. Defaulting to level 1.&quot;</span>);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>            level = 1;</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>        }</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>        <span class="comment">// Az ellenség különböző értékeinek skálázása a szint alapján</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>        <span class="comment">// Maximális életerő skálázása</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>        <a class="code hl_property" href="class_assets_1_1_scripts_1_1_character.html#a06dc7a5f6e6bdfda1681fee47c5a7bea">MaxHealth</a> = ScaleValue(<a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#a0a613b5df8a0f9b1e7c87aea1073f8f3">maxHealth</a>, maxHealthScaleFactor, level, <a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#a35557117ac1d902409427bbfce67736a">minHealthValue</a>, <a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#a0bdeb6c5ba1e180487ffdb9751a66928">maxHealthValue</a>);</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>        <span class="comment">// Jelenlegi életerő beállítása a maximális életerővel</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>        <a class="code hl_property" href="class_assets_1_1_scripts_1_1_character.html#abb9d5cbfcb12c76d3f3a1436cd29595a">CurrentHealth</a> = <a class="code hl_property" href="class_assets_1_1_scripts_1_1_character.html#a06dc7a5f6e6bdfda1681fee47c5a7bea">MaxHealth</a>;</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>        <span class="comment">// Mozgási sebesség skálázása</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>        <a class="code hl_property" href="class_assets_1_1_scripts_1_1_character.html#af2fdb249815c0f578e6dfa0425439e2f">CurrentMovementSpeed</a> = ScaleValue(<a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#ae9d7898948953d47ace66eb113cc5a61">baseMovementSpeed</a>, baseMovementSpeedScaleFactor, level, <a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#a7326188ed338cfa7004900219dc2e6cb">minMovementSpeedValue</a>, <a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#a75187ddda891cffa55fe922a9e82277c">maxMovementSpeedValue</a>);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        <span class="comment">// Sebzés skálázása</span></div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>        <a class="code hl_property" href="class_assets_1_1_scripts_1_1_character.html#a6ee04e7804d4141890030586e944078b">CurrentDMG</a> = ScaleValue(<a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#ad296092534d977ed7b26e06f21beeb21">baseDMG</a>, baseDMGScaleFactor, level, <a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#a9e7c470df7969197e5a8496fc55b7ec4">minDMGValue</a>, <a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#a2bff384c53014fd650baa9520d37158b">maxDMGValue</a>);</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>        <span class="comment">// Támadási cooldown skálázása</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        <a class="code hl_property" href="class_assets_1_1_scripts_1_1_character.html#a92a19ff302149f4a1ff48c01b841b80c">CurrentAttackCooldown</a> = ScaleValue(<a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#aed72f88c12a5ce36746eb9c18ffcf2fc">baseAttackCooldown</a>, baseAttackCooldownScaleFactor, level, <a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#a06ff77e3ab8e5f4575d874457450bcdc">minAttackCooldownValue</a>, <a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#abe924a4ceb672aaad554d4b43bcd39b5">maxAttackCooldownValue</a>, inverse: <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        <span class="comment">// Kritikus találat esélyének skálázása</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>        <a class="code hl_property" href="class_assets_1_1_scripts_1_1_character.html#a278861a3a2f0b549d4d336bee8452e0a">CurrentCriticalHitChance</a> = ScaleValue(<a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#a07d4e28ac5bb1523b89e5bddad39afac">baseCriticalHitChance</a>, baseCriticalHitChanceScaleFactor, level, <a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#aedf66d584be8775e420a75ba284b10a8">minCriticalHitChanceValue</a>, <a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#aebea8af2dcf1bf7a15ad02ef84c8f742">maxCriticalHitChanceValue</a>);</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>        <span class="comment">// Százalékos alapú sebzés skálázása</span></div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        <a class="code hl_property" href="class_assets_1_1_scripts_1_1_character.html#a6c99a7bb6104969af257b53a3adf9cd1">CurrentPercentageBasedDMG</a> = ScaleValue(<a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#af4df2141b293bd22410d84c757c085a6">basePercentageBasedDMG</a>, basePercentageBasedDMGScaleFactor, level, <a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#a327e41488d55f720309f7f2ba698aa42">minPercentageBasedDMGValue</a>, <a class="code hl_variable" href="class_assets_1_1_scripts_1_1_character.html#abd90063e020b6e55563caf2283847577">maxPercentageBasedDMGValue</a>);</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>        <span class="comment">// Pont értékének skálázása</span></div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        <a class="code hl_property" href="class_enemy_controller.html#ad7bb54783c8fe2abd5ce9880a6ba933e">CurrentPointValue</a> = (int)ScaleValue(basePointValue, pointValueScaleFactor, level, minPointValue, maxPointValue);</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    }</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span></div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    <span class="keywordtype">float</span> ScaleValue(<span class="keywordtype">float</span> baseValue, <span class="keywordtype">float</span> scaleFactor, <span class="keywordtype">int</span> level, <span class="keywordtype">float</span> minValue, <span class="keywordtype">float</span> maxValue, <span class="keywordtype">bool</span> inverse = <span class="keyword">false</span>)</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    {</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>        <span class="comment">// A skálázott érték kiszámítása, figyelembe véve az &#39;inverse&#39; paramétert</span></div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>        <span class="keywordtype">float</span> scaledValue = inverse</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            ? baseValue / (float)Mathf.Pow(scaleFactor, level - 1) <span class="comment">// Fordított skálázás</span></div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>            : baseValue * (float)Mathf.Pow(scaleFactor, level - 1); <span class="comment">// Normál skálázás</span></div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        <span class="comment">// Az érték korlátozása a megadott minimum és maximum határok között</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        <span class="keywordflow">return</span> Mathf.Clamp(scaledValue, minValue, maxValue);</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    }</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span></div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>    <span class="keyword">private</span> <span class="keywordtype">void</span> Start()</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>    {</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>        <span class="comment">// Az objectpool, a játékos és a karakter beállító menedzser inicializálása</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>        objectPool = FindObjectOfType&lt;ObjectPoolForProjectiles&gt;();</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>        player = FindObjectOfType&lt;PlayerController&gt;();</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>        characterSetupManager = FindObjectOfType&lt;CharacterSetupManager&gt;();</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span> </div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>        <span class="comment">// Események feliratkozása</span></div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>        objectPool.OnProjectileActivated += StartProjectileDetection; <span class="comment">// Feliratkozás a lövedék aktiválásához kapcsolódó eseményre</span></div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>        objectPool.OnProjectileDeactivated += StopProjectileDetection; <span class="comment">// Feliratkozás a lövedék deaktiválásához kapcsolódó eseményre</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>        characterSetupManager.OnSetEnemyAttributes += <a class="code hl_function" href="class_enemy_controller.html#a38e80a740cfb72d0483598d654a82cbe">SetEnemyAttributesByLevel</a>; <span class="comment">// Feliratkozás az ellenség attribútumainak beállításához</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    }</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span> </div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span></div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    <span class="keyword">private</span> <span class="keywordtype">void</span> FixedUpdate()</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    {</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        <span class="comment">// Az aktuális viselkedés végrehajtása</span></div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>        currentBehaviour.ExecuteBehaviour(<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span> </div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>        <span class="comment">// Ha a játékos elérhető, még nem észleltük, és a játékos a közelben van</span></div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>        <span class="keywordflow">if</span> (player &amp;&amp; !hasDetectedPlayer &amp;&amp; IsPlayerInRange())</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        {</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>            <span class="comment">// Esemény kiváltása, hogy a játékos a közelben van</span></div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>            <a class="code hl_event" href="class_enemy_controller.html#a5f6edd1f6aa856a4770bdb31608932f2">OnPlayerInRange</a>?.Invoke(<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>        }</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>    }</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span> </div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span></div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <span class="keywordtype">void</span> OnTriggerEnter2D(Collider2D trigger)</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>    {</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>        <span class="comment">//Debug.Log(player);</span></div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <span class="keywordflow">if</span> (trigger.gameObject.TryGetComponent&lt;PlayerController&gt;(out var palyer))</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        {</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>            Debug.Log(<a class="code hl_property" href="class_assets_1_1_scripts_1_1_character.html#a555f5014591fcecc5eef9c75fb493624">BaseDMG</a>);</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>            <span class="comment">// A játékos sebzésének kiváltása az esemény segítségével</span></div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>            <a class="code hl_event" href="class_enemy_controller.html#a09900f45d3c2536bb4a153de9c918879">OnPlayerCollision</a>?.Invoke(-<a class="code hl_property" href="class_assets_1_1_scripts_1_1_character.html#a555f5014591fcecc5eef9c75fb493624">BaseDMG</a>);</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>        }</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>    }</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span> </div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span></div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>    <span class="keywordtype">void</span> HandleBehaviourChange(EnemyController targetGameObject)</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    {</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>        <span class="comment">// Ellenőrizzük, hogy a viselkedésváltozást kezdeményező objektum a jelenlegi ellenség-e</span></div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>        <span class="keywordflow">if</span> (<span class="keyword">this</span> == targetGameObject)</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>        {</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            <span class="comment">// Ha igen, akkor a játékos észlelve lett, és az eseményeket leválasztjuk</span></div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            hasDetectedPlayer = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>            <a class="code hl_event" href="class_enemy_controller.html#ad4340e48c68be453dc8a1201584c476d">OnBehaviourChange</a> -= HandleBehaviourChange; <span class="comment">// Leiratkozunk a viselkedés változásáról</span></div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>            <a class="code hl_event" href="class_enemy_controller.html#a5f6edd1f6aa856a4770bdb31608932f2">OnPlayerInRange</a> -= HandleBehaviourChange; <span class="comment">// Leiratkozunk a játékos közelítéséről</span></div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>            Debug.Log(<span class="stringliteral">&quot;DETECTED&quot;</span>);</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>            <a class="code hl_function" href="class_enemy_controller.html#a601523220ce990e4f631a03c719e1a9d">SetBehaviour</a>(hostileBehaviour); <span class="comment">// Átváltjuk az ellenség viselkedését ellenségesre</span></div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>        }</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>    }</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span> </div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span></div>
+<div class="foldopen" id="foldopen00257" data-start="{" data-end="}">
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno"><a class="line" href="class_enemy_controller.html#a601523220ce990e4f631a03c719e1a9d">  257</a></span>    <span class="keyword">public</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemy_controller.html#a601523220ce990e4f631a03c719e1a9d">SetBehaviour</a>(EnemyBehaviour newEnemyBehaviour)</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>    {</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        <span class="comment">// Ha van aktuális viselkedés, akkor leállítjuk</span></div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        currentBehaviour?.StopBehaviour(<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        <span class="comment">// Beállítjuk az új viselkedést</span></div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>        currentBehaviour = newEnemyBehaviour;</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>        <span class="comment">// Elindítjuk az új viselkedést</span></div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>        currentBehaviour?.StartBehaviour(<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>    }</div>
+</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span> </div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span></div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span>    <span class="keywordtype">bool</span> IsPlayerInRange()</div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span>    {</div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span>        <span class="comment">// Kiszámítjuk az aktuális objektum és a játékos közötti távolságot</span></div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span>        <span class="keywordtype">float</span> distance = Vector2.Distance(transform.position, player.transform.position);   <span class="comment">// kifagy, ha a játékos meghal</span></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span>        <span class="comment">// Visszaadjuk, hogy a távolság kisebb-e vagy egyenlő a meghatározott észlelési távolsággal</span></div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span>        <span class="keywordflow">return</span> distance &lt;= detectionRange;</div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span>    }</div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span></div>
+<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span>    <span class="keywordtype">void</span> StartProjectileDetection(GameObject projectile)</div>
+<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span>    {</div>
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span>        <span class="comment">// A lövedék komponensének lekérése</span></div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span>        Projectile proj = projectile.GetComponent&lt;Projectile&gt;();</div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span>        <span class="comment">// Elkerüljük, hogy ugyanaz a lövedék többször kerüljön hozzáadásra</span></div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span>        <span class="keywordflow">if</span> (!activeProjectiles.Contains(proj))</div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span>        {</div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span>            <span class="comment">// Feliratkozunk a lövedék &#39;OnEnemyHit&#39; eseményére</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span>            proj.OnEnemyHit += HandleEnemyHit;</div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span>            <span class="comment">// Hozzáadjuk a lövedéket az aktív lövedékek listájához</span></div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span>            activeProjectiles.Add(proj);</div>
+<div class="line"><a id="l00300" name="l00300"></a><span class="lineno">  300</span> </div>
+<div class="line"><a id="l00301" name="l00301"></a><span class="lineno">  301</span>            Debug.Log($<span class="stringliteral">&quot;Projectile detected: {proj}&quot;</span>);</div>
+<div class="line"><a id="l00302" name="l00302"></a><span class="lineno">  302</span>        }</div>
+<div class="line"><a id="l00303" name="l00303"></a><span class="lineno">  303</span>    }</div>
+<div class="line"><a id="l00304" name="l00304"></a><span class="lineno">  304</span> </div>
+<div class="line"><a id="l00305" name="l00305"></a><span class="lineno">  305</span></div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span>    <span class="keywordtype">void</span> StopProjectileDetection(GameObject projectile)</div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span>    {</div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span>        <span class="comment">// A lövedék komponensének lekérése</span></div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span>        Projectile proj = projectile.GetComponent&lt;Projectile&gt;();</div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span>        <span class="comment">// Leiratkozunk a lövedék &#39;OnEnemyHit&#39; eseményéről</span></div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span>        proj.OnEnemyHit -= HandleEnemyHit;</div>
+<div class="line"><a id="l00317" name="l00317"></a><span class="lineno">  317</span> </div>
+<div class="line"><a id="l00318" name="l00318"></a><span class="lineno">  318</span>        <span class="comment">// Eltávolítjuk a lövedéket az aktív lövedékek listájából</span></div>
+<div class="line"><a id="l00319" name="l00319"></a><span class="lineno">  319</span>        activeProjectiles.Remove(proj);</div>
+<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span>        Debug.Log($<span class="stringliteral">&quot;Projectile returned: {proj}&quot;</span>);</div>
+<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span>    }</div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno">  322</span></div>
+<div class="line"><a id="l00329" name="l00329"></a><span class="lineno">  329</span>    <span class="keywordtype">void</span> HandleEnemyHit(EnemyController enemyHitByProjectile, <span class="keywordtype">float</span> damageAmount)</div>
+<div class="line"><a id="l00330" name="l00330"></a><span class="lineno">  330</span>    {</div>
+<div class="line"><a id="l00331" name="l00331"></a><span class="lineno">  331</span>        <span class="comment">// Ellenőrizzük, hogy az ellenség, akit eltaláltak, megegyezik-e az aktuális ellenséggel</span></div>
+<div class="line"><a id="l00332" name="l00332"></a><span class="lineno">  332</span>        <span class="keywordflow">if</span> (<span class="keyword">this</span> == enemyHitByProjectile)</div>
+<div class="line"><a id="l00333" name="l00333"></a><span class="lineno">  333</span>        {</div>
+<div class="line"><a id="l00334" name="l00334"></a><span class="lineno">  334</span>            <span class="comment">// Ha igen, akkor alkalmazzuk a sebzést az aktuális ellenségen</span></div>
+<div class="line"><a id="l00335" name="l00335"></a><span class="lineno">  335</span>            <a class="code hl_function" href="class_assets_1_1_scripts_1_1_character.html#a4c2cef97f95da1f468e6729081071de9">ChangeHealth</a>(damageAmount);</div>
+<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span>            <span class="comment">// Ha a viselkedés változott, meghívjuk a viselkedés-változást kezelő eseményt</span></div>
+<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span>            <a class="code hl_event" href="class_enemy_controller.html#ad4340e48c68be453dc8a1201584c476d">OnBehaviourChange</a>?.Invoke(<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span>        }</div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span> </div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span>    }</div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span> </div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span></div>
+<div class="foldopen" id="foldopen00347" data-start="{" data-end="}">
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno"><a class="line" href="class_enemy_controller.html#ae4643988c3365d89c1ec7377f6ad42e6">  347</a></span>    <span class="keyword">protected</span> <span class="keyword">override</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemy_controller.html#ae4643988c3365d89c1ec7377f6ad42e6">Die</a>()</div>
+<div class="line"><a id="l00348" name="l00348"></a><span class="lineno">  348</span>    {</div>
+<div class="line"><a id="l00349" name="l00349"></a><span class="lineno">  349</span>        <span class="comment">// Meghívjuk az alap &#39;Die&#39; metódust</span></div>
+<div class="line"><a id="l00350" name="l00350"></a><span class="lineno">  350</span>        base.Die();</div>
+<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span>        <span class="comment">// Leállítjuk az aktuális viselkedést</span></div>
+<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span>        currentBehaviour.StopBehaviour(<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno">  353</span>        <span class="comment">// Meghívjuk az &#39;OnEnemyDeath&#39; eseményt, hogy értesítsük a többi rendszert</span></div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span>        <a class="code hl_event" href="class_enemy_controller.html#aa6676bbd2b8cae359ac9c8eddb8e23bc">OnEnemyDeath</a>?.Invoke(<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span>        <span class="comment">// Meghívjuk az &#39;OnBehaviourChange&#39; eseményt, hogy értesítsük a viselkedésváltozásról</span></div>
+<div class="line"><a id="l00356" name="l00356"></a><span class="lineno">  356</span>        <a class="code hl_event" href="class_enemy_controller.html#ad4340e48c68be453dc8a1201584c476d">OnBehaviourChange</a>?.Invoke(<span class="keyword">this</span>);</div>
+<div class="line"><a id="l00357" name="l00357"></a><span class="lineno">  357</span>    }</div>
+</div>
+<div class="line"><a id="l00358" name="l00358"></a><span class="lineno">  358</span> </div>
+<div class="line"><a id="l00359" name="l00359"></a><span class="lineno">  359</span></div>
+<div class="foldopen" id="foldopen00364" data-start="{" data-end="}">
+<div class="line"><a id="l00364" name="l00364"></a><span class="lineno"><a class="line" href="class_enemy_controller.html#a4520f46ce3c50343d9c158fd9d5febaa">  364</a></span>    <span class="keyword">protected</span> <span class="keyword">override</span> <span class="keywordtype">void</span> <a class="code hl_function" href="class_enemy_controller.html#a4520f46ce3c50343d9c158fd9d5febaa">OnDestroy</a>()</div>
+<div class="line"><a id="l00365" name="l00365"></a><span class="lineno">  365</span>    {</div>
+<div class="line"><a id="l00366" name="l00366"></a><span class="lineno">  366</span>        <span class="comment">// Meghívjuk az alap &#39;OnDestroy&#39; metódust</span></div>
+<div class="line"><a id="l00367" name="l00367"></a><span class="lineno">  367</span>        base.OnDestroy();</div>
+<div class="line"><a id="l00368" name="l00368"></a><span class="lineno">  368</span> </div>
+<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span>        <span class="comment">// Ha létezik az objektumpool, leiratkozunk az eseményekről</span></div>
+<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span>        <span class="keywordflow">if</span> (objectPool != <span class="keyword">null</span>)</div>
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span>        {</div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span>            objectPool.OnProjectileActivated -= StartProjectileDetection;</div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span>            objectPool.OnProjectileDeactivated -= StopProjectileDetection;</div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span>        }</div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span> </div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span>        <span class="comment">// Ha az aktív lövedékek lista nem null, eltávolítjuk a lövedékek eseményeit és töröljük a listát</span></div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span>        <span class="keywordflow">if</span> (activeProjectiles != <span class="keyword">null</span>)</div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span>        {</div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span>            <span class="keywordflow">foreach</span> (var proj <span class="keywordflow">in</span> activeProjectiles)</div>
+<div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span>            {</div>
+<div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span>                proj.OnEnemyHit -= HandleEnemyHit;</div>
+<div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span>            }</div>
+<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span> </div>
+<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span>            <span class="comment">// Kiürítjük az aktív lövedékek listáját</span></div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno">  385</span>            activeProjectiles.Clear();</div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span>        }</div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span>    }</div>
+</div>
+<div class="line"><a id="l00388" name="l00388"></a><span class="lineno">  388</span></div>
+<div class="line"><a id="l00393" name="l00393"></a><span class="lineno">  393</span>    <span class="keyword">private</span> <span class="keywordtype">void</span> ValidateUniqueSpriteLevels()</div>
+<div class="line"><a id="l00394" name="l00394"></a><span class="lineno">  394</span>    {</div>
+<div class="line"><a id="l00395" name="l00395"></a><span class="lineno">  395</span>        <span class="comment">// Létrehozunk egy hashsetet a szintek tárolására</span></div>
+<div class="line"><a id="l00396" name="l00396"></a><span class="lineno">  396</span>        HashSet&lt;int&gt; levelSet = <span class="keyword">new</span> HashSet&lt;int&gt;();</div>
+<div class="line"><a id="l00397" name="l00397"></a><span class="lineno">  397</span>        <span class="comment">// Végigiterálunk a sprite szint adatokat tartalmazó listán</span></div>
+<div class="line"><a id="l00398" name="l00398"></a><span class="lineno">  398</span>        <span class="keywordflow">foreach</span> (var data <span class="keywordflow">in</span> spriteLevelDataList)</div>
+<div class="line"><a id="l00399" name="l00399"></a><span class="lineno">  399</span>        {</div>
+<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span>            <span class="comment">// Ha a szint már szerepel a hashsetben, duplikált szintet találtunk</span></div>
+<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span>            <span class="keywordflow">if</span> (levelSet.Contains(data.level))</div>
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span>            {</div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span>                Debug.LogError($<span class="stringliteral">&quot;Duplicate level {data.level} found in LevelSpriteDataList.&quot;</span>);</div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span>            }</div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>            <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>            {</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>                <span class="comment">// Ha nincs duplikált szint, hozzáadjuk a szintet a szetthez</span></div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>                levelSet.Add(data.level);</div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>            }</div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>        }</div>
+<div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>    }</div>
+<div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span></div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>    <span class="keyword">private</span> <span class="keywordtype">void</span> OnValidate()</div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>    {</div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span>        <span class="comment">// ValidateUniqueSpriteLevels(); // tesztek ezzel nem futnak le, kikommentelve</span></div>
+<div class="line"><a id="l00419" name="l00419"></a><span class="lineno">  419</span>    }</div>
+<div class="line"><a id="l00420" name="l00420"></a><span class="lineno">  420</span></div>
+<div class="line"><a id="l00428" name="l00428"></a><span class="lineno">  428</span>    <span class="keywordtype">void</span> SetCurrentEnemySpriteByLevel(<span class="keywordtype">int</span> level)</div>
+<div class="line"><a id="l00429" name="l00429"></a><span class="lineno">  429</span>    {</div>
+<div class="line"><a id="l00430" name="l00430"></a><span class="lineno">  430</span>        <span class="comment">// Megkeressük a megfelelő szinthez tartozó adatot a lista első elemében</span></div>
+<div class="line"><a id="l00431" name="l00431"></a><span class="lineno">  431</span>        var currentSpriteLevelData = spriteLevelDataList.FirstOrDefault(x =&gt; x.level == level);</div>
+<div class="line"><a id="l00432" name="l00432"></a><span class="lineno">  432</span> </div>
+<div class="line"><a id="l00433" name="l00433"></a><span class="lineno">  433</span>        <span class="keywordflow">if</span> (currentSpriteLevelData != <span class="keyword">null</span>)</div>
+<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span>        {</div>
+<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span>            <span class="comment">// Ha találunk megfelelő adatot, frissítjük a sprite-ot és engedélyezzük a collidert.</span></div>
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span>            this.GetComponent&lt;SpriteRenderer&gt;().sprite = currentSpriteLevelData.sprite;</div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span>            currentSpriteLevelData.collider.enabled = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span>        }</div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span>        <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span>        {</div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span>            <span class="comment">// Ha nem találunk megfelelő adatot, figyelmeztetést adunk</span></div>
+<div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span>            Debug.LogWarning($<span class="stringliteral">&quot;No SpriteLevelData found for level {level}. Make sure the level exists in the data list.&quot;</span>);</div>
+<div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span>        }</div>
+<div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span>    }</div>
+<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span> </div>
+<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span>}</div>
+</div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html">Assets.Scripts.Character</a></div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00015">Character.cs:16</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a06dc7a5f6e6bdfda1681fee47c5a7bea"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a06dc7a5f6e6bdfda1681fee47c5a7bea">Assets.Scripts.Character.MaxHealth</a></div><div class="ttdeci">float MaxHealth</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00103">Character.cs:104</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a06ff77e3ab8e5f4575d874457450bcdc"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a06ff77e3ab8e5f4575d874457450bcdc">Assets.Scripts.Character.minAttackCooldownValue</a></div><div class="ttdeci">float minAttackCooldownValue</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00071">Character.cs:71</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a07d4e28ac5bb1523b89e5bddad39afac"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a07d4e28ac5bb1523b89e5bddad39afac">Assets.Scripts.Character.baseCriticalHitChance</a></div><div class="ttdeci">float baseCriticalHitChance</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00049">Character.cs:49</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a0a613b5df8a0f9b1e7c87aea1073f8f3"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a0a613b5df8a0f9b1e7c87aea1073f8f3">Assets.Scripts.Character.maxHealth</a></div><div class="ttdeci">float maxHealth</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00033">Character.cs:33</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a0bdeb6c5ba1e180487ffdb9751a66928"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a0bdeb6c5ba1e180487ffdb9751a66928">Assets.Scripts.Character.maxHealthValue</a></div><div class="ttdeci">float maxHealthValue</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00061">Character.cs:61</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a278861a3a2f0b549d4d336bee8452e0a"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a278861a3a2f0b549d4d336bee8452e0a">Assets.Scripts.Character.CurrentCriticalHitChance</a></div><div class="ttdeci">float CurrentCriticalHitChance</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00133">Character.cs:134</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a2bff384c53014fd650baa9520d37158b"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a2bff384c53014fd650baa9520d37158b">Assets.Scripts.Character.maxDMGValue</a></div><div class="ttdeci">float maxDMGValue</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00069">Character.cs:69</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a327e41488d55f720309f7f2ba698aa42"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a327e41488d55f720309f7f2ba698aa42">Assets.Scripts.Character.minPercentageBasedDMGValue</a></div><div class="ttdeci">float minPercentageBasedDMGValue</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00078">Character.cs:78</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a35557117ac1d902409427bbfce67736a"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a35557117ac1d902409427bbfce67736a">Assets.Scripts.Character.minHealthValue</a></div><div class="ttdeci">float minHealthValue</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00059">Character.cs:59</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a4c2cef97f95da1f468e6729081071de9"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a4c2cef97f95da1f468e6729081071de9">Assets.Scripts.Character.ChangeHealth</a></div><div class="ttdeci">virtual void ChangeHealth(float amount)</div><div class="ttdoc">Kezeli a karakter életerõ-változását, figyeli a kapcsolódó eseményeket, és ellenõrzi,...</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00207">Character.cs:207</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a555f5014591fcecc5eef9c75fb493624"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a555f5014591fcecc5eef9c75fb493624">Assets.Scripts.Character.BaseDMG</a></div><div class="ttdeci">float BaseDMG</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00121">Character.cs:122</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a6c99a7bb6104969af257b53a3adf9cd1"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a6c99a7bb6104969af257b53a3adf9cd1">Assets.Scripts.Character.CurrentPercentageBasedDMG</a></div><div class="ttdeci">float CurrentPercentageBasedDMG</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00139">Character.cs:140</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a6ee04e7804d4141890030586e944078b"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a6ee04e7804d4141890030586e944078b">Assets.Scripts.Character.CurrentDMG</a></div><div class="ttdeci">float CurrentDMG</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00115">Character.cs:116</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a7326188ed338cfa7004900219dc2e6cb"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a7326188ed338cfa7004900219dc2e6cb">Assets.Scripts.Character.minMovementSpeedValue</a></div><div class="ttdeci">float minMovementSpeedValue</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00063">Character.cs:63</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a75187ddda891cffa55fe922a9e82277c"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a75187ddda891cffa55fe922a9e82277c">Assets.Scripts.Character.maxMovementSpeedValue</a></div><div class="ttdeci">float maxMovementSpeedValue</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00065">Character.cs:65</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a92a19ff302149f4a1ff48c01b841b80c"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a92a19ff302149f4a1ff48c01b841b80c">Assets.Scripts.Character.CurrentAttackCooldown</a></div><div class="ttdeci">float CurrentAttackCooldown</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00127">Character.cs:128</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_a9e7c470df7969197e5a8496fc55b7ec4"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#a9e7c470df7969197e5a8496fc55b7ec4">Assets.Scripts.Character.minDMGValue</a></div><div class="ttdeci">float minDMGValue</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00067">Character.cs:67</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_abb9d5cbfcb12c76d3f3a1436cd29595a"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#abb9d5cbfcb12c76d3f3a1436cd29595a">Assets.Scripts.Character.CurrentHealth</a></div><div class="ttdeci">float CurrentHealth</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00097">Character.cs:98</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_abd90063e020b6e55563caf2283847577"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#abd90063e020b6e55563caf2283847577">Assets.Scripts.Character.maxPercentageBasedDMGValue</a></div><div class="ttdeci">float maxPercentageBasedDMGValue</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00079">Character.cs:79</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_abe924a4ceb672aaad554d4b43bcd39b5"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#abe924a4ceb672aaad554d4b43bcd39b5">Assets.Scripts.Character.maxAttackCooldownValue</a></div><div class="ttdeci">float maxAttackCooldownValue</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00073">Character.cs:73</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_ad296092534d977ed7b26e06f21beeb21"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#ad296092534d977ed7b26e06f21beeb21">Assets.Scripts.Character.baseDMG</a></div><div class="ttdeci">float baseDMG</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00041">Character.cs:41</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_ae9d7898948953d47ace66eb113cc5a61"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#ae9d7898948953d47ace66eb113cc5a61">Assets.Scripts.Character.baseMovementSpeed</a></div><div class="ttdeci">float baseMovementSpeed</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00037">Character.cs:37</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_aebea8af2dcf1bf7a15ad02ef84c8f742"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#aebea8af2dcf1bf7a15ad02ef84c8f742">Assets.Scripts.Character.maxCriticalHitChanceValue</a></div><div class="ttdeci">float maxCriticalHitChanceValue</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00076">Character.cs:76</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_aed72f88c12a5ce36746eb9c18ffcf2fc"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#aed72f88c12a5ce36746eb9c18ffcf2fc">Assets.Scripts.Character.baseAttackCooldown</a></div><div class="ttdeci">float baseAttackCooldown</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00045">Character.cs:45</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_aedf66d584be8775e420a75ba284b10a8"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#aedf66d584be8775e420a75ba284b10a8">Assets.Scripts.Character.minCriticalHitChanceValue</a></div><div class="ttdeci">float minCriticalHitChanceValue</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00075">Character.cs:75</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_af2fdb249815c0f578e6dfa0425439e2f"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#af2fdb249815c0f578e6dfa0425439e2f">Assets.Scripts.Character.CurrentMovementSpeed</a></div><div class="ttdeci">float CurrentMovementSpeed</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00109">Character.cs:110</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_character_html_af4df2141b293bd22410d84c757c085a6"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_character.html#af4df2141b293bd22410d84c757c085a6">Assets.Scripts.Character.basePercentageBasedDMG</a></div><div class="ttdeci">float basePercentageBasedDMG</div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00053">Character.cs:53</a></div></div>
+<div class="ttc" id="aclass_assets_1_1_scripts_1_1_object_pool_for_projectiles_html"><div class="ttname"><a href="class_assets_1_1_scripts_1_1_object_pool_for_projectiles.html">Assets.Scripts.ObjectPoolForProjectiles</a></div><div class="ttdef"><b>Definition</b> <a href="_object_pool_for_projectiles_8cs_source.html#l00010">ObjectPoolForProjectiles.cs:11</a></div></div>
+<div class="ttc" id="aclass_enemy_controller_html"><div class="ttname"><a href="class_enemy_controller.html">EnemyController</a></div><div class="ttdef"><b>Definition</b> <a href="#l00010">EnemyController.cs:11</a></div></div>
+<div class="ttc" id="aclass_enemy_controller_html_a09900f45d3c2536bb4a153de9c918879"><div class="ttname"><a href="class_enemy_controller.html#a09900f45d3c2536bb4a153de9c918879">EnemyController.OnPlayerCollision</a></div><div class="ttdeci">Action&lt; float &gt; OnPlayerCollision</div><div class="ttdoc">Események.</div><div class="ttdef"><b>Definition</b> <a href="#l00083">EnemyController.cs:83</a></div></div>
+<div class="ttc" id="aclass_enemy_controller_html_a38e80a740cfb72d0483598d654a82cbe"><div class="ttname"><a href="class_enemy_controller.html#a38e80a740cfb72d0483598d654a82cbe">EnemyController.SetEnemyAttributesByLevel</a></div><div class="ttdeci">void SetEnemyAttributesByLevel(int level)</div><div class="ttdoc">Beállítja az ellenség attribútumait a megadott szint alapján. Ez magában foglalja az ellenség sprite-...</div><div class="ttdef"><b>Definition</b> <a href="#l00112">EnemyController.cs:112</a></div></div>
+<div class="ttc" id="aclass_enemy_controller_html_a4520f46ce3c50343d9c158fd9d5febaa"><div class="ttname"><a href="class_enemy_controller.html#a4520f46ce3c50343d9c158fd9d5febaa">EnemyController.OnDestroy</a></div><div class="ttdeci">override void OnDestroy()</div><div class="ttdoc">Tisztítja a szükséges eseményeket és erõforrásokat az objektum megsemmisítésekor. Elõször meghívja az...</div><div class="ttdef"><b>Definition</b> <a href="#l00364">EnemyController.cs:364</a></div></div>
+<div class="ttc" id="aclass_enemy_controller_html_a5f6edd1f6aa856a4770bdb31608932f2"><div class="ttname"><a href="class_enemy_controller.html#a5f6edd1f6aa856a4770bdb31608932f2">EnemyController.OnPlayerInRange</a></div><div class="ttdeci">Action&lt; EnemyController &gt; OnPlayerInRange</div><div class="ttdef"><b>Definition</b> <a href="#l00087">EnemyController.cs:87</a></div></div>
+<div class="ttc" id="aclass_enemy_controller_html_a601523220ce990e4f631a03c719e1a9d"><div class="ttname"><a href="class_enemy_controller.html#a601523220ce990e4f631a03c719e1a9d">EnemyController.SetBehaviour</a></div><div class="ttdeci">void SetBehaviour(EnemyBehaviour newEnemyBehaviour)</div><div class="ttdoc">Beállítja az új ellenség viselkedést és végrehajtja az előző viselkedés leállítását,...</div><div class="ttdef"><b>Definition</b> <a href="#l00257">EnemyController.cs:257</a></div></div>
+<div class="ttc" id="aclass_enemy_controller_html_aa6676bbd2b8cae359ac9c8eddb8e23bc"><div class="ttname"><a href="class_enemy_controller.html#aa6676bbd2b8cae359ac9c8eddb8e23bc">EnemyController.OnEnemyDeath</a></div><div class="ttdeci">Action&lt; EnemyController &gt; OnEnemyDeath</div><div class="ttdef"><b>Definition</b> <a href="#l00084">EnemyController.cs:84</a></div></div>
+<div class="ttc" id="aclass_enemy_controller_html_ab6deef38df6828a5152e1fd0c73061d8"><div class="ttname"><a href="class_enemy_controller.html#ab6deef38df6828a5152e1fd0c73061d8">EnemyController.Awake</a></div><div class="ttdeci">override void Awake()</div><div class="ttdoc">Az ébredési fázisban végzett inicializálás.</div><div class="ttdef"><b>Definition</b> <a href="#l00093">EnemyController.cs:93</a></div></div>
+<div class="ttc" id="aclass_enemy_controller_html_ad4340e48c68be453dc8a1201584c476d"><div class="ttname"><a href="class_enemy_controller.html#ad4340e48c68be453dc8a1201584c476d">EnemyController.OnBehaviourChange</a></div><div class="ttdeci">Action&lt; EnemyController &gt; OnBehaviourChange</div><div class="ttdef"><b>Definition</b> <a href="#l00086">EnemyController.cs:86</a></div></div>
+<div class="ttc" id="aclass_enemy_controller_html_ad7bb54783c8fe2abd5ce9880a6ba933e"><div class="ttname"><a href="class_enemy_controller.html#ad7bb54783c8fe2abd5ce9880a6ba933e">EnemyController.CurrentPointValue</a></div><div class="ttdeci">int CurrentPointValue</div><div class="ttdoc">Getterek és Setterek.</div><div class="ttdef"><b>Definition</b> <a href="#l00073">EnemyController.cs:74</a></div></div>
+<div class="ttc" id="aclass_enemy_controller_html_ae4643988c3365d89c1ec7377f6ad42e6"><div class="ttname"><a href="class_enemy_controller.html#ae4643988c3365d89c1ec7377f6ad42e6">EnemyController.Die</a></div><div class="ttdeci">override void Die()</div><div class="ttdoc">Kezeli az ellenség halálát. Meghívja az alap Die metódust, majd az OnEnemyDeath eseményt,...</div><div class="ttdef"><b>Definition</b> <a href="#l00347">EnemyController.cs:347</a></div></div>
+<div class="ttc" id="aclass_player_controller_html"><div class="ttname"><a href="class_player_controller.html">PlayerController</a></div><div class="ttdef"><b>Definition</b> <a href="_player_controller_8cs_source.html#l00013">PlayerController.cs:14</a></div></div>
+<div class="ttc" id="anamespace_assets_1_1_scripts_html"><div class="ttname"><a href="namespace_assets_1_1_scripts.html">Assets.Scripts</a></div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00010">Character.cs:11</a></div></div>
+<div class="ttc" id="anamespace_assets_html"><div class="ttname"><a href="namespace_assets.html">Assets</a></div><div class="ttdef"><b>Definition</b> <a href="_character_8cs_source.html#l00010">Character.cs:11</a></div></div>
+</div><!-- fragment --></div><!-- contents -->
+</div><!-- doc-content -->
+<!-- start footer part -->
+<div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
+  <ul>
+    <li class="navelem"><a class="el" href="dir_90cc87346a754f9736446d4afcc65dd1.html">MOSZE3</a></li><li class="navelem"><a class="el" href="dir_de74f6cb05e47c2c84ccdfd8793a7175.html">MoSzE-Alomprojekt</a></li><li class="navelem"><a class="el" href="dir_5b8727ba7470270ad1bd55c3941511ed.html">Alomprojekt</a></li><li class="navelem"><a class="el" href="dir_5c92a90bc6391b5560f3261650b155c4.html">Assets</a></li><li class="navelem"><a class="el" href="dir_b60a7c4b28e0b14781463a39c3f93fe8.html">Scripts</a></li><li class="navelem"><a class="el" href="_enemy_controller_8cs.html">EnemyController.cs</a></li>
+    <li class="footer">Készítette <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.13.2 </li>
+  </ul>
+</div>
+</body>
+</html>

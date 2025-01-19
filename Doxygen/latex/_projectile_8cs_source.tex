@@ -1,0 +1,190 @@
+\doxysection{Projectile.\+cs}
+\hypertarget{_projectile_8cs_source}{}\label{_projectile_8cs_source}\index{C:/Users/ati/Desktop/MOSZE3/MoSzE-\/Alomprojekt/Alomprojekt/Assets/Scripts/Projectile.cs@{C:/Users/ati/Desktop/MOSZE3/MoSzE-\/Alomprojekt/Alomprojekt/Assets/Scripts/Projectile.cs}}
+\mbox{\hyperlink{_projectile_8cs}{Ugrás a fájl dokumentációjához.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_assets_1_1_scripts}{Assets.Scripts}};}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }System;}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00003}00003\ \textcolor{keyword}{using\ }UnityEngine;}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00004}00004\ \textcolor{keyword}{using\ }UnityEngine.InputSystem;}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00007}\mbox{\hyperlink{class_projectile}{00007}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_projectile}{Projectile}}\ :\ MonoBehaviour}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00008}00008\ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00012}00012\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{float}\ \_projectileDMG;\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ sebzésértéke}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00013}\mbox{\hyperlink{class_projectile_a94ef685369823fe7b11dabcfd5afd436}{00013}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_projectile_a94ef685369823fe7b11dabcfd5afd436}{deleteTime}}\ =\ 5f;}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00014}00014\ \ \ \ \ \textcolor{comment}{//private\ float\ timer\ =\ 0f;}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00015}\mbox{\hyperlink{class_projectile_a569bcca5cad76d30134ca434b84c826d}{00015}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_projectile_a569bcca5cad76d30134ca434b84c826d}{force}}\ =\ 3;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ alkalmazott\ erõ,\ amely\ meghatározza\ a\ lövedék\ indításának\ intenzitását}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00016}00016\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{float}\ \_percentageDMGValue;\ \ \ \ \ \ \textcolor{comment}{//\ Százalékos\ sebzésérték}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00017}00017\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{bool}\ \_isMarked;\ \ \ \ \ \textcolor{comment}{//\ lövedék\ megjelöltsége\ [igen/nem]}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00019}00019\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{bool}\ isSubscribedForPlayerDeath;}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00025}00025\ \ \ \ \ Rigidbody2D\ rigidbody2d;\ \ \ \ \textcolor{comment}{//\ Lövedékhez\ kapcsolódó\ Rigidbody2D\ komponens}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00026}00026\ \ \ \ \ \textcolor{keyword}{private}\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles}{ObjectPoolForProjectiles}}\ objectPool;\ \ \ \ \textcolor{comment}{//\ A\ lövedékeket\ kezelõ\ ObjectPoolForProjectiles\ komponens}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00028}00028\ \ \ \ \ \textcolor{keyword}{private}\ \mbox{\hyperlink{class_player_controller}{PlayerController}}\ player;}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00030}00030\ \ \ \ \ \textcolor{keyword}{private}\ Camera\ \_mainCamera;}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00035}\mbox{\hyperlink{class_projectile_a69f252c4c5134ad1c3b24814787318a6}{00035}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_projectile_a69f252c4c5134ad1c3b24814787318a6}{ProjectileDMG}}\ \ \textcolor{comment}{//\ Lövedék\ sebzésértéke}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00036}00036\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00037}00037\ \ \ \ \ \ \ \ \ \textcolor{keyword}{get}\ \{\ \textcolor{keywordflow}{return}\ \_projectileDMG;\ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{keyword}{set}\ \{\ \_projectileDMG\ =\ value;\ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00039}00039\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00041}\mbox{\hyperlink{class_projectile_ab6d5d1b0e2dc52ca86eebc05cb4906aa}{00041}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_projectile_ab6d5d1b0e2dc52ca86eebc05cb4906aa}{PercentageDMGValue}}\ \textcolor{comment}{//\ Lövedék\ százalékos\ sebzésértéke}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00042}00042\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00043}00043\ \ \ \ \ \ \ \ \ \textcolor{keyword}{get}\ \{\ \textcolor{keywordflow}{return}\ \_percentageDMGValue;\ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{keyword}{set}\ \{\ \_percentageDMGValue\ =\ value;\ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00045}00045\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00047}\mbox{\hyperlink{class_projectile_a017b8ff4012636359219fe7cb2a4d103}{00047}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_projectile_a017b8ff4012636359219fe7cb2a4d103}{IsMarked}}\ \ \ \ \textcolor{comment}{//\ Lövedék\ megjelöltsége}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00048}00048\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{keyword}{get}\ \{\ \textcolor{keywordflow}{return}\ \_isMarked;\ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keyword}{set}\ \{\ \_isMarked\ =\ value;\ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00051}00051\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00053}\mbox{\hyperlink{class_projectile_abc640ddd3b046f1faa045c3dc2220e5f}{00053}}\ \ \ \ \ \textcolor{keyword}{public}\ Camera\ \mbox{\hyperlink{class_projectile_abc640ddd3b046f1faa045c3dc2220e5f}{MainCamera}}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00054}00054\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00055}00055\ \ \ \ \ \ \ \ \ \textcolor{keyword}{get}\ \{\ \textcolor{keywordflow}{return}\ \_mainCamera;\ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00056}00056\ \ \ \ \ \ \ \ \ \textcolor{keyword}{set}\ \{\ \_mainCamera\ =\ value;\ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00057}00057\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00058}00058\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00064}\mbox{\hyperlink{class_projectile_a4a018b990c9181249d9141f72dd1c796}{00064}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{event}\ Action<EnemyController,\ float>\ \mbox{\hyperlink{class_projectile_a4a018b990c9181249d9141f72dd1c796}{OnEnemyHit}};\ \ \textcolor{comment}{//\ Esemény,\ amely\ akkor\ hívódik\ meg,\ amikor\ a\ lövedék\ eltalál\ egy\ ellenséges\ karaktert}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00065}\mbox{\hyperlink{class_projectile_a2574ba2547a37db6d1131e3a8b559e2b}{00065}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{event}\ Action<float>\ \mbox{\hyperlink{class_projectile_a2574ba2547a37db6d1131e3a8b559e2b}{OnBossHit}};}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00066}00066\ \ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00072}00072\ \ \ \ \ \textcolor{keywordtype}{void}\ Awake()}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00073}00073\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00074}00074\ \ \ \ \ \ \ \ \ rigidbody2d\ =\ GetComponent<Rigidbody2D>();}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00075}00075\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00077}00077\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ Start()}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00078}00078\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00079}00079\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Megkeressük\ az\ ObjectPoolForProjectiles\ típusú\ objektumot\ a\ jelenetben,\ és\ hozzárendeljük\ a\ 'objectPool'\ változóhoz.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00080}00080\ \ \ \ \ \ \ \ \ objectPool\ =\ FindObjectOfType<ObjectPoolForProjectiles>();}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Megkeressük\ a\ PlayerController\ típusú\ objektumot\ a\ jelenetben,\ és\ hozzárendeljük\ a\ 'player'\ változóhoz.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00082}00082\ \ \ \ \ \ \ \ \ player\ =\ FindAnyObjectByType<PlayerController>();}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00083}00083\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Feliratkozunk\ a\ 'player'\ halál\ eseményére,\ hogy\ a\ 'DestroyProjectile'\ metódust\ meghívjuk,\ ha\ a\ játékos\ meghal.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00084}00084\ \ \ \ \ \ \ \ \ player.OnPlayerDeath\ +=\ DestroyProjectile;}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Jelezzük,\ hogy\ feliratkoztunk\ a\ játékos\ halál\ eseményére.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00086}00086\ \ \ \ \ \ \ \ \ isSubscribedForPlayerDeath\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00087}00087\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00094}00094\ \ \ \ \ \textcolor{keywordtype}{void}\ Update()}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00095}00095\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00096}00096\ \ \ \ \ \ \ \ \ Vector3\ viewportPosition\ =\ \mbox{\hyperlink{class_projectile_abc640ddd3b046f1faa045c3dc2220e5f}{MainCamera}}.WorldToViewportPoint(transform.position);}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00098}00098\ \ \ \ \ \ \ \ \ \textcolor{comment}{//timer\ +=\ Time.deltaTime;}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00099}00099\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00100}00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (viewportPosition.x\ <\ -\/0.05\ ||\ viewportPosition.x\ >\ 1.05\ ||\ viewportPosition.y\ <\ -\/0.05\ ||\ viewportPosition.y\ >\ 1.05\ \textcolor{comment}{/*||\ timer\ >=\ deleteTime*/})}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00101}00101\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00102}00102\ \ \ \ \ \ \ \ \ \ \ \ \ DestroyProjectile();}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00103}00103\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00104}00104\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00106}00106\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00107}00107\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ OnEnable()}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00108}00108\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00109}00109\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrizzük,\ hogy\ a\ 'player'\ objektum\ létezik-\/e,\ és\ hogy\ még\ nem\ történt\ meg\ a\ feliratkozás\ a\ halál\ eseményére.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (player\ \&\&\ !isSubscribedForPlayerDeath)}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00111}00111\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Feliratkozunk\ a\ 'player'\ halál\ eseményére,\ hogy\ a\ 'DestroyProjectile'\ metódust\ meghívjuk,\ ha\ a\ játékos\ meghal.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ player.OnPlayerDeath\ +=\ DestroyProjectile;}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Jelezzük,\ hogy\ a\ feliratkozás\ megtörtént.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ isSubscribedForPlayerDeath\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00116}00116\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00117}00117\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00119}00119\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ OnDisable()}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00120}00120\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrizzük,\ hogy\ a\ 'player'\ objektum\ létezik-\/e,\ és\ hogy\ korábban\ feliratkoztunk-\/e\ a\ halál\ eseményére.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (player\ \&\&\ isSubscribedForPlayerDeath)}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00123}00123\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Leiratkozunk\ a\ 'player'\ halál\ eseményéről,\ hogy\ elkerüljük\ a\ felesleges\ eseményhívásokat.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00125}00125\ \ \ \ \ \ \ \ \ \ \ \ \ player.OnPlayerDeath\ -\/=\ DestroyProjectile;}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Jelezzük,\ hogy\ a\ leiratkozás\ megtörtént.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ isSubscribedForPlayerDeath\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00128}00128\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00129}00129\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00137}\mbox{\hyperlink{class_projectile_a57d7814a538aa8198b397861f7f1dbbf}{00137}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_projectile_a57d7814a538aa8198b397861f7f1dbbf}{Launch}}(Vector2\ direction,\ \textcolor{keywordtype}{float}\ launchForce)}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00138}00138\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00139}00139\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ angle\ =\ Mathf.Atan2(direction.y,\ direction.x)\ *\ Mathf.Rad2Deg;}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00140}00140\ \ \ \ \ \ \ \ \ transform.rotation\ =\ Quaternion.Euler(0f,\ 0f,\ angle\ -\/\ 90f);}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00141}00141\ \ \ \ \ \ \ \ \ rigidbody2d.AddForce(direction\ *\ launchForce);}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00142}00142\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00144}00144\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00150}00150\ \ \ \ \ \textcolor{keywordtype}{void}\ OnCollisionEnter2D(Collision2D\ collision)}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00151}00151\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00152}00152\ \ \ \ \ \ \ \ \ Debug.Log(\textcolor{stringliteral}{"{}Projectile\ collision\ with\ "{}}\ +\ collision.gameObject);}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00153}00153\ \ \ \ \ \ \ \ \ DestroyProjectile();}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00154}00154\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00163}00163\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ OnTriggerEnter2D(Collider2D\ trigger)}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00164}00164\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00165}00165\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrizzük,\ hogy\ a\ trigger\ objektum\ rendelkezik-\/e\ EnemyController\ komponenssel.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00166}00166\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (trigger.gameObject.TryGetComponent<EnemyController>(out\ var\ enemy))}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00167}00167\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ lövedék\ meg\ van\ jelölve,\ extra\ sebzést\ oszt\ ki\ az\ ellenség\ maximális\ életerejének\ egy\ százalékos\ értéke\ alapján.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ nincs\ megjelölve,\ csak\ az\ alap\ sebzést\ osztja\ ki.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ damage\ =\ \mbox{\hyperlink{class_projectile_a017b8ff4012636359219fe7cb2a4d103}{IsMarked}}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ?\ -\/\mbox{\hyperlink{class_projectile_a69f252c4c5134ad1c3b24814787318a6}{ProjectileDMG}}\ -\/\ enemy.MaxHealth\ *\ \mbox{\hyperlink{class_projectile_ab6d5d1b0e2dc52ca86eebc05cb4906aa}{PercentageDMGValue}}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ -\/\mbox{\hyperlink{class_projectile_a69f252c4c5134ad1c3b24814787318a6}{ProjectileDMG}};}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00173}00173\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(\mbox{\hyperlink{class_projectile_a017b8ff4012636359219fe7cb2a4d103}{IsMarked}}\ ?\ \textcolor{stringliteral}{"{}MARKED!"{}}\ :\ \textcolor{stringliteral}{"{}UNMARKED!"{}});}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Meghívjuk\ az\ OnEnemyHit\ eseményt,\ hogy\ értesítsük\ a\ rendszert\ az\ ellenség\ eltalálásáról.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_projectile_a4a018b990c9181249d9141f72dd1c796}{OnEnemyHit}}?.Invoke(enemy,\ damage);}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00178}00178\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00179}00179\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00180}00180\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrizzük,\ hogy\ a\ trigger\ objektum\ rendelkezik-\/e\ BossBodypartController\ komponenssel.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00181}00181\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (trigger.gameObject.TryGetComponent<BossBodypartController>(out\ var\ bodypart))}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00182}00182\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00183}00183\ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(\$\textcolor{stringliteral}{"{}\{bodypart.name\}"{}});}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00184}00184\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00185}00185\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ lövedék\ meg\ van\ jelölve,\ extra\ sebzést\ oszt\ ki\ a\ főellenfél\ maximális\ életerejének\ egy\ százalékos\ értéke\ alapján.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00186}00186\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ nincs\ megjelölve,\ csak\ az\ alap\ sebzést\ osztja\ ki.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00187}00187\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ damage\ =\ \mbox{\hyperlink{class_projectile_a017b8ff4012636359219fe7cb2a4d103}{IsMarked}}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00188}00188\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ?\ -\/\mbox{\hyperlink{class_projectile_a69f252c4c5134ad1c3b24814787318a6}{ProjectileDMG}}\ -\/\ bodypart.GetComponentInParent<BossController>().MaxHealth\ *\ \mbox{\hyperlink{class_projectile_ab6d5d1b0e2dc52ca86eebc05cb4906aa}{PercentageDMGValue}}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ -\/\mbox{\hyperlink{class_projectile_a69f252c4c5134ad1c3b24814787318a6}{ProjectileDMG}};}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00190}00190\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Meghívjuk\ az\ OnBossHit\ eseményt,\ hogy\ értesítsük\ a\ rendszert\ a\ főellenfél\ testrészének\ eltalálásáról.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_projectile_a2574ba2547a37db6d1131e3a8b559e2b}{OnBossHit}}?.Invoke(damage);}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00193}00193\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00194}00194\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00195}00195\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrizzük,\ hogy\ a\ trigger\ objektum\ rendelkezik-\/e\ BossController\ komponenssel.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00196}00196\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (trigger.gameObject.TryGetComponent<BossController>(out\ var\ boss))}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00197}00197\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(\$\textcolor{stringliteral}{"{}\{boss.name\}"{}});}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00199}00199\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ lövedék\ meg\ van\ jelölve,\ extra\ sebzést\ oszt\ ki\ a\ főellenfél\ maximális\ életerejének\ egy\ százalékos\ értéke\ alapján.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ nincs\ megjelölve,\ csak\ az\ alap\ sebzést\ osztja\ ki.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ damage\ =\ \mbox{\hyperlink{class_projectile_a017b8ff4012636359219fe7cb2a4d103}{IsMarked}}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ?\ -\/\mbox{\hyperlink{class_projectile_a69f252c4c5134ad1c3b24814787318a6}{ProjectileDMG}}\ -\/\ boss.MaxHealth\ *\ \mbox{\hyperlink{class_projectile_ab6d5d1b0e2dc52ca86eebc05cb4906aa}{PercentageDMGValue}}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ :\ -\/\mbox{\hyperlink{class_projectile_a69f252c4c5134ad1c3b24814787318a6}{ProjectileDMG}};}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00205}00205\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Meghívjuk\ az\ OnBossHit\ eseményt,\ hogy\ értesítsük\ a\ rendszert\ a\ főellenfél\ eltalálásáról.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_projectile_a2574ba2547a37db6d1131e3a8b559e2b}{OnBossHit}}?.Invoke(damage);}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00208}00208\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00209}00209\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00210}00210\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ megsemmisítése\ a\ találkozás\ után.}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00211}00211\ \ \ \ \ \ \ \ \ DestroyProjectile();}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00212}00212\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00214}00214\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00219}00219\ \ \ \ \ \textcolor{keywordtype}{void}\ DestroyProjectile()}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00220}00220\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00221}00221\ \ \ \ \ \ \ \ \ objectPool.ReturnProjectile(gameObject);}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00222}00222\ \ \ \ \ \ \ \ \ \textcolor{comment}{//timer\ =\ 0f;}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00223}00223\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00224}00224\ }
+\DoxyCodeLine{\Hypertarget{_projectile_8cs_source_l00225}00225\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,25 @@
+var class_player_upgrade =
+[
+    [ "StatModifierData", "class_player_upgrade_1_1_stat_modifier_data.html", "class_player_upgrade_1_1_stat_modifier_data" ],
+    [ "PlayerUpgrade", "class_player_upgrade.html#a122dc964e69f4a34c1e194839b2d8eb2", null ],
+    [ "PlayerUpgrade", "class_player_upgrade.html#a7f7e74713caeb6cbe774e83ab0ae2d58", null ],
+    [ "GetCurrentValues", "class_player_upgrade.html#a66a1a2325a9e52e868877cd3930fe3b5", null ],
+    [ "GetPrice", "class_player_upgrade.html#a53b1720f5521f3842a711165d1a62c74", null ],
+    [ "IncreaseCurrentPlayerUpgradeLevel", "class_player_upgrade.html#a64fcc08161d61eed457730b979a9d9dc", null ],
+    [ "RefreshDescription", "class_player_upgrade.html#a5b42f1f5bee3a0b06b9f82c5250fe569", null ],
+    [ "SetCurrentPlayerUpgradeLevel", "class_player_upgrade.html#ac5eb75840b757fd2b44e62fae5621674", null ],
+    [ "basePrice", "class_player_upgrade.html#a876210644df6b6a2811e93b8922c1a69", null ],
+    [ "currentUpgradeLevel", "class_player_upgrade.html#ac4fda63acf6f5c1feadef1e993d32164", null ],
+    [ "customDescription", "class_player_upgrade.html#a43a7bc214b073d3ad7b7adcbbbda02de", null ],
+    [ "description", "class_player_upgrade.html#a79b03dd39e652fdb460c8ad74747d38a", null ],
+    [ "icon", "class_player_upgrade.html#a6300574b0ce48efcbdfabf80bee35d3a", null ],
+    [ "isHealing", "class_player_upgrade.html#aa9adde4d4d3ba31871fd1af5953e5cdd", null ],
+    [ "isTempCopy", "class_player_upgrade.html#a08cc110254ed164a00337d571afe22d2", null ],
+    [ "maxUpgradeLevel", "class_player_upgrade.html#a43e7a5e76f7e382ca42de661a8d84854", null ],
+    [ "minUpgradeLevel", "class_player_upgrade.html#a5fbce850264331bf25a56fc219ac3331", null ],
+    [ "modifiers", "class_player_upgrade.html#a7ab4013e472446f9d1cfdbde3806af8b", null ],
+    [ "priceScaleFactor", "class_player_upgrade.html#a418147736a1cfaa9781d673aed04f284", null ],
+    [ "upgradeName", "class_player_upgrade.html#a8aa2f5ee3b4400b666158a1603311400", null ],
+    [ "ID", "class_player_upgrade.html#a37fb76af3a9e72d07f4e26ad8c5fe180", null ],
+    [ "IsTempCopy", "class_player_upgrade.html#ab33fd300353a849bfd2a25e7d4a69142", null ]
+];

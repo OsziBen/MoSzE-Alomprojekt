@@ -1,0 +1,172 @@
+\doxysection{Object\+Pool\+For\+Projectiles.\+cs}
+\hypertarget{_object_pool_for_projectiles_8cs_source}{}\label{_object_pool_for_projectiles_8cs_source}\index{C:/Users/ati/Desktop/MOSZE3/MoSzE-\/Alomprojekt/Alomprojekt/Assets/Scripts/ObjectPoolForProjectiles.cs@{C:/Users/ati/Desktop/MOSZE3/MoSzE-\/Alomprojekt/Alomprojekt/Assets/Scripts/ObjectPoolForProjectiles.cs}}
+\mbox{\hyperlink{_object_pool_for_projectiles_8cs}{Ugrás a fájl dokumentációjához.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }System;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }System.Collections.Generic;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00003}00003\ \textcolor{keyword}{using\ }System.Linq;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00004}00004\ \textcolor{keyword}{using\ }System.Text;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00005}00005\ \textcolor{keyword}{using\ }System.Threading.Tasks;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00006}00006\ \textcolor{keyword}{using\ }UnityEngine;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00008}00008\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_assets_1_1_scripts}{Assets.Scripts}}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00009}00009\ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00010}\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles}{00010}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles}{ObjectPoolForProjectiles}}\ :\ BaseTransientManager<ObjectPoolForProjectiles>}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00011}00011\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00015}\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a46aa158c633fe916f5f5fe10b99e4ad0}{00015}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ GameObject\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a46aa158c633fe916f5f5fe10b99e4ad0}{projectilePrefab}};\ \textcolor{comment}{//\ A\ lövedék\ prefab,\ amelyet\ a\ poolba\ helyezett\ objektumok\ alapjául\ használunk.}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00016}\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ac1e84007de3e1b7d8ae6e0a509c7db31}{00016}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ac1e84007de3e1b7d8ae6e0a509c7db31}{poolSize}}\ =\ 25;\ \ \ \textcolor{comment}{//\ A\ pool\ maximális\ mérete,\ amely\ meghatározza,\ hány\ lövedék\ lehet\ egyszerre\ az\ objektumpoolban.}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00017}00017\ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}\ Queue<GameObject>\ pool;\ \textcolor{comment}{//\ A\ lövedékek\ tárolására\ használt\ queue\ (sor),\ amely\ a\ rendelkezésre\ álló\ és\ visszaadott\ lövedékeket\ tartalmazza.}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00019}\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a8e03452914df52a89b9ca05d93f3197a}{00019}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a8e03452914df52a89b9ca05d93f3197a}{projectileMarkEveryNth}}\ =\ 4;\ \ \textcolor{comment}{//\ n\ értéke,\ ahol\ minden\ n-\/edik\ lövedéket\ megjelöljük;\ TODO:clamp\ 1-\/x}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00020}00020\ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{bool}\ isMarkingEnabled;\ \ \ \textcolor{comment}{//\ lövedékjelölés\ ki-\/\ és\ bekapcsolása}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00021}00021\ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{int}\ fireCounter\ =\ 0;\ \ \ \ \textcolor{comment}{//\ lövedékszámláló\ a\ jelöléshez}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00027}00027\ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}\ Camera\ mainCamera;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00032}\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a59276c0b263b6dd36c945da61f91b00a}{00032}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a59276c0b263b6dd36c945da61f91b00a}{IsMarkingEnabled}}\ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{get}\ \{\ \textcolor{keywordflow}{return}\ isMarkingEnabled;\ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{set}\ \{\ isMarkingEnabled\ =\ value;\ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00035}00035\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00040}\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ae882a9c6b632d77ff031c7c5cd755807}{00040}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{event}\ Action<GameObject>\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ae882a9c6b632d77ff031c7c5cd755807}{OnProjectileActivated}};\ \ \textcolor{comment}{//\ Esemény,\ amely\ akkor\ aktiválódik,\ amikor\ egy\ lövedék\ elérhetõvé\ válik\ a\ poolban\ és\ használatba\ kerül.}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00041}\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a45ee65cf88065a7def9da36ced9a96f5}{00041}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{event}\ Action<GameObject>\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a45ee65cf88065a7def9da36ced9a96f5}{OnProjectileDeactivated}};\ \ \ \ \textcolor{comment}{//\ Esemény,\ amely\ akkor\ aktiválódik,\ amikor\ egy\ lövedék\ deaktiválódik,\ miután\ visszakerült\ a\ poolba.}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00043}00043\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00050}\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_aae1bf1024badc304cffe9e0070bc5051}{00050}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ async\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_aae1bf1024badc304cffe9e0070bc5051}{Initialize}}()}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00051}00051\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Várakozás\ a\ következő\ frissítésig.}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ await\ Task.Yield();}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ alapértelmezett\ inicializálás\ meghívása\ a\ szülő\ osztályban}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ base.Initialize();}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ fő\ kamera\ hozzárendelése}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ mainCamera\ =\ Camera.main;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ pool\ inicializálása\ egy\ Queue\ típusú\ adatstruktúrával,\ amely\ a\ lövedékeket\ fogja\ tárolni}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ pool\ =\ \textcolor{keyword}{new}\ Queue<GameObject>(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ac1e84007de3e1b7d8ae6e0a509c7db31}{poolSize}});}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Létrehozza\ és\ deaktiválja\ a\ lövedékeket\ a\ pool\ méretének\ megfelelően}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ac1e84007de3e1b7d8ae6e0a509c7db31}{poolSize}};\ i++)}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ példányosítása\ a\ prefab\ alapján}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GameObject\ projectile\ =\ Instantiate(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a46aa158c633fe916f5f5fe10b99e4ad0}{projectilePrefab}});}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ deaktiválása,\ hogy\ ne\ jelenjen\ meg\ a\ játékban\ kezdetben}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ projectile.SetActive(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedékhez\ hozzárendeljük\ a\ fő\ kamerát}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ projectile.GetComponent<\mbox{\hyperlink{class_projectile}{Projectile}}>().MainCamera\ =\ mainCamera;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ hozzáadása\ a\ pool-\/hoz}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pool.Enqueue(projectile);}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00073}00073\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00074}00074\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00075}00075\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00092}\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ab7f6b3d4703bdf447b17fc9a4e45863d}{00092}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ GameObject\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ab7f6b3d4703bdf447b17fc9a4e45863d}{GetProjectile}}(Vector2\ position,\ Quaternion\ rotation,\ \textcolor{keywordtype}{float}\ damageValue,\ \textcolor{keywordtype}{float}\ percentageDMGValue)}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00093}00093\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Loop,\ hogy\ megnézze\ van-\/e\ inaktív\ lövedék\ a\ pool-\/ban}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{foreach}\ (var\ projectile\ \textcolor{keywordflow}{in}\ pool)}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!projectile.activeInHierarchy)}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ találunk\ inaktív\ lövedéket,\ beállítjuk\ annak\ pozícióját\ és\ forgatását}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ projectile.transform.position\ =\ position;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ projectile.transform.rotation\ =\ rotation;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00102}00102\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00103}00103\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ tulajdonságainak\ frissítése\ (sebzés\ érték,\ módosító)}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UpdateProjectileProperties(projectile,\ damageValue,\ percentageDMGValue);}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00105}00105\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ aktiválása\ a\ pool-\/ból}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ projectile.SetActive(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ esemény\ triggerelése,\ hogy\ a\ lövedék\ aktiválva\ lett}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ae882a9c6b632d77ff031c7c5cd755807}{OnProjectileActivated}}?.Invoke(projectile);}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Visszaadjuk\ a\ pool-\/ból\ lekért\ lövedéket}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ projectile;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ nincs\ elérhető\ inaktív\ lövedék,\ létrehozunk\ egy\ újat}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ GameObject\ newProjectile\ =\ Instantiate(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a46aa158c633fe916f5f5fe10b99e4ad0}{projectilePrefab}},\ position,\ rotation);}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ új\ lövedék\ hozzáadása\ a\ pool-\/hoz}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ pool.Enqueue(newProjectile);}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00119}00119\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ új\ lövedék\ tulajdonságainak\ beállítása}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ UpdateProjectileProperties(newProjectile,\ damageValue,\ percentageDMGValue);}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00122}00122\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ esemény\ triggerelése\ az\ új\ lövedék\ aktiválásához}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ae882a9c6b632d77ff031c7c5cd755807}{OnProjectileActivated}}?.Invoke(newProjectile);}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00126}00126\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Visszaadjuk\ az\ új\ lövedéket}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00127}00127\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ newProjectile;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00128}00128\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00129}00129\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00139}00139\ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ UpdateProjectileProperties(GameObject\ projectile,\ \textcolor{keywordtype}{float}\ damageValue,\ \textcolor{keywordtype}{float}\ percentageDMGValue)}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00140}00140\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00141}00141\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ tüzelés\ számláló\ növelése\ minden\ lövedék\ frissítéskor}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00142}00142\ \ \ \ \ \ \ \ \ \ \ \ \ fireCounter++;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00143}00143\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00144}00144\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ komponensének\ lekérése\ a\ GameObject-\/ről}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00145}00145\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_projectile}{Projectile}}\ proj\ =\ projectile.GetComponent<\mbox{\hyperlink{class_projectile}{Projectile}}>();}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00146}00146\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ sebzésének\ és\ százalékos\ sebzésének\ beállítása}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ proj.ProjectileDMG\ =\ damageValue;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ proj.PercentageDMGValue\ =\ percentageDMGValue;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00149}00149\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ jelölés\ engedélyezve\ van,\ jelöljük\ meg\ a\ lövedéket}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00151}00151\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isMarkingEnabled)}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00152}00152\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00153}00153\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ MarkProjectile(proj);}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00154}00154\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00155}00155\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00156}00156\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00158}00158\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00164}00164\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ MarkProjectile(\mbox{\hyperlink{class_projectile}{Projectile}}\ projectile)}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00165}00165\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00166}00166\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrzi,\ hogy\ a\ lövések\ száma\ elérte-\/e\ a\ beállított\ intervallumot\ (projectileMarkEveryNth)}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00167}00167\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (fireCounter\ \%\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a8e03452914df52a89b9ca05d93f3197a}{projectileMarkEveryNth}}\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ elérte\ az\ intervallumot,\ a\ lövedék\ jelölve\ lesz}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00170}00170\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ projectile.IsMarked\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00171}00171\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ tüzelés\ számláló\ visszaállítása\ nullára,\ hogy\ újrainduljon\ az\ intervallum}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00172}00172\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fireCounter\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00173}00173\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00174}00174\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00175}00175\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00176}00176\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ nem\ érte\ el\ az\ intervallumot,\ a\ lövedék\ nem\ lesz\ jelölve}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00177}00177\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ projectile.IsMarked\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00179}00179\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00180}00180\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00181}00181\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00187}\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a47b7d9a6bdc9ae0d7af3736fc5562fbb}{00187}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a47b7d9a6bdc9ae0d7af3736fc5562fbb}{EnableMarking}}(\textcolor{keywordtype}{bool}\ enable)}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00188}00188\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00189}00189\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ jelölés\ engedélyezésének\ beállítása}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00190}00190\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a59276c0b263b6dd36c945da61f91b00a}{IsMarkingEnabled}}\ =\ enable;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00191}00191\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ jelölés\ le\ van\ tiltva,\ a\ tüzelés\ számláló\ visszaállítódik\ nullára}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00192}00192\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isMarkingEnabled)}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ fireCounter\ =\ 0;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00196}00196\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00197}00197\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00198}00198\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00204}\mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a85ca70edb16457ea25527c218b75ec0b}{00204}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a85ca70edb16457ea25527c218b75ec0b}{ReturnProjectile}}(GameObject\ projectile)}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00205}00205\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ deaktiválása,\ hogy\ visszakerüljön\ a\ pool-\/ba}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ projectile.SetActive(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ komponensének\ lekérése}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_projectile}{Projectile}}\ proj\ =\ projectile.GetComponent<\mbox{\hyperlink{class_projectile}{Projectile}}>();}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ sebzésének\ nullázása,\ hogy\ ne\ tartalmazzon\ érvényes\ sebzést\ a\ következő\ használat\ előtt}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ proj.ProjectileDMG\ =\ 0f;}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ jelölésének\ törlése}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ proj.IsMarked\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ esemény\ triggerelése,\ hogy\ jelezze\ a\ lövedék\ deaktiválódását}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a45ee65cf88065a7def9da36ced9a96f5}{OnProjectileDeactivated}}?.Invoke(projectile);}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00216}00216\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00218}00218\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_object_pool_for_projectiles_8cs_source_l00219}00219\ \}}
+
+\end{DoxyCode}

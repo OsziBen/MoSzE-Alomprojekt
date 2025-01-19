@@ -1,0 +1,341 @@
+\doxysection{Enemy\+Controller.\+cs}
+\hypertarget{_enemy_controller_8cs_source}{}\label{_enemy_controller_8cs_source}\index{C:/Users/ati/Desktop/MOSZE3/MoSzE-\/Alomprojekt/Alomprojekt/Assets/Scripts/EnemyController.cs@{C:/Users/ati/Desktop/MOSZE3/MoSzE-\/Alomprojekt/Alomprojekt/Assets/Scripts/EnemyController.cs}}
+\mbox{\hyperlink{_enemy_controller_8cs}{Ugrás a fájl dokumentációjához.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_assets_1_1_scripts}{Assets.Scripts}};}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }System.Collections.Generic;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00003}00003\ \textcolor{keyword}{using\ }System;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00004}00004\ \textcolor{keyword}{using\ }UnityEngine;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00005}00005\ \textcolor{keyword}{using\ }UnityEngine.TextCore.Text;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00006}00006\ \textcolor{keyword}{using\ }Assets.Scripts.EnemyBehaviours;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00007}00007\ \textcolor{keyword}{using\ }static\ Cinemachine.DocumentationSortingAttribute;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00008}00008\ \textcolor{keyword}{using\ }System.Linq;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00009}00009\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00010}\mbox{\hyperlink{class_enemy_controller}{00010}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_enemy_controller}{EnemyController}}\ :\ \mbox{\hyperlink{namespace_assets}{Assets}}.\mbox{\hyperlink{namespace_assets_1_1_scripts}{Scripts}}.\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character}{Character}}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00011}00011\ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00012}00012\ \ \ \ \ \textcolor{comment}{//\ Pont\ érték\ beállításai}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00013}00013\ \ \ \ \ [Header(\textcolor{stringliteral}{"{}Pont\ érték"{}})]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00014}00014\ \ \ \ \ [SerializeField]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00015}00015\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{int}\ basePointValue;\ \textcolor{comment}{//\ Alap\ pont\ érték}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00016}00016\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{int}\ \_currentPointValue;\ \textcolor{comment}{//\ Jelenlegi\ pont\ érték}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00018}00018\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{int}\ minPointValue\ =\ 10;\ \textcolor{comment}{//\ Minimum\ pont\ érték}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00019}00019\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{int}\ maxPointValue\ =\ 1000;\ \textcolor{comment}{//\ Maximum\ pont\ érték}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00021}00021\ \ \ \ \ \textcolor{comment}{//\ Skálázási\ tényezők}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00022}00022\ \ \ \ \ [Header(\textcolor{stringliteral}{"{}Skálázási\ tényezők"{}})]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00023}00023\ \ \ \ \ [SerializeField,\ Range(1f,\ 2f)]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00024}00024\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{float}\ maxHealthScaleFactor;\ \textcolor{comment}{//\ Maximális\ életerő\ skálázási\ tényező}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00025}00025\ \ \ \ \ [SerializeField,\ Range(1f,\ 2f)]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00026}00026\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{float}\ baseMovementSpeedScaleFactor;\ \textcolor{comment}{//\ Alap\ mozgási\ sebesség\ skálázási\ tényező}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00027}00027\ \ \ \ \ [SerializeField,\ Range(1f,\ 2f)]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00028}00028\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{float}\ baseDMGScaleFactor;\ \textcolor{comment}{//\ Alap\ sebzés\ skálázási\ tényező}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00029}00029\ \ \ \ \ [SerializeField,\ Range(1f,\ 2f)]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00030}00030\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{float}\ baseAttackCooldownScaleFactor;\ \textcolor{comment}{//\ Alap\ támadás\ cooldown\ skálázási\ tényező}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00031}00031\ \ \ \ \ [SerializeField,\ Range(1f,\ 2f)]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00032}00032\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{float}\ baseCriticalHitChanceScaleFactor;\ \textcolor{comment}{//\ Alap\ kritikus\ találat\ esélyének\ skálázása}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00033}00033\ \ \ \ \ [SerializeField,\ Range(1f,\ 2f)]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00034}00034\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{float}\ basePercentageBasedDMGScaleFactor;\ \textcolor{comment}{//\ Alap\ százalékos\ alapú\ sebzés\ skálázása}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00035}00035\ \ \ \ \ [SerializeField,\ Range(1f,\ 2f)]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00036}00036\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{float}\ pointValueScaleFactor;\ \textcolor{comment}{//\ Pont\ érték\ skálázási\ tényező}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00039}00039\ \ \ \ \ \textcolor{comment}{//\ TODO:\ IsMarkingOn\ implementálása}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00042}00042\ \ \ \ \ [Header(\textcolor{stringliteral}{"{}Sprites\ and\ Colliders"{}})]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00043}00043\ \ \ \ \ [SerializeField]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00044}00044\ \ \ \ \ \textcolor{keyword}{private}\ List<SpriteLevelData>\ spriteLevelDataList;\ \textcolor{comment}{//\ A\ szintenként\ eltérő\ sprite-\/okat\ tároló\ objektum.}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00045}00045\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00051}00051\ \ \ \ \ \textcolor{keyword}{private}\ List<Projectile>\ activeProjectiles\ =\ \textcolor{keyword}{new}\ List<Projectile>();\ \ \ \ \textcolor{comment}{//\ Az\ aktívan\ megfigyelt\ lövedékek\ (Projectile)\ listája}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00052}00052\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{bool}\ hasDetectedPlayer\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ bool,\ amely\ tárolja,\ hogy\ az\ enemy\ érzékelt-\/e\ playert.}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00057}00057\ \ \ \ \ \textcolor{keyword}{private}\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles}{ObjectPoolForProjectiles}}\ objectPool;\ \ \textcolor{comment}{//\ A\ lövedékek\ kezelésére\ szolgáló\ ObjectPool\ objektum}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00058}00058\ \ \ \ \ \textcolor{keyword}{private}\ \mbox{\hyperlink{class_player_controller}{PlayerController}}\ player;\ \textcolor{comment}{//\ A\ játékos\ irányításáért\ felelős\ PlayerController}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00059}00059\ \ \ \ \ \textcolor{keyword}{private}\ CharacterSetupManager\ characterSetupManager;\ \ \textcolor{comment}{//\ A\ karakter\ beállításokat\ kezelő\ manager}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00061}00061\ \ \ \ \ \textcolor{keyword}{private}\ EnemyBehaviour\ currentBehaviour;\ \textcolor{comment}{//\ Az\ aktuális\ ellenség\ viselkedését\ meghatározó\ változó}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00062}00062\ \ \ \ \ [Header(\textcolor{stringliteral}{"{}Enemy\ Behaviour"{}})]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00063}00063\ \ \ \ \ [SerializeField]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00064}00064\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{float}\ detectionRange;\ \textcolor{comment}{//\ Az\ észlelési\ távolság,\ ami\ meghatározza,\ hogy\ az\ ellenség\ mikor\ reagál}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00065}00065\ \ \ \ \ [SerializeField]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00066}00066\ \ \ \ \ \textcolor{keyword}{private}\ PassiveEnemyBehaviour\ passiveBehaviour;\ \textcolor{comment}{//\ Az\ ellenség\ passzív\ viselkedését\ kezelő\ objektum}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00067}00067\ \ \ \ \ [SerializeField]}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00068}00068\ \ \ \ \ \textcolor{keyword}{private}\ HostileEnemyBehaviour\ hostileBehaviour;\ \textcolor{comment}{//\ Az\ ellenség\ agresszív\ viselkedését\ kezelő\ objektum}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00069}00069\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00073}\mbox{\hyperlink{class_enemy_controller_ad7bb54783c8fe2abd5ce9880a6ba933e}{00073}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_enemy_controller_ad7bb54783c8fe2abd5ce9880a6ba933e}{CurrentPointValue}}\ \ \textcolor{comment}{//\ Aktuális\ pontérték}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00074}00074\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{keyword}{get}\ \{\ \textcolor{keywordflow}{return}\ \_currentPointValue;\ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00076}00076\ \ \ \ \ \ \ \ \ \textcolor{keyword}{set}\ \{\ \_currentPointValue\ =\ value;\ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00077}00077\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00083}\mbox{\hyperlink{class_enemy_controller_a09900f45d3c2536bb4a153de9c918879}{00083}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{event}\ Action<float>\ \mbox{\hyperlink{class_enemy_controller_a09900f45d3c2536bb4a153de9c918879}{OnPlayerCollision}};\ \textcolor{comment}{//\ Játékossal\ való\ ütközés\ eseménye}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00084}\mbox{\hyperlink{class_enemy_controller_aa6676bbd2b8cae359ac9c8eddb8e23bc}{00084}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{event}\ Action<EnemyController>\ \mbox{\hyperlink{class_enemy_controller_aa6676bbd2b8cae359ac9c8eddb8e23bc}{OnEnemyDeath}};\ \ \ \textcolor{comment}{//\ Ellenség\ halála\ eseménye}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00085}00085\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00086}\mbox{\hyperlink{class_enemy_controller_ad4340e48c68be453dc8a1201584c476d}{00086}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{event}\ Action<EnemyController>\ \mbox{\hyperlink{class_enemy_controller_ad4340e48c68be453dc8a1201584c476d}{OnBehaviourChange}};\ \textcolor{comment}{//\ Ellenség\ viselkedésének\ változása\ esemény}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00087}\mbox{\hyperlink{class_enemy_controller_a5f6edd1f6aa856a4770bdb31608932f2}{00087}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{event}\ Action<EnemyController>\ \mbox{\hyperlink{class_enemy_controller_a5f6edd1f6aa856a4770bdb31608932f2}{OnPlayerInRange}};\ \ \textcolor{comment}{//\ Esemény,\ amely\ akkor\ aktiválódik,\ amikor\ a\ játékos\ az\ ellenség\ közelébe\ kerül}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00088}00088\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00093}\mbox{\hyperlink{class_enemy_controller_ab6deef38df6828a5152e1fd0c73061d8}{00093}}\ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_enemy_controller_ab6deef38df6828a5152e1fd0c73061d8}{Awake}}()}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00094}00094\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00095}00095\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ ősosztály\ Awake\ metódusának\ meghívása,\ hogy\ az\ alapértelmezett\ inicializálás\ megtörténjen}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00096}00096\ \ \ \ \ \ \ \ \ base.Awake();\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00097}00097\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ OnBehaviourChange\ eseményhez\ hozzáadjuk\ a\ viselkedés\ kezelését\ végző\ metódust}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00098}00098\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_controller_ad4340e48c68be453dc8a1201584c476d}{OnBehaviourChange}}\ +=\ HandleBehaviourChange;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00099}00099\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ OnPlayerInRange\ eseményhez\ is\ hozzárendeljük\ ugyanazt\ a\ metódust,\ hogy\ reagáljon,\ ha\ a\ játékos\ a\ közelben\ van}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00100}00100\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_controller_a5f6edd1f6aa856a4770bdb31608932f2}{OnPlayerInRange}}\ +=\ HandleBehaviourChange;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00101}00101\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Beállítjuk\ az\ alapértelmezett\ passzív\ viselkedést\ az\ ellenség\ számára}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00102}00102\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_controller_a601523220ce990e4f631a03c719e1a9d}{SetBehaviour}}(passiveBehaviour);}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00103}00103\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00112}\mbox{\hyperlink{class_enemy_controller_a38e80a740cfb72d0483598d654a82cbe}{00112}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_enemy_controller_a38e80a740cfb72d0483598d654a82cbe}{SetEnemyAttributesByLevel}}(\textcolor{keywordtype}{int}\ level)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00113}00113\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00114}00114\ \ \ \ \ \ \ \ \ SetCurrentEnemySpriteByLevel(level);\ \ \textcolor{comment}{//\ Az\ ellenség\ sprite-\/jának\ beállítása\ a\ szint\ alapján}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00115}00115\ \ \ \ \ \ \ \ \ SetCurrentEnemyValuesByLevel(level);\ \ \textcolor{comment}{//\ Az\ ellenség\ értékeinek\ (pl.\ sebzés,\ életerő)\ beállítása\ a\ szint\ alapján}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00116}00116\ \ \ \ \ \ \ \ \ characterSetupManager.OnSetEnemyAttributes\ -\/=\ \mbox{\hyperlink{class_enemy_controller_a38e80a740cfb72d0483598d654a82cbe}{SetEnemyAttributesByLevel}};\ \ \textcolor{comment}{//\ Leválasztjuk\ az\ eseményt,\ miután\ az\ ellenség\ attribútumait\ beállítottuk}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00117}00117\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00118}00118\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00125}00125\ \ \ \ \ \textcolor{keywordtype}{void}\ SetCurrentEnemyValuesByLevel(\textcolor{keywordtype}{int}\ level)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00126}00126\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00127}00127\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ szint\ érvénytelen\ (0\ vagy\ kisebb),\ figyelmeztetést\ írunk\ ki,\ és\ alapértelmezett\ szintre\ állítjuk}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00128}00128\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (level\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00129}00129\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00130}00130\ \ \ \ \ \ \ \ \ \ \ \ \ Debug.LogWarning(\$\textcolor{stringliteral}{"{}Invalid\ level:\ \{level\}.\ Defaulting\ to\ level\ 1."{}});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00131}00131\ \ \ \ \ \ \ \ \ \ \ \ \ level\ =\ 1;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00132}00132\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00133}00133\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ ellenség\ különböző\ értékeinek\ skálázása\ a\ szint\ alapján}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00134}00134\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Maximális\ életerő\ skálázása}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00135}00135\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a06dc7a5f6e6bdfda1681fee47c5a7bea}{MaxHealth}}\ =\ ScaleValue(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a0a613b5df8a0f9b1e7c87aea1073f8f3}{maxHealth}},\ maxHealthScaleFactor,\ level,\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a35557117ac1d902409427bbfce67736a}{minHealthValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a0bdeb6c5ba1e180487ffdb9751a66928}{maxHealthValue}});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00136}00136\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Jelenlegi\ életerő\ beállítása\ a\ maximális\ életerővel}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00137}00137\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_abb9d5cbfcb12c76d3f3a1436cd29595a}{CurrentHealth}}\ =\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a06dc7a5f6e6bdfda1681fee47c5a7bea}{MaxHealth}};}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00138}00138\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Mozgási\ sebesség\ skálázása}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00139}00139\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af2fdb249815c0f578e6dfa0425439e2f}{CurrentMovementSpeed}}\ =\ ScaleValue(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_ae9d7898948953d47ace66eb113cc5a61}{baseMovementSpeed}},\ baseMovementSpeedScaleFactor,\ level,\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a7326188ed338cfa7004900219dc2e6cb}{minMovementSpeedValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a75187ddda891cffa55fe922a9e82277c}{maxMovementSpeedValue}});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00140}00140\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Sebzés\ skálázása}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00141}00141\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a6ee04e7804d4141890030586e944078b}{CurrentDMG}}\ =\ ScaleValue(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_ad296092534d977ed7b26e06f21beeb21}{baseDMG}},\ baseDMGScaleFactor,\ level,\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a9e7c470df7969197e5a8496fc55b7ec4}{minDMGValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a2bff384c53014fd650baa9520d37158b}{maxDMGValue}});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00142}00142\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Támadási\ cooldown\ skálázása}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00143}00143\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a92a19ff302149f4a1ff48c01b841b80c}{CurrentAttackCooldown}}\ =\ ScaleValue(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aed72f88c12a5ce36746eb9c18ffcf2fc}{baseAttackCooldown}},\ baseAttackCooldownScaleFactor,\ level,\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a06ff77e3ab8e5f4575d874457450bcdc}{minAttackCooldownValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_abe924a4ceb672aaad554d4b43bcd39b5}{maxAttackCooldownValue}},\ inverse:\ \textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00144}00144\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Kritikus\ találat\ esélyének\ skálázása}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00145}00145\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a278861a3a2f0b549d4d336bee8452e0a}{CurrentCriticalHitChance}}\ =\ ScaleValue(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a07d4e28ac5bb1523b89e5bddad39afac}{baseCriticalHitChance}},\ baseCriticalHitChanceScaleFactor,\ level,\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aedf66d584be8775e420a75ba284b10a8}{minCriticalHitChanceValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aebea8af2dcf1bf7a15ad02ef84c8f742}{maxCriticalHitChanceValue}});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00146}00146\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Százalékos\ alapú\ sebzés\ skálázása}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00147}00147\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a6c99a7bb6104969af257b53a3adf9cd1}{CurrentPercentageBasedDMG}}\ =\ ScaleValue(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af4df2141b293bd22410d84c757c085a6}{basePercentageBasedDMG}},\ basePercentageBasedDMGScaleFactor,\ level,\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a327e41488d55f720309f7f2ba698aa42}{minPercentageBasedDMGValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_abd90063e020b6e55563caf2283847577}{maxPercentageBasedDMGValue}});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00148}00148\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Pont\ értékének\ skálázása}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00149}00149\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_controller_ad7bb54783c8fe2abd5ce9880a6ba933e}{CurrentPointValue}}\ =\ (int)ScaleValue(basePointValue,\ pointValueScaleFactor,\ level,\ minPointValue,\ maxPointValue);}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00150}00150\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00164}00164\ \ \ \ \ \textcolor{keywordtype}{float}\ ScaleValue(\textcolor{keywordtype}{float}\ baseValue,\ \textcolor{keywordtype}{float}\ scaleFactor,\ \textcolor{keywordtype}{int}\ level,\ \textcolor{keywordtype}{float}\ minValue,\ \textcolor{keywordtype}{float}\ maxValue,\ \textcolor{keywordtype}{bool}\ inverse\ =\ \textcolor{keyword}{false})}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00165}00165\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00166}00166\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ skálázott\ érték\ kiszámítása,\ figyelembe\ véve\ az\ 'inverse'\ paramétert}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00167}00167\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ scaledValue\ =\ inverse}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00168}00168\ \ \ \ \ \ \ \ \ \ \ \ \ ?\ baseValue\ /\ (float)Mathf.Pow(scaleFactor,\ level\ -\/\ 1)\ \textcolor{comment}{//\ Fordított\ skálázás}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00169}00169\ \ \ \ \ \ \ \ \ \ \ \ \ :\ baseValue\ *\ (float)Mathf.Pow(scaleFactor,\ level\ -\/\ 1);\ \textcolor{comment}{//\ Normál\ skálázás}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00171}00171\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ érték\ korlátozása\ a\ megadott\ minimum\ és\ maximum\ határok\ között}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00172}00172\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Mathf.Clamp(scaledValue,\ minValue,\ maxValue);}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00173}00173\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00174}00174\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00175}00175\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00180}00180\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ Start()}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00181}00181\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00182}00182\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ objectpool,\ a\ játékos\ és\ a\ karakter\ beállító\ menedzser\ inicializálása}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00183}00183\ \ \ \ \ \ \ \ \ objectPool\ =\ FindObjectOfType<ObjectPoolForProjectiles>();}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00184}00184\ \ \ \ \ \ \ \ \ player\ =\ FindObjectOfType<PlayerController>();}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00185}00185\ \ \ \ \ \ \ \ \ characterSetupManager\ =\ FindObjectOfType<CharacterSetupManager>();}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00187}00187\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Események\ feliratkozása}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00188}00188\ \ \ \ \ \ \ \ \ objectPool.OnProjectileActivated\ +=\ StartProjectileDetection;\ \textcolor{comment}{//\ Feliratkozás\ a\ lövedék\ aktiválásához\ kapcsolódó\ eseményre}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00189}00189\ \ \ \ \ \ \ \ \ objectPool.OnProjectileDeactivated\ +=\ StopProjectileDetection;\ \textcolor{comment}{//\ Feliratkozás\ a\ lövedék\ deaktiválásához\ kapcsolódó\ eseményre}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00190}00190\ \ \ \ \ \ \ \ \ characterSetupManager.OnSetEnemyAttributes\ +=\ \mbox{\hyperlink{class_enemy_controller_a38e80a740cfb72d0483598d654a82cbe}{SetEnemyAttributesByLevel}};\ \textcolor{comment}{//\ Feliratkozás\ az\ ellenség\ attribútumainak\ beállításához}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00191}00191\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00192}00192\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00193}00193\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00199}00199\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ FixedUpdate()}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00200}00200\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00201}00201\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ aktuális\ viselkedés\ végrehajtása}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00202}00202\ \ \ \ \ \ \ \ \ currentBehaviour.ExecuteBehaviour(\textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00203}00203\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00204}00204\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ játékos\ elérhető,\ még\ nem\ észleltük,\ és\ a\ játékos\ a\ közelben\ van}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00205}00205\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (player\ \&\&\ !hasDetectedPlayer\ \&\&\ IsPlayerInRange())}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00206}00206\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Esemény\ kiváltása,\ hogy\ a\ játékos\ a\ közelben\ van}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_controller_a5f6edd1f6aa856a4770bdb31608932f2}{OnPlayerInRange}}?.Invoke(\textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00209}00209\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00210}00210\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00211}00211\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00212}00212\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00219}00219\ \ \ \ \ \textcolor{keywordtype}{void}\ OnTriggerEnter2D(Collider2D\ trigger)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00220}00220\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00221}00221\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Debug.Log(player);}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00222}00222\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (trigger.gameObject.TryGetComponent<PlayerController>(out\ var\ palyer))}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00223}00223\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a555f5014591fcecc5eef9c75fb493624}{BaseDMG}});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ játékos\ sebzésének\ kiváltása\ az\ esemény\ segítségével}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_controller_a09900f45d3c2536bb4a153de9c918879}{OnPlayerCollision}}?.Invoke(-\/\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a555f5014591fcecc5eef9c75fb493624}{BaseDMG}});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00227}00227\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00228}00228\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00229}00229\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00237}00237\ \ \ \ \ \textcolor{keywordtype}{void}\ HandleBehaviourChange(EnemyController\ targetGameObject)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00238}00238\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00239}00239\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrizzük,\ hogy\ a\ viselkedésváltozást\ kezdeményező\ objektum\ a\ jelenlegi\ ellenség-\/e}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00240}00240\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{this}\ ==\ targetGameObject)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00241}00241\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00242}00242\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ igen,\ akkor\ a\ játékos\ észlelve\ lett,\ és\ az\ eseményeket\ leválasztjuk}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00243}00243\ \ \ \ \ \ \ \ \ \ \ \ \ hasDetectedPlayer\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00244}00244\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_controller_ad4340e48c68be453dc8a1201584c476d}{OnBehaviourChange}}\ -\/=\ HandleBehaviourChange;\ \textcolor{comment}{//\ Leiratkozunk\ a\ viselkedés\ változásáról}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00245}00245\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_controller_a5f6edd1f6aa856a4770bdb31608932f2}{OnPlayerInRange}}\ -\/=\ HandleBehaviourChange;\ \textcolor{comment}{//\ Leiratkozunk\ a\ játékos\ közelítéséről}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00246}00246\ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(\textcolor{stringliteral}{"{}DETECTED"{}});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00247}00247\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_controller_a601523220ce990e4f631a03c719e1a9d}{SetBehaviour}}(hostileBehaviour);\ \textcolor{comment}{//\ Átváltjuk\ az\ ellenség\ viselkedését\ ellenségesre}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00248}00248\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00249}00249\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00250}00250\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00251}00251\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00257}\mbox{\hyperlink{class_enemy_controller_a601523220ce990e4f631a03c719e1a9d}{00257}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_enemy_controller_a601523220ce990e4f631a03c719e1a9d}{SetBehaviour}}(EnemyBehaviour\ newEnemyBehaviour)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00258}00258\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00259}00259\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ van\ aktuális\ viselkedés,\ akkor\ leállítjuk}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00260}00260\ \ \ \ \ \ \ \ \ currentBehaviour?.StopBehaviour(\textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00261}00261\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Beállítjuk\ az\ új\ viselkedést}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00262}00262\ \ \ \ \ \ \ \ \ currentBehaviour\ =\ newEnemyBehaviour;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00263}00263\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Elindítjuk\ az\ új\ viselkedést}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00264}00264\ \ \ \ \ \ \ \ \ currentBehaviour?.StartBehaviour(\textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00265}00265\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00266}00266\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00267}00267\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00268}00268\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00275}00275\ \ \ \ \ \textcolor{keywordtype}{bool}\ IsPlayerInRange()}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00276}00276\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00277}00277\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Kiszámítjuk\ az\ aktuális\ objektum\ és\ a\ játékos\ közötti\ távolságot}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00278}00278\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ distance\ =\ Vector2.Distance(transform.position,\ player.transform.position);\ \ \ \textcolor{comment}{//\ kifagy,\ ha\ a\ játékos\ meghal}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00279}00279\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Visszaadjuk,\ hogy\ a\ távolság\ kisebb-\/e\ vagy\ egyenlő\ a\ meghatározott\ észlelési\ távolsággal}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00280}00280\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ distance\ <=\ detectionRange;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00281}00281\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00282}00282\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00289}00289\ \ \ \ \ \textcolor{keywordtype}{void}\ StartProjectileDetection(GameObject\ projectile)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00290}00290\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00291}00291\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ komponensének\ lekérése}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00292}00292\ \ \ \ \ \ \ \ \ Projectile\ proj\ =\ projectile.GetComponent<Projectile>();}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00293}00293\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Elkerüljük,\ hogy\ ugyanaz\ a\ lövedék\ többször\ kerüljön\ hozzáadásra}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00294}00294\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!activeProjectiles.Contains(proj))}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00295}00295\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00296}00296\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Feliratkozunk\ a\ lövedék\ 'OnEnemyHit'\ eseményére}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00297}00297\ \ \ \ \ \ \ \ \ \ \ \ \ proj.OnEnemyHit\ +=\ HandleEnemyHit;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Hozzáadjuk\ a\ lövedéket\ az\ aktív\ lövedékek\ listájához}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ activeProjectiles.Add(proj);}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00300}00300\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00301}00301\ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(\$\textcolor{stringliteral}{"{}Projectile\ detected:\ \{proj\}"{}});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00302}00302\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00303}00303\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00304}00304\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00311}00311\ \ \ \ \ \textcolor{keywordtype}{void}\ StopProjectileDetection(GameObject\ projectile)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00312}00312\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00313}00313\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ komponensének\ lekérése}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00314}00314\ \ \ \ \ \ \ \ \ Projectile\ proj\ =\ projectile.GetComponent<Projectile>();}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00315}00315\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Leiratkozunk\ a\ lövedék\ 'OnEnemyHit'\ eseményéről}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00316}00316\ \ \ \ \ \ \ \ \ proj.OnEnemyHit\ -\/=\ HandleEnemyHit;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00317}00317\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00318}00318\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Eltávolítjuk\ a\ lövedéket\ az\ aktív\ lövedékek\ listájából}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00319}00319\ \ \ \ \ \ \ \ \ activeProjectiles.Remove(proj);}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00320}00320\ \ \ \ \ \ \ \ \ Debug.Log(\$\textcolor{stringliteral}{"{}Projectile\ returned:\ \{proj\}"{}});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00321}00321\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00322}00322\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00329}00329\ \ \ \ \ \textcolor{keywordtype}{void}\ HandleEnemyHit(EnemyController\ enemyHitByProjectile,\ \textcolor{keywordtype}{float}\ damageAmount)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00330}00330\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00331}00331\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrizzük,\ hogy\ az\ ellenség,\ akit\ eltaláltak,\ megegyezik-\/e\ az\ aktuális\ ellenséggel}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00332}00332\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keyword}{this}\ ==\ enemyHitByProjectile)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00333}00333\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ igen,\ akkor\ alkalmazzuk\ a\ sebzést\ az\ aktuális\ ellenségen}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a4c2cef97f95da1f468e6729081071de9}{ChangeHealth}}(damageAmount);}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ viselkedés\ változott,\ meghívjuk\ a\ viselkedés-\/változást\ kezelő\ eseményt}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_controller_ad4340e48c68be453dc8a1201584c476d}{OnBehaviourChange}}?.Invoke(\textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00338}00338\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00340}00340\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00341}00341\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00342}00342\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00347}\mbox{\hyperlink{class_enemy_controller_ae4643988c3365d89c1ec7377f6ad42e6}{00347}}\ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_enemy_controller_ae4643988c3365d89c1ec7377f6ad42e6}{Die}}()}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00348}00348\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00349}00349\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Meghívjuk\ az\ alap\ 'Die'\ metódust}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00350}00350\ \ \ \ \ \ \ \ \ base.Die();}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00351}00351\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Leállítjuk\ az\ aktuális\ viselkedést}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00352}00352\ \ \ \ \ \ \ \ \ currentBehaviour.StopBehaviour(\textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00353}00353\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Meghívjuk\ az\ 'OnEnemyDeath'\ eseményt,\ hogy\ értesítsük\ a\ többi\ rendszert}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00354}00354\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_controller_aa6676bbd2b8cae359ac9c8eddb8e23bc}{OnEnemyDeath}}?.Invoke(\textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00355}00355\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Meghívjuk\ az\ 'OnBehaviourChange'\ eseményt,\ hogy\ értesítsük\ a\ viselkedésváltozásról}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00356}00356\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_controller_ad4340e48c68be453dc8a1201584c476d}{OnBehaviourChange}}?.Invoke(\textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00357}00357\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00358}00358\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00359}00359\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00364}\mbox{\hyperlink{class_enemy_controller_a4520f46ce3c50343d9c158fd9d5febaa}{00364}}\ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_enemy_controller_a4520f46ce3c50343d9c158fd9d5febaa}{OnDestroy}}()}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00365}00365\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00366}00366\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Meghívjuk\ az\ alap\ 'OnDestroy'\ metódust}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00367}00367\ \ \ \ \ \ \ \ \ base.OnDestroy();}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00368}00368\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00369}00369\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ létezik\ az\ objektumpool,\ leiratkozunk\ az\ eseményekről}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00370}00370\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (objectPool\ !=\ \textcolor{keyword}{null})}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00371}00371\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00372}00372\ \ \ \ \ \ \ \ \ \ \ \ \ objectPool.OnProjectileActivated\ -\/=\ StartProjectileDetection;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ objectPool.OnProjectileDeactivated\ -\/=\ StopProjectileDetection;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00374}00374\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00375}00375\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00376}00376\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ az\ aktív\ lövedékek\ lista\ nem\ null,\ eltávolítjuk\ a\ lövedékek\ eseményeit\ és\ töröljük\ a\ listát}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00377}00377\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (activeProjectiles\ !=\ \textcolor{keyword}{null})}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00378}00378\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00379}00379\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{foreach}\ (var\ proj\ \textcolor{keywordflow}{in}\ activeProjectiles)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00380}00380\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00381}00381\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ proj.OnEnemyHit\ -\/=\ HandleEnemyHit;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00382}00382\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00383}00383\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00384}00384\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Kiürítjük\ az\ aktív\ lövedékek\ listáját}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00385}00385\ \ \ \ \ \ \ \ \ \ \ \ \ activeProjectiles.Clear();}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00386}00386\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00387}00387\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00388}00388\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00393}00393\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ ValidateUniqueSpriteLevels()}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00394}00394\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00395}00395\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Létrehozunk\ egy\ hashsetet\ a\ szintek\ tárolására}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00396}00396\ \ \ \ \ \ \ \ \ HashSet<int>\ levelSet\ =\ \textcolor{keyword}{new}\ HashSet<int>();}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00397}00397\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Végigiterálunk\ a\ sprite\ szint\ adatokat\ tartalmazó\ listán}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00398}00398\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{foreach}\ (var\ data\ \textcolor{keywordflow}{in}\ spriteLevelDataList)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00399}00399\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00400}00400\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ szint\ már\ szerepel\ a\ hashsetben,\ duplikált\ szintet\ találtunk}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00401}00401\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (levelSet.Contains(data.level))}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00402}00402\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00403}00403\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Debug.LogError(\$\textcolor{stringliteral}{"{}Duplicate\ level\ \{data.level\}\ found\ in\ LevelSpriteDataList."{}});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00404}00404\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00405}00405\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00406}00406\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00407}00407\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ nincs\ duplikált\ szint,\ hozzáadjuk\ a\ szintet\ a\ szetthez}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00408}00408\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ levelSet.Add(data.level);}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00409}00409\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00410}00410\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00411}00411\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00412}00412\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00416}00416\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ OnValidate()}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00417}00417\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00418}00418\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ValidateUniqueSpriteLevels();\ //\ tesztek\ ezzel\ nem\ futnak\ le,\ kikommentelve}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00419}00419\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00420}00420\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00428}00428\ \ \ \ \ \textcolor{keywordtype}{void}\ SetCurrentEnemySpriteByLevel(\textcolor{keywordtype}{int}\ level)}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00429}00429\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00430}00430\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Megkeressük\ a\ megfelelő\ szinthez\ tartozó\ adatot\ a\ lista\ első\ elemében}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00431}00431\ \ \ \ \ \ \ \ \ var\ currentSpriteLevelData\ =\ spriteLevelDataList.FirstOrDefault(x\ =>\ x.level\ ==\ level);}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00432}00432\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00433}00433\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (currentSpriteLevelData\ !=\ \textcolor{keyword}{null})}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00434}00434\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00435}00435\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ találunk\ megfelelő\ adatot,\ frissítjük\ a\ sprite-\/ot\ és\ engedélyezzük\ a\ collidert.}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00436}00436\ \ \ \ \ \ \ \ \ \ \ \ \ this.GetComponent<SpriteRenderer>().sprite\ =\ currentSpriteLevelData.sprite;}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00437}00437\ \ \ \ \ \ \ \ \ \ \ \ \ currentSpriteLevelData.collider.enabled\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00438}00438\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00439}00439\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00440}00440\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00441}00441\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ nem\ találunk\ megfelelő\ adatot,\ figyelmeztetést\ adunk}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00442}00442\ \ \ \ \ \ \ \ \ \ \ \ \ Debug.LogWarning(\$\textcolor{stringliteral}{"{}No\ SpriteLevelData\ found\ for\ level\ \{level\}.\ Make\ sure\ the\ level\ exists\ in\ the\ data\ list."{}});}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00443}00443\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00444}00444\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00445}00445\ }
+\DoxyCodeLine{\Hypertarget{_enemy_controller_8cs_source_l00446}00446\ \}}
+
+\end{DoxyCode}

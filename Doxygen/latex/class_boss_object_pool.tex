@@ -1,0 +1,128 @@
+\doxysection{Boss\+Object\+Pool osztÃ¡lyreferencia}
+\hypertarget{class_boss_object_pool}{}\label{class_boss_object_pool}\index{BossObjectPool@{BossObjectPool}}
+A Boss\+Object\+Pool osztÃ¡ly szÃ¡rmazÃ¡si diagramja\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_boss_object_pool}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Publikus tagfÃ¼ggvÃ©nyek}
+\begin{DoxyCompactItemize}
+\item 
+Game\+Object \mbox{\hyperlink{class_boss_object_pool_a061e7348adf8af0562aae8ea36e66121}{Get\+Boss\+Projectile}} (Vector2 position, Quaternion rotation, float damage\+Value)
+\begin{DoxyCompactList}\small\item\em Lekér egy lövedéket a poolból, vagy létrehoz egy újat, ha nincs elérhetõ inaktív lövedék. Beállítja a lövedék pozícióját, forgatását és a sebzés értékét, majd aktiválja azt. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_boss_object_pool_a704d632a97b8216b22e6c937dc542ea6}{Return\+Boss\+Projectile}} (Game\+Object projectile)
+\begin{DoxyCompactList}\small\item\em Visszaad egy lövedéket a poolba\+: deaktiválja azt, és nullázza a sebzés értékét. Eseményt hív, hogy jelezze a lövedék deaktiválódását. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{VÃ©dett tagfÃ¼ggvÃ©nyek}
+\begin{DoxyCompactItemize}
+\item 
+override async void \mbox{\hyperlink{class_boss_object_pool_ae7199533801df9856010c367078d917a}{Initialize}} ()
+\begin{DoxyCompactList}\small\item\em Inicializálja a lövedékek pool-\/ját az elõre meghatározott méret alapján. A \textquotesingle{}pool\+Size\textquotesingle{} változó határozza meg, hogy hány lövedék fér el a poolban. A \textquotesingle{}pool\textquotesingle{} változó egy Queue típusú adatstruktúra, amely a lövedékek kezelésére szolgál. A \textquotesingle{}Enable\+Marking\textquotesingle{} metódus itt kerül meghívásra, hogy engedélyezze a jelölést. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{EsemÃ©nyek}
+\begin{DoxyCompactItemize}
+\item 
+Action$<$ Game\+Object $>$ \mbox{\hyperlink{class_boss_object_pool_a2de346de08ad0e66db6a18641ed1e0e6}{On\+Projectile\+Activated}}
+\begin{DoxyCompactList}\small\item\em Getterek és Setterek. \end{DoxyCompactList}\item 
+Action$<$ Game\+Object $>$ \mbox{\hyperlink{class_boss_object_pool_ab13d5ce291da397211ba30f35c34f302}{On\+Projectile\+Deactivated}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{RÃ©szletes leÃ­rÃ¡s}
+
+
+DefinÃ­ciÃ³ a(z) \mbox{\hyperlink{_boss_object_pool_8cs_source}{Boss\+Object\+Pool.\+cs}} fÃ¡jl \mbox{\hyperlink{_boss_object_pool_8cs_source_l00007}{7}}. sorÃ¡ban.
+
+
+
+\doxysubsection{TagfÃ¼ggvÃ©nyek dokumentÃ¡ciÃ³ja}
+\Hypertarget{class_boss_object_pool_a061e7348adf8af0562aae8ea36e66121}\index{BossObjectPool@{BossObjectPool}!GetBossProjectile@{GetBossProjectile}}
+\index{GetBossProjectile@{GetBossProjectile}!BossObjectPool@{BossObjectPool}}
+\doxysubsubsection{\texorpdfstring{GetBossProjectile()}{GetBossProjectile()}}
+{\footnotesize\ttfamily \label{class_boss_object_pool_a061e7348adf8af0562aae8ea36e66121} 
+Game\+Object Boss\+Object\+Pool.\+Get\+Boss\+Projectile (\begin{DoxyParamCaption}\item[{Vector2}]{position}{, }\item[{Quaternion}]{rotation}{, }\item[{float}]{damage\+Value}{}\end{DoxyParamCaption})}
+
+
+
+Lekér egy lövedéket a poolból, vagy létrehoz egy újat, ha nincs elérhetõ inaktív lövedék. Beállítja a lövedék pozícióját, forgatását és a sebzés értékét, majd aktiválja azt. 
+
+
+\begin{DoxyParams}{ParamÃ©terek}
+{\em position} & A lövedék kívánt pozíciója.\\
+\hline
+{\em rotation} & A lövedék kívánt forgatása (orientációja).\\
+\hline
+{\em damage\+Value} & A lövedék által okozott sebzés mértéke.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{VisszatÃ©rÃ©si Ã©rtÃ©k}
+A lekért vagy létrehozott lövedék Game\+Object-\/je.
+\end{DoxyReturn}
+
+
+DefinÃ­ciÃ³ a(z) \mbox{\hyperlink{_boss_object_pool_8cs_source}{Boss\+Object\+Pool.\+cs}} fÃ¡jl \mbox{\hyperlink{_boss_object_pool_8cs_source_l00069}{69}}. sorÃ¡ban.
+
+\Hypertarget{class_boss_object_pool_ae7199533801df9856010c367078d917a}\index{BossObjectPool@{BossObjectPool}!Initialize@{Initialize}}
+\index{Initialize@{Initialize}!BossObjectPool@{BossObjectPool}}
+\doxysubsubsection{\texorpdfstring{Initialize()}{Initialize()}}
+{\footnotesize\ttfamily \label{class_boss_object_pool_ae7199533801df9856010c367078d917a} 
+override async void Boss\+Object\+Pool.\+Initialize (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Inicializálja a lövedékek pool-\/ját az elõre meghatározott méret alapján. A \textquotesingle{}pool\+Size\textquotesingle{} változó határozza meg, hogy hány lövedék fér el a poolban. A \textquotesingle{}pool\textquotesingle{} változó egy Queue típusú adatstruktúra, amely a lövedékek kezelésére szolgál. A \textquotesingle{}Enable\+Marking\textquotesingle{} metódus itt kerül meghívásra, hogy engedélyezze a jelölést. 
+
+
+
+DefinÃ­ciÃ³ a(z) \mbox{\hyperlink{_boss_object_pool_8cs_source}{Boss\+Object\+Pool.\+cs}} fÃ¡jl \mbox{\hyperlink{_boss_object_pool_8cs_source_l00044}{44}}. sorÃ¡ban.
+
+\Hypertarget{class_boss_object_pool_a704d632a97b8216b22e6c937dc542ea6}\index{BossObjectPool@{BossObjectPool}!ReturnBossProjectile@{ReturnBossProjectile}}
+\index{ReturnBossProjectile@{ReturnBossProjectile}!BossObjectPool@{BossObjectPool}}
+\doxysubsubsection{\texorpdfstring{ReturnBossProjectile()}{ReturnBossProjectile()}}
+{\footnotesize\ttfamily \label{class_boss_object_pool_a704d632a97b8216b22e6c937dc542ea6} 
+void Boss\+Object\+Pool.\+Return\+Boss\+Projectile (\begin{DoxyParamCaption}\item[{Game\+Object}]{projectile}{}\end{DoxyParamCaption})}
+
+
+
+Visszaad egy lövedéket a poolba\+: deaktiválja azt, és nullázza a sebzés értékét. Eseményt hív, hogy jelezze a lövedék deaktiválódását. 
+
+
+\begin{DoxyParams}{ParamÃ©terek}
+{\em projectile} & A visszaadott lövedék Game\+Object-\/je.\\
+\hline
+\end{DoxyParams}
+
+
+DefinÃ­ciÃ³ a(z) \mbox{\hyperlink{_boss_object_pool_8cs_source}{Boss\+Object\+Pool.\+cs}} fÃ¡jl \mbox{\hyperlink{_boss_object_pool_8cs_source_l00117}{117}}. sorÃ¡ban.
+
+
+
+\doxysubsection{EsemÃ©nyek dokumentÃ¡ciÃ³ja}
+\Hypertarget{class_boss_object_pool_a2de346de08ad0e66db6a18641ed1e0e6}\index{BossObjectPool@{BossObjectPool}!OnProjectileActivated@{OnProjectileActivated}}
+\index{OnProjectileActivated@{OnProjectileActivated}!BossObjectPool@{BossObjectPool}}
+\doxysubsubsection{\texorpdfstring{OnProjectileActivated}{OnProjectileActivated}}
+{\footnotesize\ttfamily \label{class_boss_object_pool_a2de346de08ad0e66db6a18641ed1e0e6} 
+Action$<$Game\+Object$>$ Boss\+Object\+Pool.\+On\+Projectile\+Activated}
+
+
+
+Getterek és Setterek. 
+
+Események 
+
+DefinÃ­ciÃ³ a(z) \mbox{\hyperlink{_boss_object_pool_8cs_source}{Boss\+Object\+Pool.\+cs}} fÃ¡jl \mbox{\hyperlink{_boss_object_pool_8cs_source_l00034}{34}}. sorÃ¡ban.
+
+\Hypertarget{class_boss_object_pool_ab13d5ce291da397211ba30f35c34f302}\index{BossObjectPool@{BossObjectPool}!OnProjectileDeactivated@{OnProjectileDeactivated}}
+\index{OnProjectileDeactivated@{OnProjectileDeactivated}!BossObjectPool@{BossObjectPool}}
+\doxysubsubsection{\texorpdfstring{OnProjectileDeactivated}{OnProjectileDeactivated}}
+{\footnotesize\ttfamily \label{class_boss_object_pool_ab13d5ce291da397211ba30f35c34f302} 
+Action$<$Game\+Object$>$ Boss\+Object\+Pool.\+On\+Projectile\+Deactivated}
+
+
+
+DefinÃ­ciÃ³ a(z) \mbox{\hyperlink{_boss_object_pool_8cs_source}{Boss\+Object\+Pool.\+cs}} fÃ¡jl \mbox{\hyperlink{_boss_object_pool_8cs_source_l00035}{35}}. sorÃ¡ban.
+
+
+
+Ez a dokumentÃ¡ciÃ³ az osztÃ¡lyrÃ³l a kÃ¶vetkezÅ‘ fÃ¡jl alapjÃ¡n kÃ©szÃ¼lt\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/ati/\+Desktop/\+MOSZE3/\+Mo\+Sz\+E-\/\+Alomprojekt/\+Alomprojekt/\+Assets/\+Scripts/\mbox{\hyperlink{_boss_object_pool_8cs}{Boss\+Object\+Pool.\+cs}}\end{DoxyCompactItemize}

@@ -1,0 +1,221 @@
+\doxysection{Assets.\+Scripts.\+Object\+Pool\+For\+Projectiles osztályreferencia}
+\hypertarget{class_assets_1_1_scripts_1_1_object_pool_for_projectiles}{}\label{class_assets_1_1_scripts_1_1_object_pool_for_projectiles}\index{Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}}
+Az Assets.\+Scripts.\+Object\+Pool\+For\+Projectiles osztály származási diagramja\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_assets_1_1_scripts_1_1_object_pool_for_projectiles}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Publikus tagfüggvények}
+\begin{DoxyCompactItemize}
+\item 
+Game\+Object \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ab7f6b3d4703bdf447b17fc9a4e45863d}{Get\+Projectile}} (Vector2 position, Quaternion rotation, float damage\+Value, float percentage\+DMGValue)
+\begin{DoxyCompactList}\small\item\em Inicializálja a lövedékek pool-\/ját azáltal, hogy elõállítja és deaktiválja a szükséges számú lövedéket. A lövedékek a poolba kerülnek, és készen állnak a használatra. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a47b7d9a6bdc9ae0d7af3736fc5562fbb}{Enable\+Marking}} (bool enable)
+\begin{DoxyCompactList}\small\item\em Engedélyezi vagy letiltja a lövedékek jelölését. Ha a jelölés le van tiltva, a lövések számlálója (fire\+Counter) visszaállítódik. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a85ca70edb16457ea25527c218b75ec0b}{Return\+Projectile}} (Game\+Object projectile)
+\begin{DoxyCompactList}\small\item\em Visszaad egy lövedéket a poolba\+: deaktiválja azt, és nullázza a sebzés értékét. Eseményt hív, hogy jelezze a lövedék deaktiválódását. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Publikus attribútumok}
+\begin{DoxyCompactItemize}
+\item 
+Game\+Object \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a46aa158c633fe916f5f5fe10b99e4ad0}{projectile\+Prefab}}
+\begin{DoxyCompactList}\small\item\em Változók. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ac1e84007de3e1b7d8ae6e0a509c7db31}{pool\+Size}} = 25
+\item 
+int \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a8e03452914df52a89b9ca05d93f3197a}{projectile\+Mark\+Every\+Nth}} = 4
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Védett tagfüggvények}
+\begin{DoxyCompactItemize}
+\item 
+override async void \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_aae1bf1024badc304cffe9e0070bc5051}{Initialize}} ()
+\begin{DoxyCompactList}\small\item\em Inicializálja a lövedékek pool-\/ját az elõre meghatározott méret alapján. A \textquotesingle{}pool\+Size\textquotesingle{} változó határozza meg, hogy hány lövedék fér el a poolban. A \textquotesingle{}pool\textquotesingle{} változó egy Queue típusú adatstruktúra, amely a lövedékek kezelésére szolgál. A \textquotesingle{}Enable\+Marking\textquotesingle{} metódus itt kerül meghívásra, hogy engedélyezze a jelölést. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Tulajdonságok}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a59276c0b263b6dd36c945da61f91b00a}{Is\+Marking\+Enabled}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Getterek és Setterek. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Események}
+\begin{DoxyCompactItemize}
+\item 
+Action$<$ Game\+Object $>$ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ae882a9c6b632d77ff031c7c5cd755807}{On\+Projectile\+Activated}}
+\begin{DoxyCompactList}\small\item\em Események. \end{DoxyCompactList}\item 
+Action$<$ Game\+Object $>$ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a45ee65cf88065a7def9da36ced9a96f5}{On\+Projectile\+Deactivated}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Részletes leírás}
+
+
+Definíció a(z) \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source}{Object\+Pool\+For\+Projectiles.\+cs}} fájl \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source_l00010}{10}}. sorában.
+
+
+
+\doxysubsection{Tagfüggvények dokumentációja}
+\Hypertarget{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a47b7d9a6bdc9ae0d7af3736fc5562fbb}\index{Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}!EnableMarking@{EnableMarking}}
+\index{EnableMarking@{EnableMarking}!Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}}
+\doxysubsubsection{\texorpdfstring{EnableMarking()}{EnableMarking()}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a47b7d9a6bdc9ae0d7af3736fc5562fbb} 
+void Assets.\+Scripts.\+Object\+Pool\+For\+Projectiles.\+Enable\+Marking (\begin{DoxyParamCaption}\item[{bool}]{enable}{}\end{DoxyParamCaption})}
+
+
+
+Engedélyezi vagy letiltja a lövedékek jelölését. Ha a jelölés le van tiltva, a lövések számlálója (fire\+Counter) visszaállítódik. 
+
+
+\begin{DoxyParams}{Paraméterek}
+{\em enable} & Ha igaz (true), engedélyezi a jelölést, ha hamis (false), letiltja azt.\\
+\hline
+\end{DoxyParams}
+
+
+Definíció a(z) \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source}{Object\+Pool\+For\+Projectiles.\+cs}} fájl \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source_l00187}{187}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ab7f6b3d4703bdf447b17fc9a4e45863d}\index{Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}!GetProjectile@{GetProjectile}}
+\index{GetProjectile@{GetProjectile}!Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}}
+\doxysubsubsection{\texorpdfstring{GetProjectile()}{GetProjectile()}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ab7f6b3d4703bdf447b17fc9a4e45863d} 
+Game\+Object Assets.\+Scripts.\+Object\+Pool\+For\+Projectiles.\+Get\+Projectile (\begin{DoxyParamCaption}\item[{Vector2}]{position}{, }\item[{Quaternion}]{rotation}{, }\item[{float}]{damage\+Value}{, }\item[{float}]{percentage\+DMGValue}{}\end{DoxyParamCaption})}
+
+
+
+Inicializálja a lövedékek pool-\/ját azáltal, hogy elõállítja és deaktiválja a szükséges számú lövedéket. A lövedékek a poolba kerülnek, és készen állnak a használatra. 
+
+Lekér egy lövedéket a poolból, vagy létrehoz egy újat, ha nincs elérhetõ inaktív lövedék. Beállítja a lövedék pozícióját, forgatását és a sebzés értékét, majd aktiválja azt.
+
+
+\begin{DoxyParams}{Paraméterek}
+{\em position} & A lövedék kívánt pozíciója.\\
+\hline
+{\em rotation} & A lövedék kívánt forgatása (orientációja).\\
+\hline
+{\em damage\+Value} & A lövedék által okozott sebzés mértéke.\\
+\hline
+{\em percentage\+DMGValue} & A sebzéshez tartozó százalékos érték, amely esetleg módosíthatja a sebzést.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Visszatérési érték}
+A lekért vagy létrehozott lövedék Game\+Object-\/je.
+\end{DoxyReturn}
+
+
+Definíció a(z) \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source}{Object\+Pool\+For\+Projectiles.\+cs}} fájl \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source_l00092}{92}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_aae1bf1024badc304cffe9e0070bc5051}\index{Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}!Initialize@{Initialize}}
+\index{Initialize@{Initialize}!Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}}
+\doxysubsubsection{\texorpdfstring{Initialize()}{Initialize()}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_aae1bf1024badc304cffe9e0070bc5051} 
+override async void Assets.\+Scripts.\+Object\+Pool\+For\+Projectiles.\+Initialize (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Inicializálja a lövedékek pool-\/ját az elõre meghatározott méret alapján. A \textquotesingle{}pool\+Size\textquotesingle{} változó határozza meg, hogy hány lövedék fér el a poolban. A \textquotesingle{}pool\textquotesingle{} változó egy Queue típusú adatstruktúra, amely a lövedékek kezelésére szolgál. A \textquotesingle{}Enable\+Marking\textquotesingle{} metódus itt kerül meghívásra, hogy engedélyezze a jelölést. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source}{Object\+Pool\+For\+Projectiles.\+cs}} fájl \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source_l00050}{50}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a85ca70edb16457ea25527c218b75ec0b}\index{Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}!ReturnProjectile@{ReturnProjectile}}
+\index{ReturnProjectile@{ReturnProjectile}!Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}}
+\doxysubsubsection{\texorpdfstring{ReturnProjectile()}{ReturnProjectile()}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a85ca70edb16457ea25527c218b75ec0b} 
+void Assets.\+Scripts.\+Object\+Pool\+For\+Projectiles.\+Return\+Projectile (\begin{DoxyParamCaption}\item[{Game\+Object}]{projectile}{}\end{DoxyParamCaption})}
+
+
+
+Visszaad egy lövedéket a poolba\+: deaktiválja azt, és nullázza a sebzés értékét. Eseményt hív, hogy jelezze a lövedék deaktiválódását. 
+
+
+\begin{DoxyParams}{Paraméterek}
+{\em projectile} & A visszaadott lövedék Game\+Object-\/je.\\
+\hline
+\end{DoxyParams}
+
+
+Definíció a(z) \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source}{Object\+Pool\+For\+Projectiles.\+cs}} fájl \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source_l00204}{204}}. sorában.
+
+
+
+\doxysubsection{Adattagok dokumentációja}
+\Hypertarget{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ac1e84007de3e1b7d8ae6e0a509c7db31}\index{Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}!poolSize@{poolSize}}
+\index{poolSize@{poolSize}!Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}}
+\doxysubsubsection{\texorpdfstring{poolSize}{poolSize}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ac1e84007de3e1b7d8ae6e0a509c7db31} 
+int Assets.\+Scripts.\+Object\+Pool\+For\+Projectiles.\+pool\+Size = 25}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source}{Object\+Pool\+For\+Projectiles.\+cs}} fájl \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source_l00016}{16}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a8e03452914df52a89b9ca05d93f3197a}\index{Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}!projectileMarkEveryNth@{projectileMarkEveryNth}}
+\index{projectileMarkEveryNth@{projectileMarkEveryNth}!Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}}
+\doxysubsubsection{\texorpdfstring{projectileMarkEveryNth}{projectileMarkEveryNth}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a8e03452914df52a89b9ca05d93f3197a} 
+int Assets.\+Scripts.\+Object\+Pool\+For\+Projectiles.\+projectile\+Mark\+Every\+Nth = 4}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source}{Object\+Pool\+For\+Projectiles.\+cs}} fájl \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source_l00019}{19}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a46aa158c633fe916f5f5fe10b99e4ad0}\index{Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}!projectilePrefab@{projectilePrefab}}
+\index{projectilePrefab@{projectilePrefab}!Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}}
+\doxysubsubsection{\texorpdfstring{projectilePrefab}{projectilePrefab}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a46aa158c633fe916f5f5fe10b99e4ad0} 
+Game\+Object Assets.\+Scripts.\+Object\+Pool\+For\+Projectiles.\+projectile\+Prefab}
+
+
+
+Változók. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source}{Object\+Pool\+For\+Projectiles.\+cs}} fájl \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source_l00015}{15}}. sorában.
+
+
+
+\doxysubsection{Tulajdonságok dokumentációjka}
+\Hypertarget{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a59276c0b263b6dd36c945da61f91b00a}\index{Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}!IsMarkingEnabled@{IsMarkingEnabled}}
+\index{IsMarkingEnabled@{IsMarkingEnabled}!Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}}
+\doxysubsubsection{\texorpdfstring{IsMarkingEnabled}{IsMarkingEnabled}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a59276c0b263b6dd36c945da61f91b00a} 
+bool Assets.\+Scripts.\+Object\+Pool\+For\+Projectiles.\+Is\+Marking\+Enabled\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Getterek és Setterek. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source}{Object\+Pool\+For\+Projectiles.\+cs}} fájl \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source_l00032}{32}}. sorában.
+
+
+
+\doxysubsection{Események dokumentációja}
+\Hypertarget{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ae882a9c6b632d77ff031c7c5cd755807}\index{Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}!OnProjectileActivated@{OnProjectileActivated}}
+\index{OnProjectileActivated@{OnProjectileActivated}!Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}}
+\doxysubsubsection{\texorpdfstring{OnProjectileActivated}{OnProjectileActivated}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_ae882a9c6b632d77ff031c7c5cd755807} 
+Action$<$Game\+Object$>$ Assets.\+Scripts.\+Object\+Pool\+For\+Projectiles.\+On\+Projectile\+Activated}
+
+
+
+Események. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source}{Object\+Pool\+For\+Projectiles.\+cs}} fájl \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source_l00040}{40}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a45ee65cf88065a7def9da36ced9a96f5}\index{Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}!OnProjectileDeactivated@{OnProjectileDeactivated}}
+\index{OnProjectileDeactivated@{OnProjectileDeactivated}!Assets.Scripts.ObjectPoolForProjectiles@{Assets.Scripts.ObjectPoolForProjectiles}}
+\doxysubsubsection{\texorpdfstring{OnProjectileDeactivated}{OnProjectileDeactivated}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_object_pool_for_projectiles_a45ee65cf88065a7def9da36ced9a96f5} 
+Action$<$Game\+Object$>$ Assets.\+Scripts.\+Object\+Pool\+For\+Projectiles.\+On\+Projectile\+Deactivated}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source}{Object\+Pool\+For\+Projectiles.\+cs}} fájl \mbox{\hyperlink{_object_pool_for_projectiles_8cs_source_l00041}{41}}. sorában.
+
+
+
+Ez a dokumentáció az osztályról a következő fájl alapján készült\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/ati/\+Desktop/\+MOSZE3/\+Mo\+Sz\+E-\/\+Alomprojekt/\+Alomprojekt/\+Assets/\+Scripts/\mbox{\hyperlink{_object_pool_for_projectiles_8cs}{Object\+Pool\+For\+Projectiles.\+cs}}\end{DoxyCompactItemize}

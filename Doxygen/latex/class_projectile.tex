@@ -1,0 +1,171 @@
+\doxysection{Projectile osztályreferencia}
+\hypertarget{class_projectile}{}\label{class_projectile}\index{Projectile@{Projectile}}
+A Projectile osztály származási diagramja\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_projectile}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Publikus tagfüggvények}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_projectile_a57d7814a538aa8198b397861f7f1dbbf}{Launch}} (Vector2 direction, float launch\+Force)
+\begin{DoxyCompactList}\small\item\em Elindítja a Game\+Object-\/et egy adott irányba és erõvel a Rigidbody2D komponens segítségével. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Publikus attribútumok}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{class_projectile_a94ef685369823fe7b11dabcfd5afd436}{delete\+Time}} = 5f
+\item 
+int \mbox{\hyperlink{class_projectile_a569bcca5cad76d30134ca434b84c826d}{force}} = 3
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Tulajdonságok}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{class_projectile_a69f252c4c5134ad1c3b24814787318a6}{Projectile\+DMG}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Getterek és Setterek. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_projectile_ab6d5d1b0e2dc52ca86eebc05cb4906aa}{Percentage\+DMGValue}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+bool \mbox{\hyperlink{class_projectile_a017b8ff4012636359219fe7cb2a4d103}{Is\+Marked}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+Camera \mbox{\hyperlink{class_projectile_abc640ddd3b046f1faa045c3dc2220e5f}{Main\+Camera}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Események}
+\begin{DoxyCompactItemize}
+\item 
+Action$<$ \mbox{\hyperlink{class_enemy_controller}{Enemy\+Controller}}, float $>$ \mbox{\hyperlink{class_projectile_a4a018b990c9181249d9141f72dd1c796}{On\+Enemy\+Hit}}
+\begin{DoxyCompactList}\small\item\em Események. \end{DoxyCompactList}\item 
+Action$<$ float $>$ \mbox{\hyperlink{class_projectile_a2574ba2547a37db6d1131e3a8b559e2b}{On\+Boss\+Hit}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Részletes leírás}
+
+
+Definíció a(z) \mbox{\hyperlink{_projectile_8cs_source}{Projectile.\+cs}} fájl \mbox{\hyperlink{_projectile_8cs_source_l00007}{7}}. sorában.
+
+
+
+\doxysubsection{Tagfüggvények dokumentációja}
+\Hypertarget{class_projectile_a57d7814a538aa8198b397861f7f1dbbf}\index{Projectile@{Projectile}!Launch@{Launch}}
+\index{Launch@{Launch}!Projectile@{Projectile}}
+\doxysubsubsection{\texorpdfstring{Launch()}{Launch()}}
+{\footnotesize\ttfamily \label{class_projectile_a57d7814a538aa8198b397861f7f1dbbf} 
+void Projectile.\+Launch (\begin{DoxyParamCaption}\item[{Vector2}]{direction}{, }\item[{float}]{launch\+Force}{}\end{DoxyParamCaption})}
+
+
+
+Elindítja a Game\+Object-\/et egy adott irányba és erõvel a Rigidbody2D komponens segítségével. 
+
+
+\begin{DoxyParams}{Paraméterek}
+{\em direction} & Az irány, amelybe a Game\+Object-\/et el kell indítani\\
+\hline
+{\em force} & Az erõ, amellyel a Game\+Object-\/nek mozognia kell\\
+\hline
+\end{DoxyParams}
+
+
+Definíció a(z) \mbox{\hyperlink{_projectile_8cs_source}{Projectile.\+cs}} fájl \mbox{\hyperlink{_projectile_8cs_source_l00137}{137}}. sorában.
+
+
+
+\doxysubsection{Adattagok dokumentációja}
+\Hypertarget{class_projectile_a94ef685369823fe7b11dabcfd5afd436}\index{Projectile@{Projectile}!deleteTime@{deleteTime}}
+\index{deleteTime@{deleteTime}!Projectile@{Projectile}}
+\doxysubsubsection{\texorpdfstring{deleteTime}{deleteTime}}
+{\footnotesize\ttfamily \label{class_projectile_a94ef685369823fe7b11dabcfd5afd436} 
+float Projectile.\+delete\+Time = 5f}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_projectile_8cs_source}{Projectile.\+cs}} fájl \mbox{\hyperlink{_projectile_8cs_source_l00013}{13}}. sorában.
+
+\Hypertarget{class_projectile_a569bcca5cad76d30134ca434b84c826d}\index{Projectile@{Projectile}!force@{force}}
+\index{force@{force}!Projectile@{Projectile}}
+\doxysubsubsection{\texorpdfstring{force}{force}}
+{\footnotesize\ttfamily \label{class_projectile_a569bcca5cad76d30134ca434b84c826d} 
+int Projectile.\+force = 3}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_projectile_8cs_source}{Projectile.\+cs}} fájl \mbox{\hyperlink{_projectile_8cs_source_l00015}{15}}. sorában.
+
+
+
+\doxysubsection{Tulajdonságok dokumentációjka}
+\Hypertarget{class_projectile_a017b8ff4012636359219fe7cb2a4d103}\index{Projectile@{Projectile}!IsMarked@{IsMarked}}
+\index{IsMarked@{IsMarked}!Projectile@{Projectile}}
+\doxysubsubsection{\texorpdfstring{IsMarked}{IsMarked}}
+{\footnotesize\ttfamily \label{class_projectile_a017b8ff4012636359219fe7cb2a4d103} 
+bool Projectile.\+Is\+Marked\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_projectile_8cs_source}{Projectile.\+cs}} fájl \mbox{\hyperlink{_projectile_8cs_source_l00047}{47}}. sorában.
+
+\Hypertarget{class_projectile_abc640ddd3b046f1faa045c3dc2220e5f}\index{Projectile@{Projectile}!MainCamera@{MainCamera}}
+\index{MainCamera@{MainCamera}!Projectile@{Projectile}}
+\doxysubsubsection{\texorpdfstring{MainCamera}{MainCamera}}
+{\footnotesize\ttfamily \label{class_projectile_abc640ddd3b046f1faa045c3dc2220e5f} 
+Camera Projectile.\+Main\+Camera\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_projectile_8cs_source}{Projectile.\+cs}} fájl \mbox{\hyperlink{_projectile_8cs_source_l00053}{53}}. sorában.
+
+\Hypertarget{class_projectile_ab6d5d1b0e2dc52ca86eebc05cb4906aa}\index{Projectile@{Projectile}!PercentageDMGValue@{PercentageDMGValue}}
+\index{PercentageDMGValue@{PercentageDMGValue}!Projectile@{Projectile}}
+\doxysubsubsection{\texorpdfstring{PercentageDMGValue}{PercentageDMGValue}}
+{\footnotesize\ttfamily \label{class_projectile_ab6d5d1b0e2dc52ca86eebc05cb4906aa} 
+float Projectile.\+Percentage\+DMGValue\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_projectile_8cs_source}{Projectile.\+cs}} fájl \mbox{\hyperlink{_projectile_8cs_source_l00041}{41}}. sorában.
+
+\Hypertarget{class_projectile_a69f252c4c5134ad1c3b24814787318a6}\index{Projectile@{Projectile}!ProjectileDMG@{ProjectileDMG}}
+\index{ProjectileDMG@{ProjectileDMG}!Projectile@{Projectile}}
+\doxysubsubsection{\texorpdfstring{ProjectileDMG}{ProjectileDMG}}
+{\footnotesize\ttfamily \label{class_projectile_a69f252c4c5134ad1c3b24814787318a6} 
+float Projectile.\+Projectile\+DMG\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Getterek és Setterek. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_projectile_8cs_source}{Projectile.\+cs}} fájl \mbox{\hyperlink{_projectile_8cs_source_l00035}{35}}. sorában.
+
+
+
+\doxysubsection{Események dokumentációja}
+\Hypertarget{class_projectile_a2574ba2547a37db6d1131e3a8b559e2b}\index{Projectile@{Projectile}!OnBossHit@{OnBossHit}}
+\index{OnBossHit@{OnBossHit}!Projectile@{Projectile}}
+\doxysubsubsection{\texorpdfstring{OnBossHit}{OnBossHit}}
+{\footnotesize\ttfamily \label{class_projectile_a2574ba2547a37db6d1131e3a8b559e2b} 
+Action$<$float$>$ Projectile.\+On\+Boss\+Hit}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_projectile_8cs_source}{Projectile.\+cs}} fájl \mbox{\hyperlink{_projectile_8cs_source_l00065}{65}}. sorában.
+
+\Hypertarget{class_projectile_a4a018b990c9181249d9141f72dd1c796}\index{Projectile@{Projectile}!OnEnemyHit@{OnEnemyHit}}
+\index{OnEnemyHit@{OnEnemyHit}!Projectile@{Projectile}}
+\doxysubsubsection{\texorpdfstring{OnEnemyHit}{OnEnemyHit}}
+{\footnotesize\ttfamily \label{class_projectile_a4a018b990c9181249d9141f72dd1c796} 
+Action$<$\mbox{\hyperlink{class_enemy_controller}{Enemy\+Controller}}, float$>$ Projectile.\+On\+Enemy\+Hit}
+
+
+
+Események. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_projectile_8cs_source}{Projectile.\+cs}} fájl \mbox{\hyperlink{_projectile_8cs_source_l00064}{64}}. sorában.
+
+
+
+Ez a dokumentáció az osztályról a következő fájl alapján készült\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/ati/\+Desktop/\+MOSZE3/\+Mo\+Sz\+E-\/\+Alomprojekt/\+Alomprojekt/\+Assets/\+Scripts/\mbox{\hyperlink{_projectile_8cs}{Projectile.\+cs}}\end{DoxyCompactItemize}

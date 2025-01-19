@@ -1,0 +1,676 @@
+\doxysection{Assets.\+Scripts.\+Character osztályreferencia}
+\hypertarget{class_assets_1_1_scripts_1_1_character}{}\label{class_assets_1_1_scripts_1_1_character}\index{Assets.Scripts.Character@{Assets.Scripts.Character}}
+Az Assets.\+Scripts.\+Character osztály származási diagramja\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_assets_1_1_scripts_1_1_character}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Publikus tagfüggvények}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a4c2cef97f95da1f468e6729081071de9}{Change\+Health}} (float amount)
+\begin{DoxyCompactList}\small\item\em Kezeli a karakter életerõ-\/változását, figyeli a kapcsolódó eseményeket, és ellenõrzi, hogy a karakter meghalt-\/e. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Védett tagfüggvények}
+\begin{DoxyCompactItemize}
+\item 
+virtual void \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a8dfdf83040566f005c8d9b28de28250f}{Awake}} ()
+\begin{DoxyCompactList}\small\item\em Inicializálja a Game\+Object változóit és komponenseit, valamint feliratkozik a szükséges eseményekre. Ez a metódus akkor kerül meghívásra, amikor a szkript elõször betöltõdik vagy példányosul, jellemzõen a játék elején. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a25425129e8a8ee011723eb248bd0ca48}{Die}} ()
+\begin{DoxyCompactList}\small\item\em Kezeli a karakter halálát, és törli a Game\+Object-\/et. \end{DoxyCompactList}\item 
+virtual void \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a3a5c9bacc20af903ecaa7836d2a2ecef}{On\+Destroy}} ()
+\begin{DoxyCompactList}\small\item\em A karakterhez kapcsolódó Game\+Object törlését megelõzõen leiratkozás a kapcsolódó On\+Death eseményrõl, hogy elkerüljük az esetleges memória szivárgást vagy hibákat. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Védett attribútumok}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_ad07614ecf1ddabead107c80967326461}{prefab\+ID}}
+\begin{DoxyCompactList}\small\item\em Változók. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a0a613b5df8a0f9b1e7c87aea1073f8f3}{max\+Health}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aa0995c5bb9e4ebb6a9688bc58a4b16c2}{additional\+Health}} = 0f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aca09419fac56d44377eef4bbd0d7ba08}{\+\_\+current\+Health}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_ae9d7898948953d47ace66eb113cc5a61}{base\+Movement\+Speed}} = 3.\+0f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a98c83be9d522b3a9d2e8021ecbdd18b7}{additional\+Movement\+Speed}} = 0f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aa5bbabfd74725712b20b134881e2ad83}{\+\_\+current\+Movement\+Speed}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_ad296092534d977ed7b26e06f21beeb21}{base\+DMG}} = 1f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a7f05c5b768347cb1538c72a65bbb08dc}{additional\+DMG}} = 0f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a8a1f60fde8f460c121ade197e5d6c026}{\+\_\+current\+DMG}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aed72f88c12a5ce36746eb9c18ffcf2fc}{base\+Attack\+Cooldown}} = 0.\+5f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aa7c790a9924e671a992d95fc3ea0a596}{attack\+Cooldown\+Reduction}} = 0f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a37157c5707480efa1b61ecd3ebc0a26e}{\+\_\+current\+Attack\+Cooldown}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a07d4e28ac5bb1523b89e5bddad39afac}{base\+Critical\+Hit\+Chance}} = 0.\+05f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af5b56582ab183931a47526df7137d78c}{additional\+Critical\+Hit\+Chance}} = 0.\+2f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af5972931feb41df52cd7700f7df4fb55}{\+\_\+current\+Critical\+Hit\+Chance}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af4df2141b293bd22410d84c757c085a6}{base\+Percentage\+Based\+DMG}} = 0f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aa09eedefdb7b711f922e8dca4a33d0ee}{additional\+Percentage\+Based\+DMG}} = 0.\+07f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a0eff677da67525bb82c8e8bc45b1fa9d}{\+\_\+current\+Percentage\+Based\+DMG}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a35557117ac1d902409427bbfce67736a}{min\+Health\+Value}} = 5f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a0bdeb6c5ba1e180487ffdb9751a66928}{max\+Health\+Value}} = 10f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a7326188ed338cfa7004900219dc2e6cb}{min\+Movement\+Speed\+Value}} = 3.\+0f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a75187ddda891cffa55fe922a9e82277c}{max\+Movement\+Speed\+Value}} = 10.\+0f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a9e7c470df7969197e5a8496fc55b7ec4}{min\+DMGValue}} = 1f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a2bff384c53014fd650baa9520d37158b}{max\+DMGValue}} = 10f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a06ff77e3ab8e5f4575d874457450bcdc}{min\+Attack\+Cooldown\+Value}} = 0.\+5f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_abe924a4ceb672aaad554d4b43bcd39b5}{max\+Attack\+Cooldown\+Value}} = 5.\+0f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aedf66d584be8775e420a75ba284b10a8}{min\+Critical\+Hit\+Chance\+Value}} = 0.\+0f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aebea8af2dcf1bf7a15ad02ef84c8f742}{max\+Critical\+Hit\+Chance\+Value}} = 0.\+5f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a327e41488d55f720309f7f2ba698aa42}{min\+Percentage\+Based\+DMGValue}} = 0.\+0f
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_abd90063e020b6e55563caf2283847577}{max\+Percentage\+Based\+DMGValue}} = 0.\+5f
+\item 
+Rigidbody2D \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a74276fbdca04474f251a354891452067}{\+\_\+rigidbody2d}}
+\begin{DoxyCompactList}\small\item\em Komponenesek. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Tulajdonságok}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a6f0da7beb5b8b8e61e47095acacd127e}{ID}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Getterek és Setterek. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_abb9d5cbfcb12c76d3f3a1436cd29595a}{Current\+Health}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a06dc7a5f6e6bdfda1681fee47c5a7bea}{Max\+Health}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af2fdb249815c0f578e6dfa0425439e2f}{Current\+Movement\+Speed}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a6ee04e7804d4141890030586e944078b}{Current\+DMG}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a555f5014591fcecc5eef9c75fb493624}{Base\+DMG}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a92a19ff302149f4a1ff48c01b841b80c}{Current\+Attack\+Cooldown}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a278861a3a2f0b549d4d336bee8452e0a}{Current\+Critical\+Hit\+Chance}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+float \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a6c99a7bb6104969af257b53a3adf9cd1}{Current\+Percentage\+Based\+DMG}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\item 
+Rigidbody2D \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a8d6eb177b01dad74435d9db27e2d3f2f}{rigidbody2d}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, protected set\mbox{]}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Események}
+\begin{DoxyCompactItemize}
+\item 
+Action \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_ae88610a9af670a07f603c067ef357a18}{On\+Death}}
+\begin{DoxyCompactList}\small\item\em Események. \end{DoxyCompactList}\item 
+Action$<$ float $>$ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a1fbf34ca582925e793a16eb0e288dedb}{On\+Health\+Changed}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Részletes leírás}
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00015}{15}}. sorában.
+
+
+
+\doxysubsection{Tagfüggvények dokumentációja}
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a8dfdf83040566f005c8d9b28de28250f}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!Awake@{Awake}}
+\index{Awake@{Awake}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{Awake()}{Awake()}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a8dfdf83040566f005c8d9b28de28250f} 
+virtual void Assets.\+Scripts.\+Character.\+Awake (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Inicializálja a Game\+Object változóit és komponenseit, valamint feliratkozik a szükséges eseményekre. Ez a metódus akkor kerül meghívásra, amikor a szkript elõször betöltõdik vagy példányosul, jellemzõen a játék elején. 
+
+
+
+Újraimplementáló leszármazottak\+: \mbox{\hyperlink{class_enemy_controller_ab6deef38df6828a5152e1fd0c73061d8}{Enemy\+Controller}} és \mbox{\hyperlink{class_player_controller_ab89a69dbd089b54f9701b62c9fa2c221}{Player\+Controller}}.
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00163}{163}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a4c2cef97f95da1f468e6729081071de9}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!ChangeHealth@{ChangeHealth}}
+\index{ChangeHealth@{ChangeHealth}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{ChangeHealth()}{ChangeHealth()}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a4c2cef97f95da1f468e6729081071de9} 
+virtual void Assets.\+Scripts.\+Character.\+Change\+Health (\begin{DoxyParamCaption}\item[{float}]{amount}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+Kezeli a karakter életerõ-\/változását, figyeli a kapcsolódó eseményeket, és ellenõrzi, hogy a karakter meghalt-\/e. 
+
+
+\begin{DoxyParams}{Paraméterek}
+{\em amount} & Az életerõ változása; lehet pozitív (gyógyulás), vagy negatív (sebzés)\\
+\hline
+\end{DoxyParams}
+
+
+Újraimplementáló leszármazottak\+: \mbox{\hyperlink{class_player_controller_a470d8299a4d676ce41c4b253cb7770b7}{Player\+Controller}}.
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00207}{207}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a25425129e8a8ee011723eb248bd0ca48}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!Die@{Die}}
+\index{Die@{Die}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{Die()}{Die()}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a25425129e8a8ee011723eb248bd0ca48} 
+virtual void Assets.\+Scripts.\+Character.\+Die (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+Kezeli a karakter halálát, és törli a Game\+Object-\/et. 
+
+
+
+Újraimplementáló leszármazottak\+: \mbox{\hyperlink{class_enemy_controller_ae4643988c3365d89c1ec7377f6ad42e6}{Enemy\+Controller}} és \mbox{\hyperlink{class_player_controller_af45b465270db0240bee87967c97b59dc}{Player\+Controller}}.
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00225}{225}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a3a5c9bacc20af903ecaa7836d2a2ecef}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!OnDestroy@{OnDestroy}}
+\index{OnDestroy@{OnDestroy}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{OnDestroy()}{OnDestroy()}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a3a5c9bacc20af903ecaa7836d2a2ecef} 
+virtual void Assets.\+Scripts.\+Character.\+On\+Destroy (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+
+
+A karakterhez kapcsolódó Game\+Object törlését megelõzõen leiratkozás a kapcsolódó On\+Death eseményrõl, hogy elkerüljük az esetleges memória szivárgást vagy hibákat. 
+
+
+
+Újraimplementáló leszármazottak\+: \mbox{\hyperlink{class_enemy_controller_a4520f46ce3c50343d9c158fd9d5febaa}{Enemy\+Controller}}.
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00236}{236}}. sorában.
+
+
+
+\doxysubsection{Adattagok dokumentációja}
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a37157c5707480efa1b61ecd3ebc0a26e}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!\_currentAttackCooldown@{\_currentAttackCooldown}}
+\index{\_currentAttackCooldown@{\_currentAttackCooldown}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{\_currentAttackCooldown}{\_currentAttackCooldown}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a37157c5707480efa1b61ecd3ebc0a26e} 
+float Assets.\+Scripts.\+Character.\+\_\+current\+Attack\+Cooldown\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00047}{47}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_af5972931feb41df52cd7700f7df4fb55}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!\_currentCriticalHitChance@{\_currentCriticalHitChance}}
+\index{\_currentCriticalHitChance@{\_currentCriticalHitChance}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{\_currentCriticalHitChance}{\_currentCriticalHitChance}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_af5972931feb41df52cd7700f7df4fb55} 
+float Assets.\+Scripts.\+Character.\+\_\+current\+Critical\+Hit\+Chance\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00051}{51}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a8a1f60fde8f460c121ade197e5d6c026}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!\_currentDMG@{\_currentDMG}}
+\index{\_currentDMG@{\_currentDMG}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{\_currentDMG}{\_currentDMG}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a8a1f60fde8f460c121ade197e5d6c026} 
+float Assets.\+Scripts.\+Character.\+\_\+current\+DMG\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00043}{43}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_aca09419fac56d44377eef4bbd0d7ba08}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!\_currentHealth@{\_currentHealth}}
+\index{\_currentHealth@{\_currentHealth}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{\_currentHealth}{\_currentHealth}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_aca09419fac56d44377eef4bbd0d7ba08} 
+float Assets.\+Scripts.\+Character.\+\_\+current\+Health\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00035}{35}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_aa5bbabfd74725712b20b134881e2ad83}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!\_currentMovementSpeed@{\_currentMovementSpeed}}
+\index{\_currentMovementSpeed@{\_currentMovementSpeed}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{\_currentMovementSpeed}{\_currentMovementSpeed}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_aa5bbabfd74725712b20b134881e2ad83} 
+float Assets.\+Scripts.\+Character.\+\_\+current\+Movement\+Speed\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00039}{39}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a0eff677da67525bb82c8e8bc45b1fa9d}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!\_currentPercentageBasedDMG@{\_currentPercentageBasedDMG}}
+\index{\_currentPercentageBasedDMG@{\_currentPercentageBasedDMG}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{\_currentPercentageBasedDMG}{\_currentPercentageBasedDMG}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a0eff677da67525bb82c8e8bc45b1fa9d} 
+float Assets.\+Scripts.\+Character.\+\_\+current\+Percentage\+Based\+DMG\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00055}{55}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a74276fbdca04474f251a354891452067}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!\_rigidbody2d@{\_rigidbody2d}}
+\index{\_rigidbody2d@{\_rigidbody2d}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{\_rigidbody2d}{\_rigidbody2d}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a74276fbdca04474f251a354891452067} 
+Rigidbody2D Assets.\+Scripts.\+Character.\+\_\+rigidbody2d\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Komponenesek. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00085}{85}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_af5b56582ab183931a47526df7137d78c}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!additionalCriticalHitChance@{additionalCriticalHitChance}}
+\index{additionalCriticalHitChance@{additionalCriticalHitChance}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{additionalCriticalHitChance}{additionalCriticalHitChance}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_af5b56582ab183931a47526df7137d78c} 
+float Assets.\+Scripts.\+Character.\+additional\+Critical\+Hit\+Chance = 0.\+2f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00050}{50}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a7f05c5b768347cb1538c72a65bbb08dc}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!additionalDMG@{additionalDMG}}
+\index{additionalDMG@{additionalDMG}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{additionalDMG}{additionalDMG}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a7f05c5b768347cb1538c72a65bbb08dc} 
+float Assets.\+Scripts.\+Character.\+additional\+DMG = 0f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00042}{42}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_aa0995c5bb9e4ebb6a9688bc58a4b16c2}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!additionalHealth@{additionalHealth}}
+\index{additionalHealth@{additionalHealth}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{additionalHealth}{additionalHealth}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_aa0995c5bb9e4ebb6a9688bc58a4b16c2} 
+float Assets.\+Scripts.\+Character.\+additional\+Health = 0f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00034}{34}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a98c83be9d522b3a9d2e8021ecbdd18b7}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!additionalMovementSpeed@{additionalMovementSpeed}}
+\index{additionalMovementSpeed@{additionalMovementSpeed}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{additionalMovementSpeed}{additionalMovementSpeed}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a98c83be9d522b3a9d2e8021ecbdd18b7} 
+float Assets.\+Scripts.\+Character.\+additional\+Movement\+Speed = 0f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00038}{38}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_aa09eedefdb7b711f922e8dca4a33d0ee}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!additionalPercentageBasedDMG@{additionalPercentageBasedDMG}}
+\index{additionalPercentageBasedDMG@{additionalPercentageBasedDMG}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{additionalPercentageBasedDMG}{additionalPercentageBasedDMG}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_aa09eedefdb7b711f922e8dca4a33d0ee} 
+float Assets.\+Scripts.\+Character.\+additional\+Percentage\+Based\+DMG = 0.\+07f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00054}{54}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_aa7c790a9924e671a992d95fc3ea0a596}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!attackCooldownReduction@{attackCooldownReduction}}
+\index{attackCooldownReduction@{attackCooldownReduction}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{attackCooldownReduction}{attackCooldownReduction}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_aa7c790a9924e671a992d95fc3ea0a596} 
+float Assets.\+Scripts.\+Character.\+attack\+Cooldown\+Reduction = 0f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00046}{46}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_aed72f88c12a5ce36746eb9c18ffcf2fc}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!baseAttackCooldown@{baseAttackCooldown}}
+\index{baseAttackCooldown@{baseAttackCooldown}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{baseAttackCooldown}{baseAttackCooldown}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_aed72f88c12a5ce36746eb9c18ffcf2fc} 
+float Assets.\+Scripts.\+Character.\+base\+Attack\+Cooldown = 0.\+5f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00045}{45}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a07d4e28ac5bb1523b89e5bddad39afac}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!baseCriticalHitChance@{baseCriticalHitChance}}
+\index{baseCriticalHitChance@{baseCriticalHitChance}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{baseCriticalHitChance}{baseCriticalHitChance}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a07d4e28ac5bb1523b89e5bddad39afac} 
+float Assets.\+Scripts.\+Character.\+base\+Critical\+Hit\+Chance = 0.\+05f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00049}{49}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_ad296092534d977ed7b26e06f21beeb21}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!baseDMG@{baseDMG}}
+\index{baseDMG@{baseDMG}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{baseDMG}{baseDMG}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_ad296092534d977ed7b26e06f21beeb21} 
+float Assets.\+Scripts.\+Character.\+base\+DMG = 1f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00041}{41}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_ae9d7898948953d47ace66eb113cc5a61}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!baseMovementSpeed@{baseMovementSpeed}}
+\index{baseMovementSpeed@{baseMovementSpeed}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{baseMovementSpeed}{baseMovementSpeed}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_ae9d7898948953d47ace66eb113cc5a61} 
+float Assets.\+Scripts.\+Character.\+base\+Movement\+Speed = 3.\+0f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00037}{37}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_af4df2141b293bd22410d84c757c085a6}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!basePercentageBasedDMG@{basePercentageBasedDMG}}
+\index{basePercentageBasedDMG@{basePercentageBasedDMG}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{basePercentageBasedDMG}{basePercentageBasedDMG}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_af4df2141b293bd22410d84c757c085a6} 
+float Assets.\+Scripts.\+Character.\+base\+Percentage\+Based\+DMG = 0f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00053}{53}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_abe924a4ceb672aaad554d4b43bcd39b5}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!maxAttackCooldownValue@{maxAttackCooldownValue}}
+\index{maxAttackCooldownValue@{maxAttackCooldownValue}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{maxAttackCooldownValue}{maxAttackCooldownValue}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_abe924a4ceb672aaad554d4b43bcd39b5} 
+float Assets.\+Scripts.\+Character.\+max\+Attack\+Cooldown\+Value = 5.\+0f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00073}{73}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_aebea8af2dcf1bf7a15ad02ef84c8f742}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!maxCriticalHitChanceValue@{maxCriticalHitChanceValue}}
+\index{maxCriticalHitChanceValue@{maxCriticalHitChanceValue}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{maxCriticalHitChanceValue}{maxCriticalHitChanceValue}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_aebea8af2dcf1bf7a15ad02ef84c8f742} 
+float Assets.\+Scripts.\+Character.\+max\+Critical\+Hit\+Chance\+Value = 0.\+5f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00076}{76}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a2bff384c53014fd650baa9520d37158b}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!maxDMGValue@{maxDMGValue}}
+\index{maxDMGValue@{maxDMGValue}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{maxDMGValue}{maxDMGValue}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a2bff384c53014fd650baa9520d37158b} 
+float Assets.\+Scripts.\+Character.\+max\+DMGValue = 10f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00069}{69}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a0a613b5df8a0f9b1e7c87aea1073f8f3}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!maxHealth@{maxHealth}}
+\index{maxHealth@{maxHealth}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{maxHealth}{maxHealth}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a0a613b5df8a0f9b1e7c87aea1073f8f3} 
+float Assets.\+Scripts.\+Character.\+max\+Health\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00033}{33}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a0bdeb6c5ba1e180487ffdb9751a66928}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!maxHealthValue@{maxHealthValue}}
+\index{maxHealthValue@{maxHealthValue}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{maxHealthValue}{maxHealthValue}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a0bdeb6c5ba1e180487ffdb9751a66928} 
+float Assets.\+Scripts.\+Character.\+max\+Health\+Value = 10f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00061}{61}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a75187ddda891cffa55fe922a9e82277c}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!maxMovementSpeedValue@{maxMovementSpeedValue}}
+\index{maxMovementSpeedValue@{maxMovementSpeedValue}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{maxMovementSpeedValue}{maxMovementSpeedValue}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a75187ddda891cffa55fe922a9e82277c} 
+float Assets.\+Scripts.\+Character.\+max\+Movement\+Speed\+Value = 10.\+0f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00065}{65}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_abd90063e020b6e55563caf2283847577}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!maxPercentageBasedDMGValue@{maxPercentageBasedDMGValue}}
+\index{maxPercentageBasedDMGValue@{maxPercentageBasedDMGValue}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{maxPercentageBasedDMGValue}{maxPercentageBasedDMGValue}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_abd90063e020b6e55563caf2283847577} 
+float Assets.\+Scripts.\+Character.\+max\+Percentage\+Based\+DMGValue = 0.\+5f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00079}{79}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a06ff77e3ab8e5f4575d874457450bcdc}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!minAttackCooldownValue@{minAttackCooldownValue}}
+\index{minAttackCooldownValue@{minAttackCooldownValue}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{minAttackCooldownValue}{minAttackCooldownValue}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a06ff77e3ab8e5f4575d874457450bcdc} 
+float Assets.\+Scripts.\+Character.\+min\+Attack\+Cooldown\+Value = 0.\+5f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00071}{71}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_aedf66d584be8775e420a75ba284b10a8}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!minCriticalHitChanceValue@{minCriticalHitChanceValue}}
+\index{minCriticalHitChanceValue@{minCriticalHitChanceValue}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{minCriticalHitChanceValue}{minCriticalHitChanceValue}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_aedf66d584be8775e420a75ba284b10a8} 
+float Assets.\+Scripts.\+Character.\+min\+Critical\+Hit\+Chance\+Value = 0.\+0f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00075}{75}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a9e7c470df7969197e5a8496fc55b7ec4}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!minDMGValue@{minDMGValue}}
+\index{minDMGValue@{minDMGValue}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{minDMGValue}{minDMGValue}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a9e7c470df7969197e5a8496fc55b7ec4} 
+float Assets.\+Scripts.\+Character.\+min\+DMGValue = 1f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00067}{67}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a35557117ac1d902409427bbfce67736a}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!minHealthValue@{minHealthValue}}
+\index{minHealthValue@{minHealthValue}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{minHealthValue}{minHealthValue}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a35557117ac1d902409427bbfce67736a} 
+float Assets.\+Scripts.\+Character.\+min\+Health\+Value = 5f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00059}{59}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a7326188ed338cfa7004900219dc2e6cb}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!minMovementSpeedValue@{minMovementSpeedValue}}
+\index{minMovementSpeedValue@{minMovementSpeedValue}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{minMovementSpeedValue}{minMovementSpeedValue}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a7326188ed338cfa7004900219dc2e6cb} 
+float Assets.\+Scripts.\+Character.\+min\+Movement\+Speed\+Value = 3.\+0f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00063}{63}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a327e41488d55f720309f7f2ba698aa42}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!minPercentageBasedDMGValue@{minPercentageBasedDMGValue}}
+\index{minPercentageBasedDMGValue@{minPercentageBasedDMGValue}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{minPercentageBasedDMGValue}{minPercentageBasedDMGValue}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a327e41488d55f720309f7f2ba698aa42} 
+float Assets.\+Scripts.\+Character.\+min\+Percentage\+Based\+DMGValue = 0.\+0f\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00078}{78}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_ad07614ecf1ddabead107c80967326461}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!prefabID@{prefabID}}
+\index{prefabID@{prefabID}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{prefabID}{prefabID}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_ad07614ecf1ddabead107c80967326461} 
+string Assets.\+Scripts.\+Character.\+prefab\+ID\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Változók. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00022}{22}}. sorában.
+
+
+
+\doxysubsection{Tulajdonságok dokumentációjka}
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a555f5014591fcecc5eef9c75fb493624}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!BaseDMG@{BaseDMG}}
+\index{BaseDMG@{BaseDMG}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{BaseDMG}{BaseDMG}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a555f5014591fcecc5eef9c75fb493624} 
+float Assets.\+Scripts.\+Character.\+Base\+DMG\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00121}{121}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a92a19ff302149f4a1ff48c01b841b80c}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!CurrentAttackCooldown@{CurrentAttackCooldown}}
+\index{CurrentAttackCooldown@{CurrentAttackCooldown}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{CurrentAttackCooldown}{CurrentAttackCooldown}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a92a19ff302149f4a1ff48c01b841b80c} 
+float Assets.\+Scripts.\+Character.\+Current\+Attack\+Cooldown\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00127}{127}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a278861a3a2f0b549d4d336bee8452e0a}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!CurrentCriticalHitChance@{CurrentCriticalHitChance}}
+\index{CurrentCriticalHitChance@{CurrentCriticalHitChance}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{CurrentCriticalHitChance}{CurrentCriticalHitChance}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a278861a3a2f0b549d4d336bee8452e0a} 
+float Assets.\+Scripts.\+Character.\+Current\+Critical\+Hit\+Chance\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00133}{133}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a6ee04e7804d4141890030586e944078b}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!CurrentDMG@{CurrentDMG}}
+\index{CurrentDMG@{CurrentDMG}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{CurrentDMG}{CurrentDMG}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a6ee04e7804d4141890030586e944078b} 
+float Assets.\+Scripts.\+Character.\+Current\+DMG\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00115}{115}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_abb9d5cbfcb12c76d3f3a1436cd29595a}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!CurrentHealth@{CurrentHealth}}
+\index{CurrentHealth@{CurrentHealth}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{CurrentHealth}{CurrentHealth}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_abb9d5cbfcb12c76d3f3a1436cd29595a} 
+float Assets.\+Scripts.\+Character.\+Current\+Health\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00097}{97}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_af2fdb249815c0f578e6dfa0425439e2f}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!CurrentMovementSpeed@{CurrentMovementSpeed}}
+\index{CurrentMovementSpeed@{CurrentMovementSpeed}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{CurrentMovementSpeed}{CurrentMovementSpeed}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_af2fdb249815c0f578e6dfa0425439e2f} 
+float Assets.\+Scripts.\+Character.\+Current\+Movement\+Speed\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00109}{109}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a6c99a7bb6104969af257b53a3adf9cd1}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!CurrentPercentageBasedDMG@{CurrentPercentageBasedDMG}}
+\index{CurrentPercentageBasedDMG@{CurrentPercentageBasedDMG}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{CurrentPercentageBasedDMG}{CurrentPercentageBasedDMG}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a6c99a7bb6104969af257b53a3adf9cd1} 
+float Assets.\+Scripts.\+Character.\+Current\+Percentage\+Based\+DMG\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00139}{139}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a6f0da7beb5b8b8e61e47095acacd127e}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!ID@{ID}}
+\index{ID@{ID}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{ID}{ID}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a6f0da7beb5b8b8e61e47095acacd127e} 
+string Assets.\+Scripts.\+Character.\+ID\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Getterek és Setterek. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00092}{92}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a06dc7a5f6e6bdfda1681fee47c5a7bea}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!MaxHealth@{MaxHealth}}
+\index{MaxHealth@{MaxHealth}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{MaxHealth}{MaxHealth}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a06dc7a5f6e6bdfda1681fee47c5a7bea} 
+float Assets.\+Scripts.\+Character.\+Max\+Health\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00103}{103}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a8d6eb177b01dad74435d9db27e2d3f2f}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!rigidbody2d@{rigidbody2d}}
+\index{rigidbody2d@{rigidbody2d}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{rigidbody2d}{rigidbody2d}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a8d6eb177b01dad74435d9db27e2d3f2f} 
+Rigidbody2D Assets.\+Scripts.\+Character.\+rigidbody2d\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [protected set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00145}{145}}. sorában.
+
+
+
+\doxysubsection{Események dokumentációja}
+\Hypertarget{class_assets_1_1_scripts_1_1_character_ae88610a9af670a07f603c067ef357a18}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!OnDeath@{OnDeath}}
+\index{OnDeath@{OnDeath}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{OnDeath}{OnDeath}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_ae88610a9af670a07f603c067ef357a18} 
+Action Assets.\+Scripts.\+Character.\+On\+Death\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Események. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00155}{155}}. sorában.
+
+\Hypertarget{class_assets_1_1_scripts_1_1_character_a1fbf34ca582925e793a16eb0e288dedb}\index{Assets.Scripts.Character@{Assets.Scripts.Character}!OnHealthChanged@{OnHealthChanged}}
+\index{OnHealthChanged@{OnHealthChanged}!Assets.Scripts.Character@{Assets.Scripts.Character}}
+\doxysubsubsection{\texorpdfstring{OnHealthChanged}{OnHealthChanged}}
+{\footnotesize\ttfamily \label{class_assets_1_1_scripts_1_1_character_a1fbf34ca582925e793a16eb0e288dedb} 
+Action$<$float$>$ Assets.\+Scripts.\+Character.\+On\+Health\+Changed}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_character_8cs_source}{Character.\+cs}} fájl \mbox{\hyperlink{_character_8cs_source_l00156}{156}}. sorában.
+
+
+
+Ez a dokumentáció az osztályról a következő fájl alapján készült\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/ati/\+Desktop/\+MOSZE3/\+Mo\+Sz\+E-\/\+Alomprojekt/\+Alomprojekt/\+Assets/\+Scripts/\mbox{\hyperlink{_character_8cs}{Character.\+cs}}\end{DoxyCompactItemize}

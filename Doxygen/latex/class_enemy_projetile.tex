@@ -1,0 +1,105 @@
+\doxysection{Enemy\+Projetile osztályreferencia}
+\hypertarget{class_enemy_projetile}{}\label{class_enemy_projetile}\index{EnemyProjetile@{EnemyProjetile}}
+Az Enemy\+Projetile osztály származási diagramja\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_enemy_projetile}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Publikus tagfüggvények}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_enemy_projetile_addd83f4223c6ce5a0e3c592db14f5eec}{Launch}} (Vector2 direction, float launch\+Force)
+\begin{DoxyCompactList}\small\item\em Elindítja a Game\+Object-\/et egy adott irányba és erõvel a Rigidbody2D komponens segítségével. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Tulajdonságok}
+\begin{DoxyCompactItemize}
+\item 
+float \mbox{\hyperlink{class_enemy_projetile_a6f32245ecdcb1ec68ecddeea3d8acc54}{Projectile\+DMG}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Getterek és Setterek. \end{DoxyCompactList}\item 
+Camera \mbox{\hyperlink{class_enemy_projetile_ae2a6ccf96ba31319e28f95b9935e482e}{Main\+Camera}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Események}
+\begin{DoxyCompactItemize}
+\item 
+Action$<$ float $>$ \mbox{\hyperlink{class_enemy_projetile_ab3cef78c206b6fd6061b013e9da3e2ea}{On\+Player\+Hit}}
+\begin{DoxyCompactList}\small\item\em Események. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Részletes leírás}
+
+
+Definíció a(z) \mbox{\hyperlink{_enemy_projetile_8cs_source}{Enemy\+Projetile.\+cs}} fájl \mbox{\hyperlink{_enemy_projetile_8cs_source_l00007}{7}}. sorában.
+
+
+
+\doxysubsection{Tagfüggvények dokumentációja}
+\Hypertarget{class_enemy_projetile_addd83f4223c6ce5a0e3c592db14f5eec}\index{EnemyProjetile@{EnemyProjetile}!Launch@{Launch}}
+\index{Launch@{Launch}!EnemyProjetile@{EnemyProjetile}}
+\doxysubsubsection{\texorpdfstring{Launch()}{Launch()}}
+{\footnotesize\ttfamily \label{class_enemy_projetile_addd83f4223c6ce5a0e3c592db14f5eec} 
+void Enemy\+Projetile.\+Launch (\begin{DoxyParamCaption}\item[{Vector2}]{direction}{, }\item[{float}]{launch\+Force}{}\end{DoxyParamCaption})}
+
+
+
+Elindítja a Game\+Object-\/et egy adott irányba és erõvel a Rigidbody2D komponens segítségével. 
+
+
+\begin{DoxyParams}{Paraméterek}
+{\em direction} & Az irány, amelybe a Game\+Object-\/et el kell indítani\\
+\hline
+{\em force} & Az erõ, amellyel a Game\+Object-\/nek mozognia kell\\
+\hline
+\end{DoxyParams}
+
+
+Definíció a(z) \mbox{\hyperlink{_enemy_projetile_8cs_source}{Enemy\+Projetile.\+cs}} fájl \mbox{\hyperlink{_enemy_projetile_8cs_source_l00138}{138}}. sorában.
+
+
+
+\doxysubsection{Tulajdonságok dokumentációjka}
+\Hypertarget{class_enemy_projetile_ae2a6ccf96ba31319e28f95b9935e482e}\index{EnemyProjetile@{EnemyProjetile}!MainCamera@{MainCamera}}
+\index{MainCamera@{MainCamera}!EnemyProjetile@{EnemyProjetile}}
+\doxysubsubsection{\texorpdfstring{MainCamera}{MainCamera}}
+{\footnotesize\ttfamily \label{class_enemy_projetile_ae2a6ccf96ba31319e28f95b9935e482e} 
+Camera Enemy\+Projetile.\+Main\+Camera\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_enemy_projetile_8cs_source}{Enemy\+Projetile.\+cs}} fájl \mbox{\hyperlink{_enemy_projetile_8cs_source_l00045}{45}}. sorában.
+
+\Hypertarget{class_enemy_projetile_a6f32245ecdcb1ec68ecddeea3d8acc54}\index{EnemyProjetile@{EnemyProjetile}!ProjectileDMG@{ProjectileDMG}}
+\index{ProjectileDMG@{ProjectileDMG}!EnemyProjetile@{EnemyProjetile}}
+\doxysubsubsection{\texorpdfstring{ProjectileDMG}{ProjectileDMG}}
+{\footnotesize\ttfamily \label{class_enemy_projetile_a6f32245ecdcb1ec68ecddeea3d8acc54} 
+float Enemy\+Projetile.\+Projectile\+DMG\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Getterek és Setterek. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_enemy_projetile_8cs_source}{Enemy\+Projetile.\+cs}} fájl \mbox{\hyperlink{_enemy_projetile_8cs_source_l00039}{39}}. sorában.
+
+
+
+\doxysubsection{Események dokumentációja}
+\Hypertarget{class_enemy_projetile_ab3cef78c206b6fd6061b013e9da3e2ea}\index{EnemyProjetile@{EnemyProjetile}!OnPlayerHit@{OnPlayerHit}}
+\index{OnPlayerHit@{OnPlayerHit}!EnemyProjetile@{EnemyProjetile}}
+\doxysubsubsection{\texorpdfstring{OnPlayerHit}{OnPlayerHit}}
+{\footnotesize\ttfamily \label{class_enemy_projetile_ab3cef78c206b6fd6061b013e9da3e2ea} 
+Action$<$float$>$ Enemy\+Projetile.\+On\+Player\+Hit}
+
+
+
+Események. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_enemy_projetile_8cs_source}{Enemy\+Projetile.\+cs}} fájl \mbox{\hyperlink{_enemy_projetile_8cs_source_l00056}{56}}. sorában.
+
+
+
+Ez a dokumentáció az osztályról a következő fájl alapján készült\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/ati/\+Desktop/\+MOSZE3/\+Mo\+Sz\+E-\/\+Alomprojekt/\+Alomprojekt/\+Assets/\+Scripts/\mbox{\hyperlink{_enemy_projetile_8cs}{Enemy\+Projetile.\+cs}}\end{DoxyCompactItemize}

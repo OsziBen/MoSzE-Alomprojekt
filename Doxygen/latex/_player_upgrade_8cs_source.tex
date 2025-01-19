@@ -1,0 +1,204 @@
+\doxysection{Player\+Upgrade.\+cs}
+\hypertarget{_player_upgrade_8cs_source}{}\label{_player_upgrade_8cs_source}\index{C:/Users/ati/Desktop/MOSZE3/MoSzE-\/Alomprojekt/Alomprojekt/Assets/Scripts/PlayerUpgrade.cs@{C:/Users/ati/Desktop/MOSZE3/MoSzE-\/Alomprojekt/Alomprojekt/Assets/Scripts/PlayerUpgrade.cs}}
+\mbox{\hyperlink{_player_upgrade_8cs}{Ugrás a fájl dokumentációjához.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }System.Collections;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }System.Collections.Generic;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00003}00003\ \textcolor{keyword}{using\ }UnityEngine;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00004}00004\ \textcolor{keyword}{using\ }UnityEngine.UI;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00005}00005\ \textcolor{keyword}{using\ }static\ PlayerUpgradeData;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00006}\mbox{\hyperlink{_player_upgrade_8cs_a78b91359f648e2cc08112c05d3390201}{00006}}\ \textcolor{keyword}{using\ }\mbox{\hyperlink{_player_controller_8cs_a78b91359f648e2cc08112c05d3390201}{StatValuePair}}\ =\ System.Collections.Generic.KeyValuePair<PlayerUpgradeData.StatType,\ \textcolor{keywordtype}{float}>;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00008}00008\ [System.Serializable]}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00009}\mbox{\hyperlink{class_player_upgrade}{00009}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_player_upgrade_a122dc964e69f4a34c1e194839b2d8eb2}{PlayerUpgrade}}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00010}00010\ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00014}00014\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{string}\ \_uniqueID;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00015}\mbox{\hyperlink{class_player_upgrade_a8aa2f5ee3b4400b666158a1603311400}{00015}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{class_player_upgrade_a8aa2f5ee3b4400b666158a1603311400}{upgradeName}};\ \ \textcolor{comment}{//\ A\ fejlesztés\ neve}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00016}\mbox{\hyperlink{class_player_upgrade_a6300574b0ce48efcbdfabf80bee35d3a}{00016}}\ \ \ \ \ \textcolor{keyword}{public}\ Sprite\ \mbox{\hyperlink{class_player_upgrade_a6300574b0ce48efcbdfabf80bee35d3a}{icon}};\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ fejlesztés\ ikonjának\ helye}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00017}\mbox{\hyperlink{class_player_upgrade_aa9adde4d4d3ba31871fd1af5953e5cdd}{00017}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_player_upgrade_aa9adde4d4d3ba31871fd1af5953e5cdd}{isHealing}};\ \ \textcolor{comment}{//\ Ha\ igaz,\ a\ fejlesztés\ gyógyító\ jellegû}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00018}\mbox{\hyperlink{class_player_upgrade_a79b03dd39e652fdb460c8ad74747d38a}{00018}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{class_player_upgrade_a79b03dd39e652fdb460c8ad74747d38a}{description}};\ \ \textcolor{comment}{//\ A\ fejlesztés\ leírása}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00019}\mbox{\hyperlink{class_player_upgrade_a43a7bc214b073d3ad7b7adcbbbda02de}{00019}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{class_player_upgrade_a43a7bc214b073d3ad7b7adcbbbda02de}{customDescription}};\ \ \textcolor{comment}{//\ Leírás,\ amely\ tartalmazhat\ helyettesítõ\ szövegeket}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00020}\mbox{\hyperlink{class_player_upgrade_a5fbce850264331bf25a56fc219ac3331}{00020}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_player_upgrade_a5fbce850264331bf25a56fc219ac3331}{minUpgradeLevel}};\ \ \textcolor{comment}{//\ A\ minimális\ szint,\ amelyen\ elérhetõ\ a\ fejlesztés}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00021}\mbox{\hyperlink{class_player_upgrade_a43e7a5e76f7e382ca42de661a8d84854}{00021}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_player_upgrade_a43e7a5e76f7e382ca42de661a8d84854}{maxUpgradeLevel}};\ \ \textcolor{comment}{//\ A\ maximális\ szint,\ ameddig\ a\ fejlesztés\ növelhetõ}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00022}\mbox{\hyperlink{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164}{00022}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164}{currentUpgradeLevel}};\ \ \textcolor{comment}{//\ Az\ aktuális\ fejlesztési\ szint}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00023}\mbox{\hyperlink{class_player_upgrade_a876210644df6b6a2811e93b8922c1a69}{00023}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_player_upgrade_a876210644df6b6a2811e93b8922c1a69}{basePrice}};\ \ \textcolor{comment}{//\ A\ fejlesztés\ alapára}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00024}\mbox{\hyperlink{class_player_upgrade_a418147736a1cfaa9781d673aed04f284}{00024}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_player_upgrade_a418147736a1cfaa9781d673aed04f284}{priceScaleFactor}};\ \ \textcolor{comment}{//\ Az\ ár\ növelésének\ tényezõje\ a\ szint\ növekedésével}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00025}00025\ \ \ \ \ \textcolor{keyword}{private}\ readonly\ \textcolor{keywordtype}{int}\ maxPrice\ =\ 150;\ \ \textcolor{comment}{//\ A\ fejlesztés\ maximális\ ára}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00026}\mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{00026}}\ \ \ \ \ \textcolor{keyword}{public}\ List<StatModifierData>\ \mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}};\ \ \textcolor{comment}{//\ A\ fejlesztéshez\ tartozó\ statisztikai\ módosítók}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00027}\mbox{\hyperlink{class_player_upgrade_a08cc110254ed164a00337d571afe22d2}{00027}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_player_upgrade_a08cc110254ed164a00337d571afe22d2}{isTempCopy}}\ =\ \textcolor{keyword}{false};\ \textcolor{comment}{//\ Ideiglenes\ másolat-\/e?}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00030}00030\ \ \ \ \ [System.Serializable]}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00031}\mbox{\hyperlink{class_player_upgrade_1_1_stat_modifier_data}{00031}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_player_upgrade_1_1_stat_modifier_data}{StatModifierData}}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00032}00032\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00033}\mbox{\hyperlink{class_player_upgrade_1_1_stat_modifier_data_af01f1a0bb306112695caeda1641d7827}{00033}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ PlayerUpgradeData.StatType\ \mbox{\hyperlink{class_player_upgrade_1_1_stat_modifier_data_af01f1a0bb306112695caeda1641d7827}{type}};\ \ \textcolor{comment}{//\ A\ módosító\ típusa\ (pl.\ életerõ,\ sebzés)}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00034}\mbox{\hyperlink{class_player_upgrade_1_1_stat_modifier_data_afabf2b27868e528db6bd834e2927e6a1}{00034}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_player_upgrade_1_1_stat_modifier_data_afabf2b27868e528db6bd834e2927e6a1}{baseValue}};\ \ \textcolor{comment}{//\ A\ módosító\ alapértéke}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00035}\mbox{\hyperlink{class_player_upgrade_1_1_stat_modifier_data_a2ba082035ce30f3d4a32e3202319274a}{00035}}\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_player_upgrade_1_1_stat_modifier_data_a2ba082035ce30f3d4a32e3202319274a}{scaleFactor}};\ \ \textcolor{comment}{//\ A\ módosító\ szorzója,\ amely\ a\ szinttel\ növekszik}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00036}00036\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00038}00038\ \ \ \ \ \textcolor{comment}{//\ Konstruktor,\ amely\ a\ PlayerUpgradeData\ objektum\ adatait\ használja\ a\ PlayerUpgrade\ objektum\ létrehozásához}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00039}\mbox{\hyperlink{class_player_upgrade_a122dc964e69f4a34c1e194839b2d8eb2}{00039}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_player_upgrade_a122dc964e69f4a34c1e194839b2d8eb2}{PlayerUpgrade}}(PlayerUpgradeData\ upgrade)}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00040}00040\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00041}00041\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrzi,\ hogy\ az\ upgrade\ paraméter\ null-\/e}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00042}00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (upgrade\ ==\ \textcolor{keyword}{null})}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00043}00043\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Hibaüzenet\ jelenik\ meg,\ ha\ a\ paraméter\ null}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00045}00045\ \ \ \ \ \ \ \ \ \ \ \ \ Debug.LogError(\textcolor{stringliteral}{"{}PlayerUpgrade\ object\ is\ null\ in\ UpgradeData\ constructor."{}});}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};\ \textcolor{comment}{//\ Kilép\ a\ konstruktorból}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00047}00047\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00048}00048\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Inicializálja\ a\ PlayerUpgrade\ mezőit\ a\ PlayerUpgradeData\ mezőiből}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00050}00050\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_a37fb76af3a9e72d07f4e26ad8c5fe180}{ID}}\ =\ upgrade.ID;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00051}00051\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_a8aa2f5ee3b4400b666158a1603311400}{upgradeName}}\ =\ upgrade.upgradeName;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00052}00052\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_a6300574b0ce48efcbdfabf80bee35d3a}{icon}}\ =\ upgrade.icon;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00053}00053\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_aa9adde4d4d3ba31871fd1af5953e5cdd}{isHealing}}\ =\ upgrade.isHealing;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00054}00054\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_a79b03dd39e652fdb460c8ad74747d38a}{description}}\ =\ upgrade.description;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00055}00055\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_a43a7bc214b073d3ad7b7adcbbbda02de}{customDescription}}\ =\ upgrade.customDescription;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00056}00056\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_a5fbce850264331bf25a56fc219ac3331}{minUpgradeLevel}}\ =\ upgrade.minUpgradeLevel;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00057}00057\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_a43e7a5e76f7e382ca42de661a8d84854}{maxUpgradeLevel}}\ =\ upgrade.maxUpgradeLevel;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00058}00058\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164}{currentUpgradeLevel}}\ =\ upgrade.currentUpgradeLevel;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00059}00059\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_a876210644df6b6a2811e93b8922c1a69}{basePrice}}\ =\ upgrade.basePrice;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00060}00060\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_a418147736a1cfaa9781d673aed04f284}{priceScaleFactor}}\ =\ upgrade.priceScaleFactor;}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00062}00062\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ PlayerUpgrade\ példány\ nem\ ideiglenes\ másolatként\ kerül\ létrehozásra}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00063}00063\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_a08cc110254ed164a00337d571afe22d2}{isTempCopy}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00064}00064\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00065}00065\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Inicializálja\ a\ módosítók\ listáját}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00066}00066\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}}\ =\ \textcolor{keyword}{new}\ List<StatModifierData>();}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Végigmegy\ az\ UpgradeData\ módosítóin}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00069}00069\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{foreach}\ (var\ modifier\ \textcolor{keywordflow}{in}\ upgrade.modifiers)}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00070}00070\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Lemásolja\ az\ egyes\ módosítókat\ egy\ új\ StatModifierData\ objektumba,\ és\ hozzáadja\ a\ listához}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}}.Add(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_player_upgrade_1_1_stat_modifier_data}{StatModifierData}}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ type\ =\ modifier.type,\ \textcolor{comment}{//\ Beállítja\ a\ típusát}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ baseValue\ =\ modifier.baseValue,\ \textcolor{comment}{//\ Beállítja\ az\ alapértékét}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ scaleFactor\ =\ modifier.scaleFactor\ \textcolor{comment}{//\ Beállítja\ a\ skálázási\ tényezőt}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00078}00078\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00079}00079\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00081}00081\ \ \ \ \ \textcolor{comment}{//\ Konstruktor,\ amely\ egy\ meglévõ\ PlayerUpgrade\ másolatát\ hozza\ létre}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00082}\mbox{\hyperlink{class_player_upgrade_a7f7e74713caeb6cbe774e83ab0ae2d58}{00082}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_player_upgrade_a7f7e74713caeb6cbe774e83ab0ae2d58}{PlayerUpgrade}}(\mbox{\hyperlink{class_player_upgrade_a122dc964e69f4a34c1e194839b2d8eb2}{PlayerUpgrade}}\ original)}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00083}00083\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00084}00084\ \ \ \ \ \ \ \ \ this.ID\ =\ original.\mbox{\hyperlink{class_player_upgrade_a37fb76af3a9e72d07f4e26ad8c5fe180}{ID}};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00085}00085\ \ \ \ \ \ \ \ \ this.upgradeName\ =\ original.\mbox{\hyperlink{class_player_upgrade_a8aa2f5ee3b4400b666158a1603311400}{upgradeName}};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00086}00086\ \ \ \ \ \ \ \ \ this.icon\ =\ original.\mbox{\hyperlink{class_player_upgrade_a6300574b0ce48efcbdfabf80bee35d3a}{icon}};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00087}00087\ \ \ \ \ \ \ \ \ this.isHealing\ =\ original.\mbox{\hyperlink{class_player_upgrade_aa9adde4d4d3ba31871fd1af5953e5cdd}{isHealing}};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00088}00088\ \ \ \ \ \ \ \ \ this.description\ =\ original.\mbox{\hyperlink{class_player_upgrade_a79b03dd39e652fdb460c8ad74747d38a}{description}};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00089}00089\ \ \ \ \ \ \ \ \ this.customDescription\ =\ original.\mbox{\hyperlink{class_player_upgrade_a43a7bc214b073d3ad7b7adcbbbda02de}{customDescription}};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00090}00090\ \ \ \ \ \ \ \ \ this.minUpgradeLevel\ =\ original.\mbox{\hyperlink{class_player_upgrade_a5fbce850264331bf25a56fc219ac3331}{minUpgradeLevel}};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00091}00091\ \ \ \ \ \ \ \ \ this.maxUpgradeLevel\ =\ original.\mbox{\hyperlink{class_player_upgrade_a43e7a5e76f7e382ca42de661a8d84854}{maxUpgradeLevel}};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00092}00092\ \ \ \ \ \ \ \ \ this.currentUpgradeLevel\ =\ original.\mbox{\hyperlink{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164}{currentUpgradeLevel}};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00093}00093\ \ \ \ \ \ \ \ \ this.basePrice\ =\ original.\mbox{\hyperlink{class_player_upgrade_a876210644df6b6a2811e93b8922c1a69}{basePrice}};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00094}00094\ \ \ \ \ \ \ \ \ this.priceScaleFactor\ =\ original.\mbox{\hyperlink{class_player_upgrade_a418147736a1cfaa9781d673aed04f284}{priceScaleFactor}};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00095}00095\ \ \ \ \ \ \ \ \ this.modifiers\ =\ \textcolor{keyword}{new}\ List<StatModifierData>(original.\mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}});}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00096}00096\ \ \ \ \ \ \ \ \ this.isTempCopy\ =\ original.\mbox{\hyperlink{class_player_upgrade_a08cc110254ed164a00337d571afe22d2}{isTempCopy}};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00097}00097\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00102}\mbox{\hyperlink{class_player_upgrade_a37fb76af3a9e72d07f4e26ad8c5fe180}{00102}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{class_player_upgrade_a37fb76af3a9e72d07f4e26ad8c5fe180}{ID}}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00103}00103\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{keyword}{get}\ \{\ \textcolor{keywordflow}{return}\ \_uniqueID;\ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00105}00105\ \ \ \ \ \ \ \ \ \textcolor{keyword}{set}\ \{\ \_uniqueID\ =\ value;\ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00106}00106\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00108}\mbox{\hyperlink{class_player_upgrade_ab33fd300353a849bfd2a25e7d4a69142}{00108}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_player_upgrade_ab33fd300353a849bfd2a25e7d4a69142}{IsTempCopy}}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00109}00109\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keyword}{get}\ \{\ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{class_player_upgrade_a08cc110254ed164a00337d571afe22d2}{isTempCopy}};\ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00111}00111\ \ \ \ \ \ \ \ \ \textcolor{keyword}{set}\ \{\ \mbox{\hyperlink{class_player_upgrade_a08cc110254ed164a00337d571afe22d2}{isTempCopy}}\ =\ value;\ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00112}00112\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00113}00113\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00119}\mbox{\hyperlink{class_player_upgrade_a5b42f1f5bee3a0b06b9f82c5250fe569}{00119}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_player_upgrade_a5b42f1f5bee3a0b06b9f82c5250fe569}{RefreshDescription}}()}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00120}00120\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00121}00121\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keywordtype}{string}.IsNullOrEmpty(\mbox{\hyperlink{class_player_upgrade_a43a7bc214b073d3ad7b7adcbbbda02de}{customDescription}}))}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00122}00122\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00123}00123\ \ \ \ \ \ \ \ \ \ \ \ \ Debug.LogWarning(\textcolor{stringliteral}{"{}Custom\ description\ is\ null\ or\ empty."{}});}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00124}00124\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00125}00125\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00126}00126\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00127}00127\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ egyéni\ leírás\ helyettesítésekkel\ való\ frissítése}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00128}00128\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_a79b03dd39e652fdb460c8ad74747d38a}{description}}\ =\ ReplacePlaceholders(\mbox{\hyperlink{class_player_upgrade_a43a7bc214b073d3ad7b7adcbbbda02de}{customDescription}});}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00129}00129\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00131}00131\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00138}00138\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{string}\ ReplacePlaceholders(\textcolor{keywordtype}{string}\ inputDescription)}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00139}00139\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00140}00140\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Általános\ helyõrzõk\ cseréje\ a\ megfelelõ\ értékekre.}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00141}00141\ \ \ \ \ \ \ \ \ inputDescription\ =\ inputDescription.Replace(\textcolor{stringliteral}{@"{}\(\backslash\)name"{}},\ \mbox{\hyperlink{class_player_upgrade_a8aa2f5ee3b4400b666158a1603311400}{upgradeName}});\ \ \textcolor{comment}{//\ A\ fejlesztés\ neve}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00142}00142\ \ \ \ \ \ \ \ \ inputDescription\ =\ inputDescription.Replace(\textcolor{stringliteral}{@"{}\(\backslash\)minUpgradeLevel"{}},\ \mbox{\hyperlink{class_player_upgrade_a5fbce850264331bf25a56fc219ac3331}{minUpgradeLevel}}.ToString());\ \ \textcolor{comment}{//\ Minimális\ fejlesztési\ szint}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00143}00143\ \ \ \ \ \ \ \ \ inputDescription\ =\ inputDescription.Replace(\textcolor{stringliteral}{@"{}\(\backslash\)maxUpgradeLevel"{}},\ \mbox{\hyperlink{class_player_upgrade_a43e7a5e76f7e382ca42de661a8d84854}{maxUpgradeLevel}}.ToString());\ \ \textcolor{comment}{//\ Maximális\ fejlesztési\ szint}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00144}00144\ \ \ \ \ \ \ \ \ inputDescription\ =\ inputDescription.Replace(\textcolor{stringliteral}{@"{}\(\backslash\)currentUpgradeLevel"{}},\ \mbox{\hyperlink{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164}{currentUpgradeLevel}}.ToString());\ \ \textcolor{comment}{//\ Jelenlegi\ fejlesztési\ szint}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00145}00145\ \ \ \ \ \ \ \ \ inputDescription\ =\ inputDescription.Replace(\textcolor{stringliteral}{@"{}\(\backslash\)basePrice"{}},\ \mbox{\hyperlink{class_player_upgrade_a876210644df6b6a2811e93b8922c1a69}{basePrice}}.ToString());\ \ \textcolor{comment}{//\ Alapár}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00146}00146\ \ \ \ \ \ \ \ \ inputDescription\ =\ inputDescription.Replace(\textcolor{stringliteral}{@"{}\(\backslash\)priceScaleFactor"{}},\ \mbox{\hyperlink{class_player_upgrade_a418147736a1cfaa9781d673aed04f284}{priceScaleFactor}}.ToString());\ \ \textcolor{comment}{//\ Ár\ skálázási\ faktor}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00147}00147\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00148}00148\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ fejlesztés\ árának\ kiszámítása,\ figyelembe\ véve\ a\ szintet\ és\ az\ árskálázási\ tényezõt}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00149}00149\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ calculatedPriceValue\ =\ \mbox{\hyperlink{class_player_upgrade_a53b1720f5521f3842a711165d1a62c74}{GetPrice}}();}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00150}00150\ \ \ \ \ \ \ \ \ inputDescription\ =\ inputDescription.Replace(\textcolor{stringliteral}{\$@"{}\(\backslash\)price"{}},\ calculatedPriceValue.ToString());\ \ \textcolor{comment}{//\ Ár\ helyõrzõ\ cseréje}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00151}00151\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00152}00152\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Dinamikusan\ a\ módosítók\ helyõrzõinek\ cseréje,\ ha\ van\ módosító}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00153}00153\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}}\ !=\ \textcolor{keyword}{null}\ \&\&\ \mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}}.Count\ >\ 0)}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00154}00154\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00155}00155\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ \mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}}.Count;\ i++)}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00156}00156\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00157}00157\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Módosító\ típusának,\ alapértékének\ és\ skálázási\ tényezõjének\ cseréje}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00158}00158\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ inputDescription\ =\ inputDescription.Replace(\textcolor{stringliteral}{\$@"{}\(\backslash\)m[\{i\}].type"{}},\ \mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}}[i].type.ToString());}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00159}00159\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ inputDescription\ =\ inputDescription.Replace(\textcolor{stringliteral}{\$@"{}\(\backslash\)m[\{i\}].baseValue"{}},\ \mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}}[i].baseValue.ToString());}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00160}00160\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ inputDescription\ =\ inputDescription.Replace(\textcolor{stringliteral}{\$@"{}\(\backslash\)m[\{i\}].scaleFactor"{}},\ \mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}}[i].scaleFactor.ToString());}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00161}00161\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00162}00162\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Módosító\ értékének\ kiszámítása\ a\ szinttõl\ függõen}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00163}00163\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ calculatedModifierValue\ =\ \mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}}[i].baseValue\ *\ Mathf.Pow(\mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}}[i].scaleFactor,\ \mbox{\hyperlink{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164}{currentUpgradeLevel}}\ -\/\ \mbox{\hyperlink{class_player_upgrade_a5fbce850264331bf25a56fc219ac3331}{minUpgradeLevel}});}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00164}00164\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ inputDescription\ =\ inputDescription.Replace(\textcolor{stringliteral}{\$@"{}\(\backslash\)m[\{i\}].value"{}},\ calculatedModifierValue.ToString(\textcolor{stringliteral}{"{}F2"{}}));\ \ \textcolor{comment}{//\ Módosító\ érték\ helyõrzõ\ cseréje}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00165}00165\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00166}00166\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00167}00167\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00168}00168\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ inputDescription;\ \ \textcolor{comment}{//\ A\ végleges,\ helyettesített\ szöveg\ visszaadása}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00169}00169\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00170}00170\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00174}\mbox{\hyperlink{class_player_upgrade_a64fcc08161d61eed457730b979a9d9dc}{00174}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_player_upgrade_a64fcc08161d61eed457730b979a9d9dc}{IncreaseCurrentPlayerUpgradeLevel}}()}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00175}00175\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00176}00176\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164}{currentUpgradeLevel}}\ <\ \mbox{\hyperlink{class_player_upgrade_a43e7a5e76f7e382ca42de661a8d84854}{maxUpgradeLevel}})}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00177}00177\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00178}00178\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164}{currentUpgradeLevel}}++;\ \ \textcolor{comment}{//\ Ha\ nem\ a\ maximális\ szinten\ vagyunk,\ növeljük\ a\ szintet}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00179}00179\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00180}00180\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00181}00181\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00182}00182\ \ \ \ \ \ \ \ \ \ \ \ \ Debug.LogWarning(\textcolor{stringliteral}{"{}[PlayerUpgrade]\ Already\ at\ max\ level."{}});\ \ \textcolor{comment}{//\ Ha\ már\ a\ max\ szinten\ vagyunk}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00183}00183\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00184}00184\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00185}00185\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00186}00186\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00191}\mbox{\hyperlink{class_player_upgrade_ac5eb75840b757fd2b44e62fae5621674}{00191}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_player_upgrade_ac5eb75840b757fd2b44e62fae5621674}{SetCurrentPlayerUpgradeLevel}}(\textcolor{keywordtype}{int}\ newLevel)}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00192}00192\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00193}00193\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164}{currentUpgradeLevel}}\ =\ Mathf.Clamp(newLevel,\ \mbox{\hyperlink{class_player_upgrade_a5fbce850264331bf25a56fc219ac3331}{minUpgradeLevel}},\ \mbox{\hyperlink{class_player_upgrade_a43e7a5e76f7e382ca42de661a8d84854}{maxUpgradeLevel}});\ \ \textcolor{comment}{//\ Beállítja\ a\ szintet\ a\ tartományon\ belül}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00194}00194\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00195}00195\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00201}\mbox{\hyperlink{class_player_upgrade_a66a1a2325a9e52e868877cd3930fe3b5}{00201}}\ \ \ \ \ \textcolor{keyword}{public}\ List<StatValuePair>\ \mbox{\hyperlink{class_player_upgrade_a66a1a2325a9e52e868877cd3930fe3b5}{GetCurrentValues}}()}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00202}00202\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00203}00203\ \ \ \ \ \ \ \ \ List<StatValuePair>\ values\ =\ \textcolor{keyword}{new}\ List<StatValuePair>();\ \ \textcolor{comment}{//\ Az\ eredmények\ tárolására\ egy\ lista}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00204}00204\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00205}00205\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Végigiterálunk\ a\ módosítókon}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00206}00206\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{foreach}\ (var\ modifier\ \textcolor{keywordflow}{in}\ \mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}})}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00207}00207\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ aktuális\ érték\ kiszámítása\ a\ baseValue\ és\ a\ scaleFactor\ segítségével}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ scaledValue\ =\ modifier.baseValue\ *\ Mathf.Pow(modifier.scaleFactor,\ \mbox{\hyperlink{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164}{currentUpgradeLevel}}\ -\/\ \mbox{\hyperlink{class_player_upgrade_a5fbce850264331bf25a56fc219ac3331}{minUpgradeLevel}});}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ típus\ és\ a\ kiszámított\ érték\ párosát\ hozzáadjuk\ az\ eredményeket\ tartalmazó\ listához}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ values.Add(\textcolor{keyword}{new}\ \mbox{\hyperlink{_player_upgrade_8cs_a78b91359f648e2cc08112c05d3390201}{StatValuePair}}(modifier.type,\ scaledValue));}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00212}00212\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00213}00213\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00214}00214\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ values;\ \ \textcolor{comment}{//\ Visszaadjuk\ az\ összegyûjtött\ értékeket}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00215}00215\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00216}00216\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00217}00217\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00223}\mbox{\hyperlink{class_player_upgrade_a53b1720f5521f3842a711165d1a62c74}{00223}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_player_upgrade_a53b1720f5521f3842a711165d1a62c74}{GetPrice}}()}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00224}00224\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00225}00225\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ ár\ kiszámítása:\ alapár\ *\ (árskálázási\ faktor)\string^(jelenlegi\ szint\ -\/\ minimális\ szint)}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00226}00226\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ eredmény\ korlátozása\ a\ \`{}basePrice`\ és\ \`{}maxPrice`\ (150)\ közötti\ tartományra.}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00227}00227\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (\textcolor{keywordtype}{int})Mathf.Clamp(\mbox{\hyperlink{class_player_upgrade_a876210644df6b6a2811e93b8922c1a69}{basePrice}}\ *\ Mathf.Pow(\mbox{\hyperlink{class_player_upgrade_a418147736a1cfaa9781d673aed04f284}{priceScaleFactor}},\ \mbox{\hyperlink{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164}{currentUpgradeLevel}}\ -\/\ \mbox{\hyperlink{class_player_upgrade_a5fbce850264331bf25a56fc219ac3331}{minUpgradeLevel}}),\ \mbox{\hyperlink{class_player_upgrade_a876210644df6b6a2811e93b8922c1a69}{basePrice}},\ maxPrice);}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00228}00228\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00229}00229\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00230}00230\ }
+\DoxyCodeLine{\Hypertarget{_player_upgrade_8cs_source_l00231}00231\ \}}
+
+\end{DoxyCode}

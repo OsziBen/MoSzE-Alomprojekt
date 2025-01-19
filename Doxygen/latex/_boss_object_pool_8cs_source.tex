@@ -1,0 +1,94 @@
+\doxysection{Boss\+Object\+Pool.\+cs}
+\hypertarget{_boss_object_pool_8cs_source}{}\label{_boss_object_pool_8cs_source}\index{C:/Users/ati/Desktop/MOSZE3/MoSzE-\/Alomprojekt/Alomprojekt/Assets/Scripts/BossObjectPool.cs@{C:/Users/ati/Desktop/MOSZE3/MoSzE-\/Alomprojekt/Alomprojekt/Assets/Scripts/BossObjectPool.cs}}
+\mbox{\hyperlink{_boss_object_pool_8cs}{UgrÃ¡s a fÃ¡jl dokumentÃ¡ciÃ³jÃ¡hoz.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }System;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }System.Collections;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00003}00003\ \textcolor{keyword}{using\ }System.Collections.Generic;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00004}00004\ \textcolor{keyword}{using\ }System.Threading.Tasks;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00005}00005\ \textcolor{keyword}{using\ }UnityEngine;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00007}\mbox{\hyperlink{class_boss_object_pool}{00007}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_boss_object_pool}{BossObjectPool}}\ :\ BaseTransientManager<BossObjectPool>}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00008}00008\ \{}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00012}00012\ \ \ \ \ [Header(\textcolor{stringliteral}{"{}Object\ Pool\ Settings"{}})]}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00013}00013\ \ \ \ \ [SerializeField]}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00014}00014\ \ \ \ \ \textcolor{keyword}{private}\ GameObject\ projectilePrefab;\ \textcolor{comment}{//\ A\ lövedék prefab,\ amelyet\ a\ poolba\ helyezett\ objektumok\ alapjául\ használunk.}}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00015}00015\ \ \ \ \ [SerializeField]}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00016}00016\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{int}\ poolSize;\ \ \ \textcolor{comment}{//\ A\ pool\ maximális\ mérete,\ amely\ meghatározza,\ hány\ lövedék lehet\ egyszerre\ az\ objektumpoolban.}}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00018}00018\ \ \ \ \ \textcolor{keyword}{private}\ Queue<GameObject>\ pool;\ \textcolor{comment}{//\ A\ lövedékek\ tárolására\ használt\ queue\ (sor),\ amely\ a\ rendelkezésre\ álló és\ visszaadott\ lövedékeket\ tartalmazza.}}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00024}00024\ \ \ \ \ \textcolor{keyword}{private}\ Camera\ mainCamera;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00029}00029\ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00034}\mbox{\hyperlink{class_boss_object_pool_a2de346de08ad0e66db6a18641ed1e0e6}{00034}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{event}\ Action<GameObject>\ \mbox{\hyperlink{class_boss_object_pool_a2de346de08ad0e66db6a18641ed1e0e6}{OnProjectileActivated}};\ \ \textcolor{comment}{//\ Esemény,\ amely\ akkor\ aktiválódik,\ amikor\ egy\ lövedék elérhetõvé válik\ a\ poolban\ és használatba\ kerül.}}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00035}\mbox{\hyperlink{class_boss_object_pool_ab13d5ce291da397211ba30f35c34f302}{00035}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{event}\ Action<GameObject>\ \mbox{\hyperlink{class_boss_object_pool_ab13d5ce291da397211ba30f35c34f302}{OnProjectileDeactivated}};\ \ \ \ \textcolor{comment}{//\ Esemény,\ amely\ akkor\ aktiválódik,\ amikor\ egy\ lövedék deaktiválódik,\ miután visszakerült a poolba.}}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00044}\mbox{\hyperlink{class_boss_object_pool_ae7199533801df9856010c367078d917a}{00044}}\ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ async\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_boss_object_pool_ae7199533801df9856010c367078d917a}{Initialize}}()}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00045}00045\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00046}00046\ \ \ \ \ \ \ \ \ await\ Task.Yield();}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00047}00047\ \ \ \ \ \ \ \ \ base.Initialize();}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00048}00048\ \ \ \ \ \ \ \ \ mainCamera\ =\ Camera.main;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00049}00049\ \ \ \ \ \ \ \ \ pool\ =\ \textcolor{keyword}{new}\ Queue<GameObject>(poolSize);}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00050}00050\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00051}00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i\ =\ 0;\ i\ <\ poolSize;\ i++)}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00052}00052\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ GameObject\ projectile\ =\ Instantiate(projectilePrefab);}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ projectile.SetActive(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ projectile.GetComponent<\mbox{\hyperlink{class_enemy_projetile}{EnemyProjetile}}>().MainCamera\ =\ mainCamera;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ pool.Enqueue(projectile);}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00057}00057\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00058}00058\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00069}\mbox{\hyperlink{class_boss_object_pool_a061e7348adf8af0562aae8ea36e66121}{00069}}\ \ \ \ \ \textcolor{keyword}{public}\ GameObject\ \mbox{\hyperlink{class_boss_object_pool_a061e7348adf8af0562aae8ea36e66121}{GetBossProjectile}}(Vector2\ position,\ Quaternion\ rotation,\ \textcolor{keywordtype}{float}\ damageValue)}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00070}00070\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{foreach}\ (var\ projectile\ \textcolor{keywordflow}{in}\ pool)}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00073}00073\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!projectile.activeInHierarchy)}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ projectile.transform.position\ =\ position;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ projectile.transform.rotation\ =\ rotation;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ UpdateBossProjectileProperties(projectile,\ damageValue);}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00080}00080\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ projectile.SetActive(\textcolor{keyword}{true});}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00082}00082\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_boss_object_pool_a2de346de08ad0e66db6a18641ed1e0e6}{OnProjectileActivated}}?.Invoke(projectile);}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ projectile;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00084}00084\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00085}00085\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00087}00087\ \ \ \ \ \ \ \ \ GameObject\ newProjectile\ =\ Instantiate(projectilePrefab,\ position,\ rotation);}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00088}00088\ \ \ \ \ \ \ \ \ pool.Enqueue(newProjectile);}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00089}00089\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00090}00090\ \ \ \ \ \ \ \ \ UpdateBossProjectileProperties(newProjectile,\ damageValue);}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00091}00091\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00092}00092\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_boss_object_pool_a2de346de08ad0e66db6a18641ed1e0e6}{OnProjectileActivated}}?.Invoke(newProjectile);}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00094}00094\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ newProjectile;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00096}00096\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00098}00098\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00105}00105\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ UpdateBossProjectileProperties(GameObject\ projectile,\ \textcolor{keywordtype}{float}\ damageValue)}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00106}00106\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00107}00107\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_projetile}{EnemyProjetile}}\ proj\ =\ projectile.GetComponent<\mbox{\hyperlink{class_enemy_projetile}{EnemyProjetile}}>();}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00108}00108\ \ \ \ \ \ \ \ \ proj.ProjectileDMG\ =\ damageValue;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00109}00109\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00110}00110\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00111}00111\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00117}\mbox{\hyperlink{class_boss_object_pool_a704d632a97b8216b22e6c937dc542ea6}{00117}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_boss_object_pool_a704d632a97b8216b22e6c937dc542ea6}{ReturnBossProjectile}}(GameObject\ projectile)}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00118}00118\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00119}00119\ \ \ \ \ \ \ \ \ projectile.SetActive(\textcolor{keyword}{false});}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00120}00120\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_enemy_projetile}{EnemyProjetile}}\ proj\ =\ projectile.GetComponent<\mbox{\hyperlink{class_enemy_projetile}{EnemyProjetile}}>();}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00121}00121\ \ \ \ \ \ \ \ \ proj.ProjectileDMG\ =\ 0f;}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00122}00122\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_boss_object_pool_ab13d5ce291da397211ba30f35c34f302}{OnProjectileDeactivated}}?.Invoke(projectile);}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00123}00123\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{_boss_object_pool_8cs_source_l00125}00125\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,327 @@
+\doxysection{Player\+Upgrade osztályreferencia}
+\hypertarget{class_player_upgrade}{}\label{class_player_upgrade}\index{PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection*{Osztályok}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_player_upgrade_1_1_stat_modifier_data}{Stat\+Modifier\+Data}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Publikus tagfüggvények}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_player_upgrade_a122dc964e69f4a34c1e194839b2d8eb2}{Player\+Upgrade}} (Player\+Upgrade\+Data upgrade)
+\item 
+\mbox{\hyperlink{class_player_upgrade_a7f7e74713caeb6cbe774e83ab0ae2d58}{Player\+Upgrade}} (\mbox{\hyperlink{class_player_upgrade}{Player\+Upgrade}} original)
+\item 
+void \mbox{\hyperlink{class_player_upgrade_a5b42f1f5bee3a0b06b9f82c5250fe569}{Refresh\+Description}} ()
+\begin{DoxyCompactList}\small\item\em Frissíti a fejlesztés leírását az egyéni leírás alapján, helyettesítve a paramétereket (pl. ár, szint). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_player_upgrade_a64fcc08161d61eed457730b979a9d9dc}{Increase\+Current\+Player\+Upgrade\+Level}} ()
+\begin{DoxyCompactList}\small\item\em Növeli a fejlesztés szintjét, ha még nem értük el a maximális szintet. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_player_upgrade_ac5eb75840b757fd2b44e62fae5621674}{Set\+Current\+Player\+Upgrade\+Level}} (int new\+Level)
+\begin{DoxyCompactList}\small\item\em Beállítja a fejlesztés szintjét egy adott szintre, amely a min\+Level és max\+Level közötti tartományban van. \end{DoxyCompactList}\item 
+List$<$ \mbox{\hyperlink{_player_upgrade_8cs_a78b91359f648e2cc08112c05d3390201}{Stat\+Value\+Pair}} $>$ \mbox{\hyperlink{class_player_upgrade_a66a1a2325a9e52e868877cd3930fe3b5}{Get\+Current\+Values}} ()
+\begin{DoxyCompactList}\small\item\em Kiszámítja és visszaadja a fejlesztés módosítóinak aktuális értékeit. Az értékek a szint függvényében skálázódnak. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{class_player_upgrade_a53b1720f5521f3842a711165d1a62c74}{Get\+Price}} ()
+\begin{DoxyCompactList}\small\item\em A fejlesztés árának kiszámítása az alapár, árskálázási faktor és az aktuális fejlesztési szint alapján. Az ár egy korlátozott tartományban van, amely a {\ttfamily base\+Price} és a {\ttfamily max\+Price} (150) között helyezkedik el. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Publikus attribútumok}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{class_player_upgrade_a8aa2f5ee3b4400b666158a1603311400}{upgrade\+Name}}
+\item 
+Sprite \mbox{\hyperlink{class_player_upgrade_a6300574b0ce48efcbdfabf80bee35d3a}{icon}}
+\item 
+bool \mbox{\hyperlink{class_player_upgrade_aa9adde4d4d3ba31871fd1af5953e5cdd}{is\+Healing}}
+\item 
+string \mbox{\hyperlink{class_player_upgrade_a79b03dd39e652fdb460c8ad74747d38a}{description}}
+\item 
+string \mbox{\hyperlink{class_player_upgrade_a43a7bc214b073d3ad7b7adcbbbda02de}{custom\+Description}}
+\item 
+int \mbox{\hyperlink{class_player_upgrade_a5fbce850264331bf25a56fc219ac3331}{min\+Upgrade\+Level}}
+\item 
+int \mbox{\hyperlink{class_player_upgrade_a43e7a5e76f7e382ca42de661a8d84854}{max\+Upgrade\+Level}}
+\item 
+int \mbox{\hyperlink{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164}{current\+Upgrade\+Level}}
+\item 
+int \mbox{\hyperlink{class_player_upgrade_a876210644df6b6a2811e93b8922c1a69}{base\+Price}}
+\item 
+float \mbox{\hyperlink{class_player_upgrade_a418147736a1cfaa9781d673aed04f284}{price\+Scale\+Factor}}
+\item 
+List$<$ \mbox{\hyperlink{class_player_upgrade_1_1_stat_modifier_data}{Stat\+Modifier\+Data}} $>$ \mbox{\hyperlink{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}{modifiers}}
+\item 
+bool \mbox{\hyperlink{class_player_upgrade_a08cc110254ed164a00337d571afe22d2}{is\+Temp\+Copy}} = false
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Tulajdonságok}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{class_player_upgrade_a37fb76af3a9e72d07f4e26ad8c5fe180}{ID}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Getterek és setterek. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_player_upgrade_ab33fd300353a849bfd2a25e7d4a69142}{Is\+Temp\+Copy}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Részletes leírás}
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00009}{9}}. sorában.
+
+
+
+\doxysubsection{Konstruktorok és destruktorok dokumentációja}
+\Hypertarget{class_player_upgrade_a122dc964e69f4a34c1e194839b2d8eb2}\index{PlayerUpgrade@{PlayerUpgrade}!PlayerUpgrade@{PlayerUpgrade}}
+\index{PlayerUpgrade@{PlayerUpgrade}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{PlayerUpgrade()}{PlayerUpgrade()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a122dc964e69f4a34c1e194839b2d8eb2} 
+Player\+Upgrade.\+Player\+Upgrade (\begin{DoxyParamCaption}\item[{Player\+Upgrade\+Data}]{upgrade}{}\end{DoxyParamCaption})}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00039}{39}}. sorában.
+
+\Hypertarget{class_player_upgrade_a7f7e74713caeb6cbe774e83ab0ae2d58}\index{PlayerUpgrade@{PlayerUpgrade}!PlayerUpgrade@{PlayerUpgrade}}
+\index{PlayerUpgrade@{PlayerUpgrade}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{PlayerUpgrade()}{PlayerUpgrade()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a7f7e74713caeb6cbe774e83ab0ae2d58} 
+Player\+Upgrade.\+Player\+Upgrade (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_player_upgrade}{Player\+Upgrade}}}]{original}{}\end{DoxyParamCaption})}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00082}{82}}. sorában.
+
+
+
+\doxysubsection{Tagfüggvények dokumentációja}
+\Hypertarget{class_player_upgrade_a66a1a2325a9e52e868877cd3930fe3b5}\index{PlayerUpgrade@{PlayerUpgrade}!GetCurrentValues@{GetCurrentValues}}
+\index{GetCurrentValues@{GetCurrentValues}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{GetCurrentValues()}{GetCurrentValues()}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a66a1a2325a9e52e868877cd3930fe3b5} 
+List$<$ \mbox{\hyperlink{_player_upgrade_8cs_a78b91359f648e2cc08112c05d3390201}{Stat\+Value\+Pair}} $>$ Player\+Upgrade.\+Get\+Current\+Values (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Kiszámítja és visszaadja a fejlesztés módosítóinak aktuális értékeit. Az értékek a szint függvényében skálázódnak. 
+
+\begin{DoxyReturn}{Visszatérési érték}
+A statisztikai módosítók aktuális értékei
+\end{DoxyReturn}
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00201}{201}}. sorában.
+
+\Hypertarget{class_player_upgrade_a53b1720f5521f3842a711165d1a62c74}\index{PlayerUpgrade@{PlayerUpgrade}!GetPrice@{GetPrice}}
+\index{GetPrice@{GetPrice}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{GetPrice()}{GetPrice()}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a53b1720f5521f3842a711165d1a62c74} 
+int Player\+Upgrade.\+Get\+Price (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+A fejlesztés árának kiszámítása az alapár, árskálázási faktor és az aktuális fejlesztési szint alapján. Az ár egy korlátozott tartományban van, amely a {\ttfamily base\+Price} és a {\ttfamily max\+Price} (150) között helyezkedik el. 
+
+\begin{DoxyReturn}{Visszatérési érték}
+A kiszámított ár, mint egész szám.
+\end{DoxyReturn}
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00223}{223}}. sorában.
+
+\Hypertarget{class_player_upgrade_a64fcc08161d61eed457730b979a9d9dc}\index{PlayerUpgrade@{PlayerUpgrade}!IncreaseCurrentPlayerUpgradeLevel@{IncreaseCurrentPlayerUpgradeLevel}}
+\index{IncreaseCurrentPlayerUpgradeLevel@{IncreaseCurrentPlayerUpgradeLevel}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{IncreaseCurrentPlayerUpgradeLevel()}{IncreaseCurrentPlayerUpgradeLevel()}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a64fcc08161d61eed457730b979a9d9dc} 
+void Player\+Upgrade.\+Increase\+Current\+Player\+Upgrade\+Level (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Növeli a fejlesztés szintjét, ha még nem értük el a maximális szintet. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00174}{174}}. sorában.
+
+\Hypertarget{class_player_upgrade_a5b42f1f5bee3a0b06b9f82c5250fe569}\index{PlayerUpgrade@{PlayerUpgrade}!RefreshDescription@{RefreshDescription}}
+\index{RefreshDescription@{RefreshDescription}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{RefreshDescription()}{RefreshDescription()}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a5b42f1f5bee3a0b06b9f82c5250fe569} 
+void Player\+Upgrade.\+Refresh\+Description (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Frissíti a fejlesztés leírását az egyéni leírás alapján, helyettesítve a paramétereket (pl. ár, szint). 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00119}{119}}. sorában.
+
+\Hypertarget{class_player_upgrade_ac5eb75840b757fd2b44e62fae5621674}\index{PlayerUpgrade@{PlayerUpgrade}!SetCurrentPlayerUpgradeLevel@{SetCurrentPlayerUpgradeLevel}}
+\index{SetCurrentPlayerUpgradeLevel@{SetCurrentPlayerUpgradeLevel}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{SetCurrentPlayerUpgradeLevel()}{SetCurrentPlayerUpgradeLevel()}}
+{\footnotesize\ttfamily \label{class_player_upgrade_ac5eb75840b757fd2b44e62fae5621674} 
+void Player\+Upgrade.\+Set\+Current\+Player\+Upgrade\+Level (\begin{DoxyParamCaption}\item[{int}]{new\+Level}{}\end{DoxyParamCaption})}
+
+
+
+Beállítja a fejlesztés szintjét egy adott szintre, amely a min\+Level és max\+Level közötti tartományban van. 
+
+
+\begin{DoxyParams}{Paraméterek}
+{\em level} & A kívánt szint\\
+\hline
+\end{DoxyParams}
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00191}{191}}. sorában.
+
+
+
+\doxysubsection{Adattagok dokumentációja}
+\Hypertarget{class_player_upgrade_a876210644df6b6a2811e93b8922c1a69}\index{PlayerUpgrade@{PlayerUpgrade}!basePrice@{basePrice}}
+\index{basePrice@{basePrice}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{basePrice}{basePrice}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a876210644df6b6a2811e93b8922c1a69} 
+int Player\+Upgrade.\+base\+Price}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00023}{23}}. sorában.
+
+\Hypertarget{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164}\index{PlayerUpgrade@{PlayerUpgrade}!currentUpgradeLevel@{currentUpgradeLevel}}
+\index{currentUpgradeLevel@{currentUpgradeLevel}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{currentUpgradeLevel}{currentUpgradeLevel}}
+{\footnotesize\ttfamily \label{class_player_upgrade_ac4fda63acf6f5c1feadef1e993d32164} 
+int Player\+Upgrade.\+current\+Upgrade\+Level}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00022}{22}}. sorában.
+
+\Hypertarget{class_player_upgrade_a43a7bc214b073d3ad7b7adcbbbda02de}\index{PlayerUpgrade@{PlayerUpgrade}!customDescription@{customDescription}}
+\index{customDescription@{customDescription}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{customDescription}{customDescription}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a43a7bc214b073d3ad7b7adcbbbda02de} 
+string Player\+Upgrade.\+custom\+Description}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00019}{19}}. sorában.
+
+\Hypertarget{class_player_upgrade_a79b03dd39e652fdb460c8ad74747d38a}\index{PlayerUpgrade@{PlayerUpgrade}!description@{description}}
+\index{description@{description}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{description}{description}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a79b03dd39e652fdb460c8ad74747d38a} 
+string Player\+Upgrade.\+description}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00018}{18}}. sorában.
+
+\Hypertarget{class_player_upgrade_a6300574b0ce48efcbdfabf80bee35d3a}\index{PlayerUpgrade@{PlayerUpgrade}!icon@{icon}}
+\index{icon@{icon}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{icon}{icon}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a6300574b0ce48efcbdfabf80bee35d3a} 
+Sprite Player\+Upgrade.\+icon}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00016}{16}}. sorában.
+
+\Hypertarget{class_player_upgrade_aa9adde4d4d3ba31871fd1af5953e5cdd}\index{PlayerUpgrade@{PlayerUpgrade}!isHealing@{isHealing}}
+\index{isHealing@{isHealing}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{isHealing}{isHealing}}
+{\footnotesize\ttfamily \label{class_player_upgrade_aa9adde4d4d3ba31871fd1af5953e5cdd} 
+bool Player\+Upgrade.\+is\+Healing}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00017}{17}}. sorában.
+
+\Hypertarget{class_player_upgrade_a08cc110254ed164a00337d571afe22d2}\index{PlayerUpgrade@{PlayerUpgrade}!isTempCopy@{isTempCopy}}
+\index{isTempCopy@{isTempCopy}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{isTempCopy}{isTempCopy}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a08cc110254ed164a00337d571afe22d2} 
+bool Player\+Upgrade.\+is\+Temp\+Copy = false}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00027}{27}}. sorában.
+
+\Hypertarget{class_player_upgrade_a43e7a5e76f7e382ca42de661a8d84854}\index{PlayerUpgrade@{PlayerUpgrade}!maxUpgradeLevel@{maxUpgradeLevel}}
+\index{maxUpgradeLevel@{maxUpgradeLevel}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{maxUpgradeLevel}{maxUpgradeLevel}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a43e7a5e76f7e382ca42de661a8d84854} 
+int Player\+Upgrade.\+max\+Upgrade\+Level}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00021}{21}}. sorában.
+
+\Hypertarget{class_player_upgrade_a5fbce850264331bf25a56fc219ac3331}\index{PlayerUpgrade@{PlayerUpgrade}!minUpgradeLevel@{minUpgradeLevel}}
+\index{minUpgradeLevel@{minUpgradeLevel}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{minUpgradeLevel}{minUpgradeLevel}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a5fbce850264331bf25a56fc219ac3331} 
+int Player\+Upgrade.\+min\+Upgrade\+Level}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00020}{20}}. sorában.
+
+\Hypertarget{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b}\index{PlayerUpgrade@{PlayerUpgrade}!modifiers@{modifiers}}
+\index{modifiers@{modifiers}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{modifiers}{modifiers}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a7ab4013e472446f9d1cfdbde3806af8b} 
+List$<$\mbox{\hyperlink{class_player_upgrade_1_1_stat_modifier_data}{Stat\+Modifier\+Data}}$>$ Player\+Upgrade.\+modifiers}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00026}{26}}. sorában.
+
+\Hypertarget{class_player_upgrade_a418147736a1cfaa9781d673aed04f284}\index{PlayerUpgrade@{PlayerUpgrade}!priceScaleFactor@{priceScaleFactor}}
+\index{priceScaleFactor@{priceScaleFactor}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{priceScaleFactor}{priceScaleFactor}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a418147736a1cfaa9781d673aed04f284} 
+float Player\+Upgrade.\+price\+Scale\+Factor}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00024}{24}}. sorában.
+
+\Hypertarget{class_player_upgrade_a8aa2f5ee3b4400b666158a1603311400}\index{PlayerUpgrade@{PlayerUpgrade}!upgradeName@{upgradeName}}
+\index{upgradeName@{upgradeName}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{upgradeName}{upgradeName}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a8aa2f5ee3b4400b666158a1603311400} 
+string Player\+Upgrade.\+upgrade\+Name}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00015}{15}}. sorában.
+
+
+
+\doxysubsection{Tulajdonságok dokumentációjka}
+\Hypertarget{class_player_upgrade_a37fb76af3a9e72d07f4e26ad8c5fe180}\index{PlayerUpgrade@{PlayerUpgrade}!ID@{ID}}
+\index{ID@{ID}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{ID}{ID}}
+{\footnotesize\ttfamily \label{class_player_upgrade_a37fb76af3a9e72d07f4e26ad8c5fe180} 
+string Player\+Upgrade.\+ID\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Getterek és setterek. 
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00102}{102}}. sorában.
+
+\Hypertarget{class_player_upgrade_ab33fd300353a849bfd2a25e7d4a69142}\index{PlayerUpgrade@{PlayerUpgrade}!IsTempCopy@{IsTempCopy}}
+\index{IsTempCopy@{IsTempCopy}!PlayerUpgrade@{PlayerUpgrade}}
+\doxysubsubsection{\texorpdfstring{IsTempCopy}{IsTempCopy}}
+{\footnotesize\ttfamily \label{class_player_upgrade_ab33fd300353a849bfd2a25e7d4a69142} 
+bool Player\+Upgrade.\+Is\+Temp\+Copy\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Definíció a(z) \mbox{\hyperlink{_player_upgrade_8cs_source}{Player\+Upgrade.\+cs}} fájl \mbox{\hyperlink{_player_upgrade_8cs_source_l00108}{108}}. sorában.
+
+
+
+Ez a dokumentáció az osztályról a következő fájl alapján készült\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/ati/\+Desktop/\+MOSZE3/\+Mo\+Sz\+E-\/\+Alomprojekt/\+Alomprojekt/\+Assets/\+Scripts/\mbox{\hyperlink{_player_upgrade_8cs}{Player\+Upgrade.\+cs}}\end{DoxyCompactItemize}

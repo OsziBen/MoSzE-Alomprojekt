@@ -1,0 +1,498 @@
+\doxysection{Player\+Controller.\+cs}
+\hypertarget{_player_controller_8cs_source}{}\label{_player_controller_8cs_source}\index{C:/Users/ati/Desktop/MOSZE3/MoSzE-\/Alomprojekt/Alomprojekt/Assets/Scripts/PlayerController.cs@{C:/Users/ati/Desktop/MOSZE3/MoSzE-\/Alomprojekt/Alomprojekt/Assets/Scripts/PlayerController.cs}}
+\mbox{\hyperlink{_player_controller_8cs}{Ugrás a fájl dokumentációjához.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_assets_1_1_scripts}{Assets.Scripts}};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }log4net.Core;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00003}00003\ \textcolor{keyword}{using\ }System;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00004}00004\ \textcolor{keyword}{using\ }System.Collections.Generic;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00005}00005\ \textcolor{keyword}{using\ }UnityEngine;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00006}00006\ \textcolor{keyword}{using\ }UnityEngine.InputSystem;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00007}00007\ \textcolor{keyword}{using\ }UnityEngine.TextCore.Text;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00008}00008\ \textcolor{keyword}{using\ }UnityEngine.UIElements;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00009}00009\ \textcolor{keyword}{using\ }static\ Cinemachine.DocumentationSortingAttribute;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00010}00010\ \textcolor{keyword}{using\ }static\ PlayerUpgradeData;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00011}\mbox{\hyperlink{_player_controller_8cs_a78b91359f648e2cc08112c05d3390201}{00011}}\ \textcolor{keyword}{using\ }\mbox{\hyperlink{_player_controller_8cs_a78b91359f648e2cc08112c05d3390201}{StatValuePair}}\ =\ System.Collections.Generic.KeyValuePair<PlayerUpgradeData.StatType,\ \textcolor{keywordtype}{float}>;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00013}\mbox{\hyperlink{class_player_controller}{00013}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_player_controller}{PlayerController}}\ :\ \mbox{\hyperlink{namespace_assets}{Assets}}.\mbox{\hyperlink{namespace_assets_1_1_scripts}{Scripts}}.\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character}{Character}}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00014}00014\ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00018}00018\ \ \ \ \ Vector2\ move;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ karakter\ mozgásirányát\ tároló\ változó\ (2D\ vektor)}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00020}\mbox{\hyperlink{class_player_controller_a0e26db74a55d3b39a526c753ba7220ea}{00020}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_player_controller_a0e26db74a55d3b39a526c753ba7220ea}{timeInvincible}}\ =\ 2.0f;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ idõ,\ ameddig\ a\ karakter\ sebezhetetlen\ (másodpercekben)}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00021}00021\ \ \ \ \ \textcolor{keywordtype}{bool}\ isInvincible;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ karakter\ sebezhetetlenségének\ állapotát\ tároló\ változó\ (true,\ ha\ sebezhetetlen)}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00022}00022\ \ \ \ \ \textcolor{keywordtype}{float}\ damageCooldown;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ sebzés\ utáni\ visszatöltõdési\ idõ,\ amely\ megakadályozza\ a\ túl\ gyors\ újratámadást}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00024}\mbox{\hyperlink{class_player_controller_a3292652dd29a2497da092f905de83e9e}{00024}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{class_player_controller_a3292652dd29a2497da092f905de83e9e}{shotTravelSpeed}}\ =\ 300.0f;\ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedékek\ utazási\ sebessége}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00026}00026\ \ \ \ \ \textcolor{keywordtype}{bool}\ isAbleToAttack\ =\ \textcolor{keyword}{true};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ karakter\ támadási\ képességét\ tároló\ változó\ (true,\ ha\ támadhat)}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00027}00027\ \ \ \ \ \textcolor{keywordtype}{float}\ remainingAttackCooldown;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ aktív\ támadási\ visszatöltõdési\ idõ\ hátralévõ\ ideje\ (másodpercekben)}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00028}00028\ \ \ \ \ Vector2\ attackDirection;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ támadás\ irányát\ tároló\ változó\ (2D\ vektor)}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00030}00030\ \ \ \ \ List<EnemyController>\ enemyList;\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ pályán\ található\ ellenségek\ listája.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00032}00032\ \ \ \ \ Vector2\ movementBoundsMin;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ pálya\ széleinek}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00033}00033\ \ \ \ \ Vector2\ movementBoundsMax;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ megadása.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00035}00035\ \ \ \ \ System.Random\ random\ =\ \textcolor{keyword}{new}\ System.Random();\ \textcolor{comment}{//\ System\ random\ használata.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00036}00036\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00037}00037\ \ \ \ \ BossController\ boss;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Boss\ objektum.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00039}00039\ \ \ \ \ \mbox{\hyperlink{class_boss_object_pool}{BossObjectPool}}\ bossObjectPool;\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Boss\ külön\ objectpoolja.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00040}00040\ \ \ \ \ \textcolor{keyword}{private}\ List<EnemyProjetile>\ activeProjectiles\ =\ \textcolor{keyword}{new}\ List<EnemyProjetile>();\ \ \ \ \textcolor{comment}{//\ Az\ aktívan\ megfigyelt\ lövedékek\ (Projectile)\ listája}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00046}\mbox{\hyperlink{class_player_controller_aaf314960ed925bb2871100acf596131e}{00046}}\ \ \ \ \ \textcolor{keyword}{public}\ InputAction\ \mbox{\hyperlink{class_player_controller_aaf314960ed925bb2871100acf596131e}{MoveAction}};\ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ karakter\ mozgását\ vezérlõ\ bemeneti\ akció\ (például\ billentyûzet\ vagy\ kontroller\ mozgás)}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00047}\mbox{\hyperlink{class_player_controller_aa1c5e3df056e2180e0d81b471f91ec0e}{00047}}\ \ \ \ \ \textcolor{keyword}{public}\ InputAction\ \mbox{\hyperlink{class_player_controller_aa1c5e3df056e2180e0d81b471f91ec0e}{launchAction}};\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ lövedék\ indítását\ vezérlõ\ bemeneti\ akció\ (például\ billentyû\ vagy\ gomb\ lenyomás)}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00048}00048\ \ \ \ \ \textcolor{keyword}{private}\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_object_pool_for_projectiles}{ObjectPoolForProjectiles}}\ objectPool;\ \textcolor{comment}{//\ A\ lövedékeket\ kezelõ\ ObjectPoolForProjectiles\ komponens}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00050}\mbox{\hyperlink{class_player_controller_ae5f1a83d18a3ed4ba48171dc0b046fe3}{00050}}\ \ \ \ \ \textcolor{keyword}{public}\ CharacterSetupManager\ \mbox{\hyperlink{class_player_controller_ae5f1a83d18a3ed4ba48171dc0b046fe3}{characterSetupManager}};\ \textcolor{comment}{//\ A\ karakterobjektumok\ paramétereinek\ beállítását\ végző\ manager.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00051}00051\ \ \ \ \ \textcolor{keyword}{private}\ SpriteRenderer\ spriteRenderer;\ \ \ \ \ \ \textcolor{comment}{//\ Az\ player\ objektum\ spriterendererje.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00061}\mbox{\hyperlink{class_player_controller_a79f52d59e1e3c49c7dafa56c708a231a}{00061}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{event}\ Action\ \mbox{\hyperlink{class_player_controller_a79f52d59e1e3c49c7dafa56c708a231a}{OnPlayerDeath}};\ \ \ \ \textcolor{comment}{//\ Esemény,\ amely\ akkor\ hívódik\ meg,\ amikor\ a\ játékos\ meghal}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00063}00063\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00064}\mbox{\hyperlink{class_player_controller_ab89a69dbd089b54f9701b62c9fa2c221}{00064}}\ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_player_controller_ab89a69dbd089b54f9701b62c9fa2c221}{Awake}}()}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00065}00065\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00066}00066\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Meghívja\ a\ bázisosztály\ Awake()\ metódusát}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00067}00067\ \ \ \ \ \ \ \ \ base.Awake();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00068}00068\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Komponensek\ inicializálása}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00069}00069\ \ \ \ \ \ \ \ \ \textcolor{comment}{//rigidbody2d\ =\ GetComponent<Rigidbody2D>();}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00070}00070\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ karakter\ beállításokat\ kezelő\ manager\ objektum\ keresése\ a\ jelenlegi\ jelenetben.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00071}00071\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_controller_ae5f1a83d18a3ed4ba48171dc0b046fe3}{characterSetupManager}}\ =\ FindObjectOfType<CharacterSetupManager>();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00072}00072\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ player\ objektum\ SpriteRendererének\ lekérése}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00073}00073\ \ \ \ \ \ \ \ \ spriteRenderer\ =\ GameObject.Find(\textcolor{stringliteral}{"{}Background"{}}).GetComponent<SpriteRenderer>();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00074}00074\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ objektumpool\ (projektilok\ újrahasznosításáért\ felelős\ pool-\/rendszer)\ referenciájának\ lekérése.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00075}00075\ \ \ \ \ \ \ \ \ objectPool\ =\ FindObjectOfType<ObjectPoolForProjectiles>();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00076}00076\ \ \ \ \ \ \ \ \ bossObjectPool\ =\ FindObjectOfType<BossObjectPool>();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00077}00077\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00078}00078\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Mozgási\ határok\ beállítása}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00079}00079\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ háttér\ sprite\ méreteinek\ meghatározása}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00080}00080\ \ \ \ \ \ \ \ \ Vector2\ spriteSize\ =\ spriteRenderer.bounds.size;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00081}00081\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ háttér\ sprite\ pozíciójának\ meghatározása.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00082}00082\ \ \ \ \ \ \ \ \ Vector2\ position\ =\ spriteRenderer.transform.position;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00083}00083\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ sprite\ bal\ felső\ sarka\ (world\ space\ koordináta).}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00084}00084\ \ \ \ \ \ \ \ \ Vector2\ topLeft\ =\ \textcolor{keyword}{new}\ Vector2(position.x\ -\/\ spriteSize.x\ /\ 2,\ position.y\ +\ spriteSize.y\ /\ 2);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ sprite\ jobb\ alsó\ sarka\ (world\ space\ koordináta).}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00086}00086\ \ \ \ \ \ \ \ \ Vector2\ bottomRight\ =\ \textcolor{keyword}{new}\ Vector2(position.x\ +\ spriteSize.x\ /\ 2,\ position.y\ -\/\ spriteSize.y\ /\ 2);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00087}00087\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ mozgási\ határok\ minimális\ és\ maximális\ értékeinek\ meghatározása.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00088}00088\ \ \ \ \ \ \ \ \ movementBoundsMin\ =\ \textcolor{keyword}{new}\ Vector2(topLeft.x\ +\ 0.5f,\ bottomRight.y\ +\ 0.5f);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00089}00089\ \ \ \ \ \ \ \ \ movementBoundsMax\ =\ \textcolor{keyword}{new}\ Vector2(bottomRight.x\ -\/\ 0.5f,\ topLeft.y\ -\/\ 0.5f);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00090}00090\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Feliratkozás\ az\ OnSetPlayerAttributes\ eseményre.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00092}00092\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ez\ az\ esemény\ akkor\ aktiválódik,\ amikor\ a\ játékos\ attribútumait\ be\ kell\ állítani.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00093}00093\ \ \ \ \ \ \ \ \ characterSetupManager.OnSetPlayerAttributes\ +=\ \mbox{\hyperlink{class_player_controller_ad8817009a9cc3236b22870369477d8d9}{SetPlayerAttributes}};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00094}00094\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00095}00095\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00096}00096\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00097}00097\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00102}00102\ \ \ \ \ \textcolor{keywordtype}{void}\ Start()}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00103}00103\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00104}00104\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Bemeneti\ akciók\ engedélyezése}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00105}00105\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_controller_aaf314960ed925bb2871100acf596131e}{MoveAction}}.Enable();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00106}00106\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_controller_aa1c5e3df056e2180e0d81b471f91ec0e}{launchAction}}.Enable();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00107}00107\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00108}00108\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenségek\ összegyűjtése\ és\ eseményekhez\ való\ csatlakozás}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00109}00109\ \ \ \ \ \ \ \ \ enemyList\ =\ \textcolor{keyword}{new}\ List<EnemyController>(FindObjectsOfType<EnemyController>());}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00110}00110\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{foreach}\ (var\ enemy\ \textcolor{keywordflow}{in}\ enemyList)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00111}00111\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ enemy.OnPlayerCollision\ +=\ \mbox{\hyperlink{class_player_controller_a470d8299a4d676ce41c4b253cb7770b7}{ChangeHealth}};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ enemy.OnEnemyDeath\ +=\ StopListeningToEnemy;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00114}00114\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00115}00115\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00116}00116\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Boss\ begyűjtése\ és\ eseményekhez\ való\ csatlakozás}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00117}00117\ \ \ \ \ \ \ \ \ boss\ =\ FindObjectOfType<BossController>();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00118}00118\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (boss\ !=\ \textcolor{keyword}{null})}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00119}00119\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00120}00120\ \ \ \ \ \ \ \ \ \ \ \ \ boss.OnPlayerCollision\ +=\ \mbox{\hyperlink{class_player_controller_a470d8299a4d676ce41c4b253cb7770b7}{ChangeHealth}};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00121}00121\ \ \ \ \ \ \ \ \ \ \ \ \ bossObjectPool.OnProjectileActivated\ +=\ StartProjectileDetection;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00122}00122\ \ \ \ \ \ \ \ \ \ \ \ \ bossObjectPool.OnProjectileDeactivated\ +=\ StopProjectileDetection;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00123}00123\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00124}00124\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00125}00125\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00126}00126\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Események\ hozzáadása}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00127}00127\ \ \ \ \ \ \ \ \ launchAction.performed\ +=\ Attack;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00128}00128\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00129}00129\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00130}00130\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00138}\mbox{\hyperlink{class_player_controller_ad8817009a9cc3236b22870369477d8d9}{00138}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_player_controller_ad8817009a9cc3236b22870369477d8d9}{SetPlayerAttributes}}(List<StatValuePair>\ statValues,\ \textcolor{keywordtype}{float}\ currentHealthPercentage)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00139}00139\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00140}00140\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrzés:\ Ha\ a\ statValues\ lista\ üres,\ akkor\ az\ alapértelmezett\ játékos\ attribútumokat\ állítja\ be.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00141}00141\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (statValues.Count\ ==\ 0)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00142}00142\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00143}00143\ \ \ \ \ \ \ \ \ \ \ \ \ SetDefaultPlayerAttributes(currentHealthPercentage);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00144}00144\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00145}00145\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00146}00146\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00147}00147\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ alapértelmezett\ attribútumok\ beállítása,\ függetlenül\ attól,\ hogy\ vannak-\/e\ upgradek.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00148}00148\ \ \ \ \ \ \ \ \ \ \ \ \ SetDefaultPlayerAttributes(currentHealthPercentage);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00149}00149\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Upgrade-\/ek\ beállítása\ a\ playerre.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00150}00150\ \ \ \ \ \ \ \ \ \ \ \ \ ApplyPlayerUpgradeStats(statValues,\ currentHealthPercentage);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00151}00151\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00152}00152\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Eltávolítja\ ezt\ a\ metódust\ az\ OnSetPlayerAttributes\ eseményből.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00153}00153\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ez\ biztosítja,\ hogy\ a\ metódus\ csak\ egyszer\ fusson\ le\ az\ esemény\ aktiválásakor.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00154}00154\ \ \ \ \ \ \ \ \ characterSetupManager.OnSetPlayerAttributes\ -\/=\ \mbox{\hyperlink{class_player_controller_ad8817009a9cc3236b22870369477d8d9}{SetPlayerAttributes}};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00155}00155\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00156}00156\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00157}00157\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00164}00164\ \ \ \ \ \textcolor{keywordtype}{void}\ SetDefaultPlayerAttributes(\textcolor{keywordtype}{float}\ currentHealthPercentage)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00165}00165\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00166}00166\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Jelenlegi\ HP\ beállítása.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00167}00167\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_abb9d5cbfcb12c76d3f3a1436cd29595a}{CurrentHealth}}\ =\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a06dc7a5f6e6bdfda1681fee47c5a7bea}{MaxHealth}}\ *\ currentHealthPercentage;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00168}00168\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ mozgási\ sebesség\ beállítása.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00169}00169\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af2fdb249815c0f578e6dfa0425439e2f}{CurrentMovementSpeed}}\ =\ ClampStat(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_ae9d7898948953d47ace66eb113cc5a61}{baseMovementSpeed}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a98c83be9d522b3a9d2e8021ecbdd18b7}{additionalMovementSpeed}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a7326188ed338cfa7004900219dc2e6cb}{minMovementSpeedValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a75187ddda891cffa55fe922a9e82277c}{maxMovementSpeedValue}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00170}00170\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ sebzés\ értékének\ beállítása.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00171}00171\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a6ee04e7804d4141890030586e944078b}{CurrentDMG}}\ =\ ClampStat(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_ad296092534d977ed7b26e06f21beeb21}{baseDMG}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a7f05c5b768347cb1538c72a65bbb08dc}{additionalDMG}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a9e7c470df7969197e5a8496fc55b7ec4}{minDMGValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a2bff384c53014fd650baa9520d37158b}{maxDMGValue}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00172}00172\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ támadási\ késleltetés\ (cooldown)\ beállítása.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00173}00173\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a92a19ff302149f4a1ff48c01b841b80c}{CurrentAttackCooldown}}\ =\ ClampStat(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aed72f88c12a5ce36746eb9c18ffcf2fc}{baseAttackCooldown}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aa7c790a9924e671a992d95fc3ea0a596}{attackCooldownReduction}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a06ff77e3ab8e5f4575d874457450bcdc}{minAttackCooldownValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_abe924a4ceb672aaad554d4b43bcd39b5}{maxAttackCooldownValue}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00174}00174\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ kritikus\ találati\ esély\ beállítása.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00175}00175\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a278861a3a2f0b549d4d336bee8452e0a}{CurrentCriticalHitChance}}\ =\ ClampStat(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a07d4e28ac5bb1523b89e5bddad39afac}{baseCriticalHitChance}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af5b56582ab183931a47526df7137d78c}{additionalCriticalHitChance}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aedf66d584be8775e420a75ba284b10a8}{minCriticalHitChanceValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aebea8af2dcf1bf7a15ad02ef84c8f742}{maxCriticalHitChanceValue}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00176}00176\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ százalékos\ alapú\ sebzés\ beállítása.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00177}00177\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a6c99a7bb6104969af257b53a3adf9cd1}{CurrentPercentageBasedDMG}}\ =\ ClampStat(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af4df2141b293bd22410d84c757c085a6}{basePercentageBasedDMG}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aa09eedefdb7b711f922e8dca4a33d0ee}{additionalPercentageBasedDMG}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a327e41488d55f720309f7f2ba698aa42}{minPercentageBasedDMGValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_abd90063e020b6e55563caf2283847577}{maxPercentageBasedDMGValue}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00178}00178\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00179}00179\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00185}00185\ \ \ \ \ \textcolor{keywordtype}{void}\ ApplyPlayerUpgradeStats(List<StatValuePair>\ playerUpgradeStatValues,\ \textcolor{keywordtype}{float}\ currentHealthPercentage)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00186}00186\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00187}00187\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Biztosítja,\ hogy\ a\ currentHealthPercentage\ értéke\ 0\ és\ 1\ közé\ legyen\ korlátozva.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00188}00188\ \ \ \ \ \ \ \ \ currentHealthPercentage\ =\ Mathf.Clamp01(currentHealthPercentage);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00189}00189\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00190}00190\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Végigiterál\ minden\ egyes\ staton\ az\ upgrade\ listában.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00191}00191\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{foreach}\ (var\ statValue\ \textcolor{keywordflow}{in}\ playerUpgradeStatValues)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00192}00192\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00193}00193\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrzés\ az\ adott\ upgrade\ típus\ alapján.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00194}00194\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (statValue.Key)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00195}00195\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00196}00196\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ StatType.Health:}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00197}00197\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(statValue.Key\ +\ \textcolor{stringliteral}{"{}\ ::\ "{}}\ +\ statValue.Value);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00198}00198\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Növeli\ az\ additionalHealth\ értékét\ az\ adott\ frissítés\ alapján.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00199}00199\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aa0995c5bb9e4ebb6a9688bc58a4b16c2}{additionalHealth}}\ +=\ statValue.Value;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00200}00200\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ új\ maximális\ életerő\ értékének\ kiszámítása.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00201}00201\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a06dc7a5f6e6bdfda1681fee47c5a7bea}{MaxHealth}}\ =\ ClampStat(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a0a613b5df8a0f9b1e7c87aea1073f8f3}{maxHealth}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aa0995c5bb9e4ebb6a9688bc58a4b16c2}{additionalHealth}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a35557117ac1d902409427bbfce67736a}{minHealthValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a0bdeb6c5ba1e180487ffdb9751a66928}{maxHealthValue}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00202}00202\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ aktuális\ életerő\ frissítése\ a\ százalékos\ egészség\ alapján.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00203}00203\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_abb9d5cbfcb12c76d3f3a1436cd29595a}{CurrentHealth}}\ =\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a06dc7a5f6e6bdfda1681fee47c5a7bea}{MaxHealth}}\ *\ currentHealthPercentage;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00204}00204\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00205}00205\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ StatType.MovementSpeed:}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00206}00206\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(statValue.Key\ +\ \textcolor{stringliteral}{"{}\ ::\ "{}}\ +\ statValue.Value);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00207}00207\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a98c83be9d522b3a9d2e8021ecbdd18b7}{additionalMovementSpeed}}\ +=\ statValue.Value;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00208}00208\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ mozgási\ sebesség\ frissítése\ az\ új\ bónusz\ értékkel.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00209}00209\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af2fdb249815c0f578e6dfa0425439e2f}{CurrentMovementSpeed}}\ =\ ClampStat(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_ae9d7898948953d47ace66eb113cc5a61}{baseMovementSpeed}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a98c83be9d522b3a9d2e8021ecbdd18b7}{additionalMovementSpeed}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a7326188ed338cfa7004900219dc2e6cb}{minMovementSpeedValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a75187ddda891cffa55fe922a9e82277c}{maxMovementSpeedValue}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00210}00210\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00211}00211\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ StatType.Damage:}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00212}00212\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(statValue.Key\ +\ \textcolor{stringliteral}{"{}\ ::\ "{}}\ +\ statValue.Value);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00213}00213\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a7f05c5b768347cb1538c72a65bbb08dc}{additionalDMG}}\ +=\ statValue.Value;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00214}00214\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ sebzés\ frissítése\ az\ új\ értékekkel.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00215}00215\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a6ee04e7804d4141890030586e944078b}{CurrentDMG}}\ =\ ClampStat(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_ad296092534d977ed7b26e06f21beeb21}{baseDMG}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a7f05c5b768347cb1538c72a65bbb08dc}{additionalDMG}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a9e7c470df7969197e5a8496fc55b7ec4}{minDMGValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a2bff384c53014fd650baa9520d37158b}{maxDMGValue}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00216}00216\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00217}00217\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ StatType.AttackCooldownReduction:}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00218}00218\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(statValue.Key\ +\ \textcolor{stringliteral}{"{}\ ::\ "{}}\ +\ statValue.Value);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00219}00219\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aa7c790a9924e671a992d95fc3ea0a596}{attackCooldownReduction}}\ +=\ statValue.Value;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00220}00220\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ támadás\ delay\ frissítése.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00221}00221\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a92a19ff302149f4a1ff48c01b841b80c}{CurrentAttackCooldown}}\ =\ ClampStat(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aed72f88c12a5ce36746eb9c18ffcf2fc}{baseAttackCooldown}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aa7c790a9924e671a992d95fc3ea0a596}{attackCooldownReduction}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a06ff77e3ab8e5f4575d874457450bcdc}{minAttackCooldownValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_abe924a4ceb672aaad554d4b43bcd39b5}{maxAttackCooldownValue}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00222}00222\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00223}00223\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ StatType.CriticalHitChance:}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00224}00224\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(statValue.Key\ +\ \textcolor{stringliteral}{"{}\ ::\ "{}}\ +\ statValue.Value);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00225}00225\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af5b56582ab183931a47526df7137d78c}{additionalCriticalHitChance}}\ +=\ statValue.Value;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00226}00226\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ kritikus\ találati\ esély\ frissítése.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00227}00227\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a278861a3a2f0b549d4d336bee8452e0a}{CurrentCriticalHitChance}}\ =\ ClampStat(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a07d4e28ac5bb1523b89e5bddad39afac}{baseCriticalHitChance}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af5b56582ab183931a47526df7137d78c}{additionalCriticalHitChance}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aedf66d584be8775e420a75ba284b10a8}{minCriticalHitChanceValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aebea8af2dcf1bf7a15ad02ef84c8f742}{maxCriticalHitChanceValue}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00228}00228\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00229}00229\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ StatType.PercentageBasedDMG:}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00230}00230\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(statValue.Key\ +\ \textcolor{stringliteral}{"{}\ ::\ "{}}\ +\ statValue.Value);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00231}00231\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aa09eedefdb7b711f922e8dca4a33d0ee}{additionalPercentageBasedDMG}}\ +=\ statValue.Value;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00232}00232\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ százalékos\ sebzés\ frissítése.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00233}00233\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a6c99a7bb6104969af257b53a3adf9cd1}{CurrentPercentageBasedDMG}}\ =\ ClampStat(\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af4df2141b293bd22410d84c757c085a6}{basePercentageBasedDMG}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_aa09eedefdb7b711f922e8dca4a33d0ee}{additionalPercentageBasedDMG}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a327e41488d55f720309f7f2ba698aa42}{minPercentageBasedDMGValue}},\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_abd90063e020b6e55563caf2283847577}{maxPercentageBasedDMGValue}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00234}00234\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00235}00235\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00236}00236\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ egy\ nem\ kezelt\ stat\ típus\ érkezik,\ figyelmeztetést\ küld.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00237}00237\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Debug.LogWarning(\$\textcolor{stringliteral}{"{}Unhandled\ stat\ type:\ \{statValue.Key\}"{}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00238}00238\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00239}00239\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00240}00240\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00241}00241\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00242}00242\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00243}00243\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00253}00253\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{float}\ ClampStat(\textcolor{keywordtype}{float}\ baseValue,\ \textcolor{keywordtype}{float}\ additionalValue,\ \textcolor{keywordtype}{float}\ minValue,\ \textcolor{keywordtype}{float}\ maxValue)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00254}00254\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00255}00255\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Mathf.Clamp(baseValue\ +\ additionalValue,\ minValue,\ maxValue);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00256}00256\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00257}00257\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00258}00258\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00265}00265\ \ \ \ \ \textcolor{keywordtype}{void}\ StopListeningToEnemy(EnemyController\ enemy)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00266}00266\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00267}00267\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (enemy.TryGetComponent<EnemyController>(out\ var\ deadEnemy))}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00268}00268\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00269}00269\ \ \ \ \ \ \ \ \ \ \ \ \ deadEnemy.OnPlayerCollision\ -\/=\ \mbox{\hyperlink{class_player_controller_a470d8299a4d676ce41c4b253cb7770b7}{ChangeHealth}};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00270}00270\ \ \ \ \ \ \ \ \ \ \ \ \ deadEnemy.OnEnemyDeath\ -\/=\ StopListeningToEnemy;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00271}00271\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00272}00272\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00273}00273\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00274}00274\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00281}00281\ \ \ \ \ \textcolor{keywordtype}{float}\ CalculateDMG()}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00282}00282\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00283}00283\ \ \ \ \ \ \ \ \ Debug.Log(\textcolor{stringliteral}{"{}CURENTDMG:\ "{}}\ +\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a6ee04e7804d4141890030586e944078b}{CurrentDMG}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00284}00284\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ IsCriticalHit()\ ?\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a6ee04e7804d4141890030586e944078b}{CurrentDMG}}\ *\ 2\ :\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a6ee04e7804d4141890030586e944078b}{CurrentDMG}};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00285}00285\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00286}00286\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00287}00287\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00293}00293\ \ \ \ \ \textcolor{keywordtype}{bool}\ IsCriticalHit()}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00294}00294\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00295}00295\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ chance\ =\ random.Next(1,\ 101);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00296}00296\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (chance\ <=\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a278861a3a2f0b549d4d336bee8452e0a}{CurrentCriticalHitChance}}\ *\ 100)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00297}00297\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00298}00298\ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(\textcolor{stringliteral}{"{}*CRITICAL\ HIT!*"{}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00299}00299\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00300}00300\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00301}00301\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00302}00302\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00303}00303\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00304}00304\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00305}00305\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00310}00310\ \ \ \ \ \textcolor{keywordtype}{void}\ Update()}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00311}00311\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00312}00312\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ mozgási\ bemenet\ lekérése.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00313}00313\ \ \ \ \ \ \ \ \ move\ =\ \mbox{\hyperlink{class_player_controller_aaf314960ed925bb2871100acf596131e}{MoveAction}}.ReadValue<Vector2>();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00314}00314\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ van\ érvényes\ mozgási\ bemenet.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00315}00315\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (move\ !=\ Vector2.zero)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00316}00316\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00317}00317\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ játékos\ forgatása\ a\ mozgás\ irányának\ megfelelően.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00318}00318\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ Atan2\ kiszámítja\ az\ irány\ szögét\ radiánban,\ amit\ aztán\ fokokra\ konvertálunk.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00319}00319\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Az\ "{}-\/90f"{}\ érték\ azért\ van,\ hogy\ a\ sprite\ megfelelően\ igazodjon\ az\ irányhoz.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00320}00320\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ angle\ =\ Mathf.Atan2(move.y,\ move.x)\ *\ Mathf.Rad2Deg;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00321}00321\ \ \ \ \ \ \ \ \ \ \ \ \ transform.rotation\ =\ Quaternion.Euler(0f,\ 0f,\ angle\ -\/90f);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00322}00322\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00323}00323\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00324}00324\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00325}00325\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ nincs\ mozgási\ bemenet,\ a\ játékos\ visszatér\ az\ alaphelyzetbe.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00326}00326\ \ \ \ \ \ \ \ \ \ \ \ \ transform.rotation\ =\ Quaternion.Euler(0f,\ 0f,\ 0f);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00327}00327\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00328}00328\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00329}00329\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ játékos\ sebezhetetlen,\ csökkenti\ a\ hátralévő\ időt.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00330}00330\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isInvincible)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00331}00331\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00332}00332\ \ \ \ \ \ \ \ \ \ \ \ \ damageCooldown\ -\/=\ Time.deltaTime;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00333}00333\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ cooldown\ idő\ lejárt,\ a\ sebezhetetlenség\ véget\ ér.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00334}00334\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (damageCooldown\ <\ 0)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00335}00335\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00336}00336\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isInvincible\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00337}00337\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00338}00338\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00339}00339\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00340}00340\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ játékos\ nem\ képes\ támadni,\ csökkenti\ a\ támadási\ cooldown\ időt.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00341}00341\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!isAbleToAttack)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00342}00342\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00343}00343\ \ \ \ \ \ \ \ \ \ \ \ \ remainingAttackCooldown\ -\/=\ Time.deltaTime;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00344}00344\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Debug.Log(remainingAttackCooldown);}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00345}00345\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00346}00346\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ cooldown\ idő\ lejárt,\ a\ játékos\ ismét\ támadhat.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00347}00347\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (remainingAttackCooldown\ <=\ 0)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00348}00348\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00349}00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ isAbleToAttack\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00350}00350\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00351}00351\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00352}00352\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00353}00353\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00354}00354\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00355}00355\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00360}00360\ \ \ \ \ \textcolor{keywordtype}{void}\ FixedUpdate()}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00361}00361\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00362}00362\ \ \ \ \ \ \ \ \ Vector2\ position\ =\ (Vector2)\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a8d6eb177b01dad74435d9db27e2d3f2f}{rigidbody2d}}.position\ +\ move\ *\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_af2fdb249815c0f578e6dfa0425439e2f}{CurrentMovementSpeed}}\ *\ Time.deltaTime;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00363}00363\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00364}00364\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenõrizd,\ hogy\ az\ új\ pozíció\ kívül\ van-\/e\ a\ tartományon}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00365}00365\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (position.x\ <\ movementBoundsMin.x\ ||\ position.x\ >\ movementBoundsMax.x)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00366}00366\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00367}00367\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ az\ X\ komponens\ kívül\ van\ a\ határokon,\ állítsd\ vissza\ az\ eredeti\ értékre}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00368}00368\ \ \ \ \ \ \ \ \ \ \ \ \ position.x\ =\ Mathf.Clamp(position.x,\ movementBoundsMin.x,\ movementBoundsMax.x);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00369}00369\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00370}00370\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00371}00371\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (position.y\ <\ movementBoundsMin.y\ ||\ position.y\ >\ movementBoundsMax.y)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00372}00372\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00373}00373\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ az\ Y\ komponens\ kívül\ van\ a\ határokon,\ állítsd\ vissza\ az\ eredeti\ értékre}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00374}00374\ \ \ \ \ \ \ \ \ \ \ \ \ position.y\ =\ Mathf.Clamp(position.y,\ movementBoundsMin.y,\ movementBoundsMax.y);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00375}00375\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00376}00376\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00377}00377\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a8d6eb177b01dad74435d9db27e2d3f2f}{rigidbody2d}}.MovePosition(position);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00378}00378\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00379}00379\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00380}00380\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00381}00381\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00387}\mbox{\hyperlink{class_player_controller_a470d8299a4d676ce41c4b253cb7770b7}{00387}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{override}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_player_controller_a470d8299a4d676ce41c4b253cb7770b7}{ChangeHealth}}(\textcolor{keywordtype}{float}\ amount)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00388}00388\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00389}00389\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrzi,\ hogy\ a\ karakter\ sebezhetetlen-\/e.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00390}00390\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ igen,\ az\ életerő\ nem\ változik,\ és\ a\ metódus\ visszatér.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00391}00391\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isInvincible)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00392}00392\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00393}00393\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00394}00394\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00395}00395\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Aktiválja\ a\ sebezhetetlenségi\ állapotot,\ így\ a\ karakter\ egy\ ideig\ nem\ sérülhet.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00396}00396\ \ \ \ \ \ \ \ \ isInvincible\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00397}00397\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Beállítja\ a\ sebezhetetlenségi\ időszak\ hosszát.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00398}00398\ \ \ \ \ \ \ \ \ damageCooldown\ =\ \mbox{\hyperlink{class_player_controller_a0e26db74a55d3b39a526c753ba7220ea}{timeInvincible}};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00399}00399\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Meghívja\ az\ ősosztály\ ChangeHealth\ metódusát,\ hogy\ az\ életerő\ ténylegesen\ frissüljön.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00400}00400\ \ \ \ \ \ \ \ \ base.ChangeHealth(amount);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00401}00401\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00402}00402\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00403}00403\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00404}00404\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00409}00409\ \ \ \ \ \textcolor{keywordtype}{void}\ Attack(InputAction.CallbackContext\ context)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00410}00410\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00411}00411\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrzi,\ hogy\ a\ rigidbody\ vagy\ a\ támadás\ le\ van-\/e\ tiltva.\ Ha\ igen,\ azonnal\ visszatér.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00412}00412\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a8d6eb177b01dad74435d9db27e2d3f2f}{rigidbody2d}}\ ==\ \textcolor{keyword}{null}\ ||\ !isAbleToAttack)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00413}00413\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ támadás\ helyi\ eltolásának\ meghatározása\ a\ bemenet\ alapján.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00414}00414\ \ \ \ \ \ \ \ \ Vector2\ localOffset\ =\ GetLocalOffset(context.control.name);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00415}00415\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ bemenet\ érvénytelen\ (nulla\ eltolás),\ a\ metódus\ visszatér.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00416}00416\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (localOffset\ ==\ Vector2.zero)\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00417}00417\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00418}00418\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Kiszámítja\ a\ támadási\ irányt\ egy\ szorzó\ segítségével,\ amely\ az\ eltolást\ méretezi.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00419}00419\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ multiplier\ =\ GetMultiplier(localOffset);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00420}00420\ \ \ \ \ \ \ \ \ attackDirection\ =\ rigidbody2d.position\ +\ localOffset\ *\ multiplier;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00421}00421\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00422}00422\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Projectile\ objektum\ lekérése\ az\ objectpoolból.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00423}00423\ \ \ \ \ \ \ \ \ GameObject\ projectileObject\ =\ GetProjectileFromPool();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00424}00424\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ nincs\ elérhető\ projektil,\ a\ metódus\ visszatér.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00425}00425\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (projectileObject\ ==\ \textcolor{keyword}{null})\ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00426}00426\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00427}00427\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ projectile\ elindítása\ a\ megadott\ irányba.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00428}00428\ \ \ \ \ \ \ \ \ LaunchProjectile(projectileObject);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00429}00429\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ támadási\ cooldown\ visszaállítása.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00430}00430\ \ \ \ \ \ \ \ \ ResetAttackCooldown();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00431}00431\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ támadási\ képesség\ letiltása\ a\ cooldown\ idejére.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00432}00432\ \ \ \ \ \ \ \ \ isAbleToAttack\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00433}00433\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00434}00434\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00435}00435\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00444}00444\ \ \ \ \ \textcolor{keyword}{private}\ Vector2\ GetLocalOffset(\textcolor{keywordtype}{string}\ controlName)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00445}00445\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00446}00446\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrzi\ a\ vezérlő\ nevét,\ és\ visszaadja\ a\ hozzá\ tartozó\ irányvektort.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00447}00447\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (controlName)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00448}00448\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00449}00449\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{stringliteral}{"{}upArrow"{}}:}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00450}00450\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Vector2.up;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00451}00451\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{stringliteral}{"{}downArrow"{}}:}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00452}00452\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Vector2.down;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00453}00453\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{stringliteral}{"{}leftArrow"{}}:}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00454}00454\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Vector2.left;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00455}00455\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \textcolor{stringliteral}{"{}rightArrow"{}}:}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00456}00456\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Vector2.right;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00457}00457\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{default}:}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00458}00458\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Vector2.zero;\ \textcolor{comment}{//\ Érvénytelen\ bemenet\ esetén\ nulla\ vektor}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00459}00459\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00460}00460\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00461}00461\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00462}00462\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00468}00468\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{float}\ GetMultiplier(Vector2\ localOffset)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00469}00469\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00470}00470\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ karakter\ pillanatnyi\ iránya,\ amit\ a\ "{}transform.up"{}\ ad\ vissza}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00471}00471\ \ \ \ \ \ \ \ \ Vector2\ facingDirection\ =\ transform.up;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00472}00472\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00473}00473\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Kezeli\ a\ diagonális\ irányokat\ (pl.\ balra-\/fel\ vagy\ jobbra-\/le)}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00474}00474\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (Mathf.Abs(facingDirection.x)\ >\ 0.1f\ \&\&\ Mathf.Abs(facingDirection.y)\ >\ 0.1f)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00475}00475\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00476}00476\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ karakter\ diagonálisan\ néz,\ akkor\ az\ iránytól\ függően\ kombinált\ szorzót\ ad\ vissza}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00477}00477\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (2f\ +\ 1f)\ /\ 2f;\ \textcolor{comment}{//\ A\ diagonális\ irányokhoz\ egy\ átlagos\ szorzót\ (1.5f)\ ad\ vissza}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00478}00478\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00479}00479\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00480}00480\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Kezeli\ a\ vízszintes\ és\ függőleges\ irányokat}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00481}00481\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ isHorizontal\ =\ Mathf.Abs(facingDirection.x)\ >\ Mathf.Abs(facingDirection.y);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00482}00482\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00483}00483\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ karakter\ vízszintes\ irányba\ néz}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00484}00484\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (isHorizontal)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00485}00485\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00486}00486\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ balra\ vagy\ jobbra\ irányban\ végzett\ támadásokhoz\ nagyobb\ szorzót\ (2f)\ ad,\ míg\ a\ függőleges\ irányú\ támadásokhoz\ 1f-\/et}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00487}00487\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (localOffset\ ==\ Vector2.left\ ||\ localOffset\ ==\ Vector2.right)\ ?\ 2f\ :\ 1f;\ \textcolor{comment}{//\ 2f\ for\ horizontal,\ 1f\ for\ vertical}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00488}00488\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00489}00489\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00490}00490\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00491}00491\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ karakter\ függőleges\ irányba\ néz}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00492}00492\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ fel\ és\ le\ irányú\ támadásokhoz\ nagyobb\ szorzót\ (2f)\ ad,\ míg\ a\ vízszintes\ irányú\ támadásokhoz\ 1f-\/et}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00493}00493\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (localOffset\ ==\ Vector2.up\ ||\ localOffset\ ==\ Vector2.down)\ ?\ 2f\ :\ 1f;\ \textcolor{comment}{//\ 2f\ for\ vertical,\ 1f\ for\ horizontal}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00494}00494\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00495}00495\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00496}00496\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00497}00497\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00502}00502\ \ \ \ \ \textcolor{keyword}{private}\ GameObject\ GetProjectileFromPool()}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00503}00503\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00504}00504\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Kéri\ az\ objektumpoolból\ a\ következő\ projectile-\/t,\ amely\ megfelel\ a\ támadás\ irányának}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00505}00505\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ objectPool.GetProjectile(attackDirection,\ Quaternion.identity,\ CalculateDMG(),\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a6c99a7bb6104969af257b53a3adf9cd1}{CurrentPercentageBasedDMG}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00506}00506\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00507}00507\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00508}00508\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00513}00513\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ LaunchProjectile(GameObject\ projectileObject)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00514}00514\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00515}00515\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Kinyerjük\ a\ projectile\ komponensét\ az\ objektumból}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00516}00516\ \ \ \ \ \ \ \ \ Projectile\ projectile\ =\ projectileObject.GetComponent<Projectile>();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00517}00517\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Kiolvassuk\ az\ indítás\ irányát\ a\ launchAction\ inputból}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00518}00518\ \ \ \ \ \ \ \ \ Vector2\ launchDirection\ =\ \mbox{\hyperlink{class_player_controller_aa1c5e3df056e2180e0d81b471f91ec0e}{launchAction}}.ReadValue<Vector2>();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00519}00519\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ projectile\ indítása\ a\ megadott\ irányba\ és\ sebességgel}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00520}00520\ \ \ \ \ \ \ \ \ projectile.\mbox{\hyperlink{class_projectile_a57d7814a538aa8198b397861f7f1dbbf}{Launch}}(launchDirection,\ \mbox{\hyperlink{class_player_controller_a3292652dd29a2497da092f905de83e9e}{shotTravelSpeed}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00521}00521\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00522}00522\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00523}00523\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00527}00527\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{void}\ ResetAttackCooldown()}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00528}00528\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00529}00529\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ maradék\ cooldown\ beállítása\ a\ karakter\ aktuális\ támadási\ cooldown-\/jára}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00530}00530\ \ \ \ \ \ \ \ \ remainingAttackCooldown\ =\ \mbox{\hyperlink{class_assets_1_1_scripts_1_1_character_a92a19ff302149f4a1ff48c01b841b80c}{CurrentAttackCooldown}};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00531}00531\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00532}00532\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00539}00539\ \ \ \ \ \textcolor{keywordtype}{void}\ StartProjectileDetection(GameObject\ projectile)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00540}00540\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00541}00541\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Megpróbálja\ lekérni\ az\ EnemyProjetile\ komponenst\ a\ megadott\ GameObjectből.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00542}00542\ \ \ \ \ \ \ \ \ EnemyProjetile\ proj\ =\ projectile.GetComponent<EnemyProjetile>();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00543}00543\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00544}00544\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ellenőrzi,\ hogy\ a\ lövedék\ már\ szerepel-\/e\ az\ activeProjectiles\ listában.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00545}00545\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ezzel\ elkerüljük,\ hogy\ ugyanazt\ a\ lövedéket\ többször\ adjuk\ hozzá.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00546}00546\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (!activeProjectiles.Contains(proj))}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00547}00547\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00548}00548\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Feliratkozik\ a\ lövedék\ OnPlayerHit\ eseményére.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00549}00549\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ez\ lehetővé\ teszi,\ hogy\ reagáljunk,\ amikor\ a\ lövedék\ eltalálja\ a\ játékost.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00550}00550\ \ \ \ \ \ \ \ \ \ \ \ \ proj.OnPlayerHit\ +=\ HandlePlayerHit;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00551}00551\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00552}00552\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Hozzáadja\ a\ lövedéket\ az\ aktív\ lövedékeket\ nyomon\ követő\ listához.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00553}00553\ \ \ \ \ \ \ \ \ \ \ \ \ activeProjectiles.Add(proj);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00554}00554\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00555}00555\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Naplózza\ az\ új\ lövedék\ észlelését\ a\ hibakereséshez.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00556}00556\ \ \ \ \ \ \ \ \ \ \ \ \ Debug.Log(\$\textcolor{stringliteral}{"{}Lövedék\ érzékelve:\ \{proj\}"{}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00557}00557\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00558}00558\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00559}00559\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00560}00560\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00566}00566\ \ \ \ \ \textcolor{keywordtype}{void}\ StopProjectileDetection(GameObject\ projectile)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00567}00567\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00568}00568\ \ \ \ \ \ \ \ \ EnemyProjetile\ proj\ =\ projectile.GetComponent<EnemyProjetile>();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00569}00569\ \ \ \ \ \ \ \ \ proj.OnPlayerHit\ -\/=\ HandlePlayerHit;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00570}00570\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00571}00571\ \ \ \ \ \ \ \ \ activeProjectiles.Remove(proj);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00572}00572\ \ \ \ \ \ \ \ \ Debug.Log(\$\textcolor{stringliteral}{"{}Projectile\ returned:\ \{proj\}"{}});}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00573}00573\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00574}00574\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00579}00579\ \ \ \ \ \textcolor{keywordtype}{void}\ HandlePlayerHit(\textcolor{keywordtype}{float}\ damageAmount)}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00580}00580\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00581}00581\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Csökkenti\ a\ játékos\ életerejét\ a\ megadott\ sebzés\ mértékével.}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00582}00582\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_controller_a470d8299a4d676ce41c4b253cb7770b7}{ChangeHealth}}(damageAmount);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00583}00583\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00584}00584\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00585}00585\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00589}\mbox{\hyperlink{class_player_controller_af45b465270db0240bee87967c97b59dc}{00589}}\ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_player_controller_af45b465270db0240bee87967c97b59dc}{Die}}()}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00590}00590\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00591}00591\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Letiltja\ a\ mozgási\ akciót,\ hogy\ a\ játékos\ ne\ tudjon\ mozogni\ a\ halál\ után}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00592}00592\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_controller_aaf314960ed925bb2871100acf596131e}{MoveAction}}.Disable();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00593}00593\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Letiltja\ a\ támadási\ akciót,\ hogy\ a\ játékos\ ne\ tudjon\ támadni\ a\ halál\ után}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00594}00594\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_controller_aa1c5e3df056e2180e0d81b471f91ec0e}{launchAction}}.Disable();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00595}00595\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Eltávolítja\ a\ támadás\ eseménykezelőjét,\ hogy\ ne\ reagáljon\ többé\ a\ támadás\ akciókra}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00596}00596\ \ \ \ \ \ \ \ \ launchAction.performed\ -\/=\ Attack;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00597}00597\ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00598}00598\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Ha\ a\ játékos\ egy\ boss\ ellenséggel\ találkozott,\ akkor\ leiratkozik\ a\ boss\ eseménykezelőjéről}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00599}00599\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (boss\ !=\ \textcolor{keyword}{null})}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00600}00600\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00601}00601\ \ \ \ \ \ \ \ \ \ \ \ \ boss.OnPlayerCollision\ -\/=\ \mbox{\hyperlink{class_player_controller_a470d8299a4d676ce41c4b253cb7770b7}{ChangeHealth}};}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00602}00602\ \ \ \ \ \ \ \ \ \ \ \ \ bossObjectPool.OnProjectileActivated\ -\/=\ StartProjectileDetection;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00603}00603\ \ \ \ \ \ \ \ \ \ \ \ \ bossObjectPool.OnProjectileDeactivated\ -\/=\ StopProjectileDetection;}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00604}00604\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00605}00605\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00606}00606\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ halál\ eseményt\ továbbítja\ a\ rendszer\ felé}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00607}00607\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_player_controller_a79f52d59e1e3c49c7dafa56c708a231a}{OnPlayerDeath}}?.Invoke();}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00608}00608\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ A\ játékos\ GameObject-\/jét\ törli,\ így\ a\ karakter\ eltűnik\ a\ játékból}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00609}00609\ \ \ \ \ \ \ \ \ Destroy(gameObject);}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00610}00610\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_player_controller_8cs_source_l00611}00611\ \}}
+
+\end{DoxyCode}
