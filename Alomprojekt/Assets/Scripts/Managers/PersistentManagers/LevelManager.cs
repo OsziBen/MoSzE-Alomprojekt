@@ -122,6 +122,8 @@ public class LevelManager : BasePersistentManager<LevelManager>
     // Esemény, amely akkor hívódik meg, amikor a játék véget ér. True-siker, false-bukás.
     public event Action<bool> OnGameFinished;
 
+    public event Action<GameLevel> OnLevelLoaded;
+
     /// <summary>
     /// Az osztály inicializálását végző függvény.
     /// </summary>
@@ -970,6 +972,8 @@ public class LevelManager : BasePersistentManager<LevelManager>
         {
             // SceneManager: megfelelő átvezető + pálya betöltése
             asyncOperation = await gameSceneManager.LoadCutsceneByLevelNameAsync(saveData.gameData.levelLayoutName);
+
+            OnLevelLoaded?.Invoke(gameStateManager.LevelNameToGameLevel(saveData.gameData.gameLevel));
             asyncOperation = await gameSceneManager.LoadLevelSceneByNameAsync(saveData.gameData.levelLayoutName);
 
             // ObjectPool és CharacterSetupManager hozzáadása a jelenethez (más komponenseknek szüksége van rá az init során)

@@ -85,7 +85,7 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
     /// <summary>
     /// Események
     /// </summary>
-    //public event Action<bool> OnSceneLoaded;  // -> invoke() !
+    public event Action<string> OnCutsceneLoaded;
 
     /// <summary>
     /// Az osztály inicializálását végző metódus.
@@ -531,17 +531,21 @@ public class GameSceneManager : BasePersistentManager<GameSceneManager>
             // Ha a pálya szám -1 (Boss szint), akkor egy speciális átvezető jelenetet töltünk be
             if (levelNum == -1)
             {
+                OnCutsceneLoaded?.Invoke("LevelTransition34");
                 asyncOperation = await LoadAnimatedCutsceneAsync("LevelTransition34");
             }
             // Ha az első pálya, akkor a "NewGame" átvezetőt tölti be
             else if (levelNum == 1)
             {
+                OnCutsceneLoaded?.Invoke("NewGame");
                 asyncOperation = await LoadAnimatedCutsceneAsync("NewGame");
             }
             else
             {
                 // Ha nem első vagy boss szint, akkor az előző szint és az aktuális szint átvezetőjét tölti be
                 string cutsceneRefName = "LevelTransition" + (levelNum - 1).ToString() + levelNum.ToString();
+
+                OnCutsceneLoaded?.Invoke(cutsceneRefName);
                 asyncOperation = await LoadAnimatedCutsceneAsync(cutsceneRefName);
             }
 
