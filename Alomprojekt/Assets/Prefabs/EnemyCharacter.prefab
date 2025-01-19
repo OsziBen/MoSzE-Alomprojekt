@@ -200,11 +200,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopDistance: 1
-  overshootDistance: 2
+  overshootDistance: 5
   reorientTime: 1
   overshootTimer: 0
-  obstacleAvoidanceRadius: 2
-  avoidanceForce: 1
+  rb: {fileID: 0}
 --- !u!70 &2161456631341761391
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

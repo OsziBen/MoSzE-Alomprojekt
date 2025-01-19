@@ -399,7 +399,7 @@ MonoBehaviour:
   head: {fileID: 8477411664171374919}
   leftArm: {fileID: 2952663060691800939}
   rightArm: {fileID: 8048482267699872293}
-  offsetDistance: 6
+  offsetDistance: 2
   deviationRadius: 2
   targetUpdateInterval: 2
   shotTravelSpeed: 300
