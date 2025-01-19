@@ -9,25 +9,25 @@ using static UIManager;
 public class UpgradeUIController : MonoBehaviour
 {
     /// <summary>
-    /// Véltozók
+    /// Változók
     /// </summary>
     [Header("Upgrade Text Value Fields")]
     [SerializeField]
-    private TextMeshProUGUI upgradeNameUI; // A frissítés nevének megjelenítésére szolgáló szöveg.
+    private TextMeshProUGUI upgradeNameUI; // Az upgrade nevének megjelenítésére szolgáló szöveg.
     [SerializeField]
-    private TextMeshProUGUI upgradeLevelsUI; // A frissítési szintek tartományának megjelenítésére szolgáló szöveg.
+    private TextMeshProUGUI upgradeLevelsUI; // Az upgrade szintek tartományának megjelenítésére szolgáló szöveg.
     [SerializeField]
-    private Image upgradeIconUI; // A frissítés ikonját megjelenítõ kép.
+    private Image upgradeIconUI; // Az upgrade ikonját megjelenítõ kép.
     [SerializeField]
-    private TextMeshProUGUI upgradeDescriptionUI; // A frissítés leírásának szövege.
+    private TextMeshProUGUI upgradeDescriptionUI; // Az upgrade leírásának szövege.
     [SerializeField]
     private TextMeshProUGUI upgradeButtonTextUI; // A gomb szövegének megjelenítésére szolgáló mezõ.
     [SerializeField]
     private Button upgradeButton; // A vásárlást kezelõ gomb.
 
-    public string ID; // A frissítés egyedi azonosítója.
+    public string ID; // Az upgrade egyedi azonosítója.
 
-    public int Price;
+    public int Price; // Az upgrade ára.
 
 
 

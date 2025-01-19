@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,359 +14,356 @@ using static GameStateManager;
 
 public class UIManager : BasePersistentManager<UIManager>
 {
+    // A v√°s√°rl√°si lehet≈ës√©gek oszt√°lya, amely tartalmazza a sz√ºks√©ges inform√°ci√≥kat egy v√°s√°rl√°si opci√≥r√≥l
     [System.Serializable]
     public class PurchaseOption
     {
-        public string ID;
-        public string Name;
-        public int minLevel;
-        public int maxLevel;
-        public int currentLevel;
-        public Sprite Icon;
-        public string Description;
-        public int Price;
+        public string ID; // A v√°s√°rl√°si opci√≥ egyedi azonos√≠t√≥ja
+        public string Name; // A v√°s√°rl√°si opci√≥ neve
+        public int minLevel; // Minim√°lis szint, amely sz√ºks√©ges a v√°s√°rl√°shoz
+        public int maxLevel; // Maxim√°lis szint, amelyen a v√°s√°rl√°s √©rv√©nyes
+        public int currentLevel; // Az aktu√°lis szint
+        public Sprite Icon; // A v√°s√°rl√°si opci√≥hoz tartoz√≥ ikon
+        public string Description; // A v√°s√°rl√°si opci√≥ le√≠r√°sa
+        public int Price; // A v√°s√°rl√°s √°ra
     }
 
-
     /// <summary>
-    /// V·ltozÛk
+    /// A v√°ltoz√≥k, amelyeket az UI kezel√©se sor√°n haszn√°lunk
     /// </summary>
-    GameObject DMGStatsPanel;
-    GameObject upgradeShopPanel;
-    GameObject menuButtonPanel;
-    Canvas pauseMenuCanvas;
-    Canvas playerUICanvas;
-    Canvas upgradeShopUICanvas;
+    GameObject DMGStatsPanel; // A sebz√©s statisztik√°k panelje
+    GameObject upgradeShopPanel; // A fejleszt√©s boltj√°nak panelje
+    GameObject menuButtonPanel; // A men√º gomb panelje
+    Canvas pauseMenuCanvas; // A sz√ºnet men√º canvas
+    Canvas playerUICanvas; // A j√°t√©kos UI-ja
+    Canvas upgradeShopUICanvas; // A fejleszt√©si bolt UI-ja
 
-    public List<PurchaseOption> purchaseOptions;
+    public List<PurchaseOption> purchaseOptions; // V√°s√°rl√°si opci√≥k list√°ja
 
+    // Egy sz√≥t√°r, amely a TextMeshProUGUI elemeket t√°rolja az azonos√≠t√≥jukkal
     private Dictionary<string, TextMeshProUGUI> textMeshProElementReferences = new Dictionary<string, TextMeshProUGUI>();
 
+    // Egy sz√≥t√°r, amely a j√°t√©kos v√°ltoz√≥inak √©rt√©keit t√°rolja
     private Dictionary<string, string> playerVariableValues = new Dictionary<string, string>();
 
-
-    bool isPauseMenuEnabled;
+    bool isPauseMenuEnabled; // A sz√ºnet men√º √°llapot√°t t√°rol√≥ v√°ltoz√≥
 
     /// <summary>
-    /// Komponensek
+    /// Komponensek, amelyeket az UI kezel√©s√©hez haszn√°lunk
     /// </summary>
-    SaveLoadManager saveLoadManager;
-    PlayerController player;
-    GameStateManager gameStateManager;
-
+    SaveLoadManager saveLoadManager; // A j√°t√©k ment√©s√©t √©s bet√∂lt√©s√©t kezel≈ë komponens
+    PlayerController player; // A j√°t√©kos vez√©rl√©s√©t kezel≈ë komponens
+    GameStateManager gameStateManager; // A j√°t√©k √°llapot√°t kezel≈ë komponens
 
     [Header("Main Menu")]
     [SerializeField]
-    private Button newGameButton;
+    private Button newGameButton; // Az √∫j j√°t√©k gomb
     [SerializeField]
-    private Button loadGameButton;
+    private Button loadGameButton; // A bet√∂lt√©s gomb
     [SerializeField]
-    private Button settingsButton;
+    private Button settingsButton; // A be√°ll√≠t√°sok gomb
     [SerializeField]
-    private Button scoreboardButton;
+    private Button scoreboardButton; // Az eredm√©nylista gomb
     [SerializeField]
-    private Button quitGameButton;
+    private Button quitGameButton; // A kil√©p√©s gomb
 
     [Header("Scoreboard Menu Panels")]
     [SerializeField]
-    private GameObject scoreboardPanel;
+    private GameObject scoreboardPanel; // Az eredm√©nylista panelje
     [SerializeField]
-    private GameObject scoreboardEntryPrefab;
-
+    private GameObject scoreboardEntryPrefab; // Az eredm√©nylista bejegyz√©s prefabja
 
     [Header("UI Panels")]
-    public GameObject menuButtonUIPrefab;
-    public GameObject pauseMenuUIPrefab;
-    public GameObject playerStatsUIPrefab;
-    public GameObject damageStatsUIPrefab;
-    public GameObject upgradeShopUIPrefab;
-    public GameObject pauseMenu;
-
+    public GameObject menuButtonUIPrefab; // A men√º gombok UI prefabja
+    public GameObject pauseMenuUIPrefab; // A sz√ºnet men√º UI prefabja
+    public GameObject playerStatsUIPrefab; // A j√°t√©kos statjai UI prefabja
+    public GameObject damageStatsUIPrefab; // A sebz√©s statjai UI prefabja
+    public GameObject upgradeShopUIPrefab; // A fejleszt√©si bolt UI prefabja
+    public GameObject pauseMenu; // A sz√ºnet men√º
 
     [Header("Shop UI")]
     [SerializeField]
-    private GameObject upgradesPanel;
+    private GameObject upgradesPanel; // A fejleszt√©sek panelje
     [SerializeField]
-    private GameObject normalUpgradeUIPrefab;
+    private GameObject normalUpgradeUIPrefab; // A norm√°l fejleszt√©s UI prefabja
     [SerializeField]
-    private GameObject nextLevelUpgradeUIPrefab;
+    private GameObject nextLevelUpgradeUIPrefab; // A k√∂vetkez≈ë szint fejleszt√©s UI prefabja
     [SerializeField]
-    private GameObject healUpgradeUIPrefab;
-
+    private GameObject healUpgradeUIPrefab; // A heal fejleszt√©s UI prefabja
 
     [Header("Victory/Defeat Panels")]
     [SerializeField]
-    private GameObject victoryPanelPrefab;
+    private GameObject victoryPanelPrefab; // A gy≈ëzelem panel prefabja
     [SerializeField]
-    private GameObject defeatPanelPrefab;
-
+    private GameObject defeatPanelPrefab; // A veres√©g panel prefabja
 
     /// <summary>
-    /// EsemÈnyek
+    /// Esem√©nyek, amelyek a j√°t√©k k√ºl√∂nb√∂z≈ë √°llapotv√°ltoz√°sait kezelik
     /// </summary>
-    public event Action<GameState> OnStartNewGame;
-    public event Action<GameState> OnLoadGame;
-    public event Action<GameState> OnExitGame;
-    public event Action<GameState> OnGamePaused;
-    public event Action<GameState> OnGameResumed;
-    public event Action<GameState> OnBackToMainMenu;
-    public event Action<string> OnPurchaseOptionChosen;
+    public event Action<GameState> OnStartNewGame; // Az esem√©ny, amely akkor aktiv√°l√≥dik, amikor √∫j j√°t√©kot ind√≠tunk
+    public event Action<GameState> OnLoadGame; // Az esem√©ny, amely akkor aktiv√°l√≥dik, amikor egy mentett j√°t√©kot bet√∂lt√ºnk
+    public event Action<GameState> OnExitGame; // Az esem√©ny, amely akkor aktiv√°l√≥dik, amikor kil√©p√ºnk a j√°t√©kb√≥l
+    public event Action<GameState> OnGamePaused; // Az esem√©ny, amely akkor aktiv√°l√≥dik, amikor a j√°t√©k sz√ºneteltetve van
+    public event Action<GameState> OnGameResumed; // Az esem√©ny, amely akkor aktiv√°l√≥dik, amikor a j√°t√©k folytat√≥dik
+    public event Action<GameState> OnBackToMainMenu; // Az esem√©ny, amely akkor aktiv√°l√≥dik, amikor visszat√©r√ºnk a f≈ëmen√ºbe
+    public event Action<string> OnPurchaseOptionChosen; // Az esem√©ny, amely akkor aktiv√°l√≥dik, amikor a felhaszn√°l√≥ v√°laszt egy v√°s√°rl√°si opci√≥t
 
     /// <summary>
-    /// 
+    /// Inicializ√°lja a sz√ºks√©ges komponenseket √©s esem√©nyeket
     /// </summary>
     protected override async void Initialize()
     {
-        base.Initialize();
+        base.Initialize(); // Megh√≠vja az ≈ësoszt√°ly (BasePersistentManager) Initialize met√≥dus√°t
+
+        // Kiv√°lasztja √©s t√°rolja a SaveLoadManager p√©ld√°ny√°t a j√°t√©kban
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
+
+        // Kiv√°lasztja √©s t√°rolja a GameStateManager p√©ld√°ny√°t a j√°t√©kban
         gameStateManager = FindObjectOfType<GameStateManager>();
+
+        // Feliratkozik a GameStateManager OnPointsChanged esem√©ny√©re, hogy friss√≠tse a pontokat megjelen√≠t≈ë UI-t
         gameStateManager.OnPointsChanged += UpdatePointsUIText;
     }
 
-
     /// <summary>
-    /// 
+    /// A komponens inicializ√°l√°sa ut√°n, a j√°t√©k ind√≠t√°sakor v√©grehajt√≥dik
     /// </summary>
     void Start()
     {
-        //SetMainMenuButtonReferences();
-        //UpdateMainMenuButtons();
-
+        //SetMainMenuButtonReferences(); // A f≈ëmen√º gombok hivatkoz√°sainak be√°ll√≠t√°sa
+        //UpdateMainMenuButtons(); // A f≈ëmen√º gombok friss√≠t√©se
     }
 
-
-
-
     /// <summary>
-    /// Az Update metÛdus minden egyes frame-ben meghÌvÛdik, Ès folyamatosan ellenırzi, hogy
-    /// lenyomt·k-e az Escape billenty˚t, hogy aktiv·lja a sz¸net men¸t.
+    /// Az Update met√≥dus minden egyes frame-ben megh√≠v√≥dik, √©s folyamatosan ellen√µrzi, hogy
+    /// lenyomt√°k-e az Escape billenty√ªt, hogy aktiv√°lja a sz√ºnet men√ºt.
     /// </summary>
     private void Update()
     {
-        // Ellenırizz¸k, hogy lenyomt·k-e az Escape billenty˚t
+        // Ellen√µrizz√ºk, hogy lenyomt√°k-e az Escape billenty√ªt
         if (isPauseMenuEnabled && pauseMenu != null && UnityEngine.Input.GetKeyDown(KeyCode.Escape))
         {
-            // Ha az Escape billenty˚t lenyomt·k, aktiv·ljuk a sz¸net men¸t
+            // Ha az Escape billenty√ªt lenyomt√°k, aktiv√°ljuk a sz√ºnet men√ºt
             SetPauseMenuActive();
         }
     }
 
 
     /// <summary>
-    /// Aszinkron mÛdon betˆlti a j·tÈk UI elemeit, pÈld·ul a sz¸net men¸t, a j·tÈkos statisztikai paneljÈt Ès az upgrade shopot.
-    /// A funkciÛ biztosÌtja, hogy a sz¸ksÈges elemek Ès esemÈnyek inicializ·l·sa megtˆrtÈnjen a UI betˆltÈse elıtt.
-    /// Hib·k esetÈn false ÈrtÈket ad vissza, siker esetÈn true-t.
+    /// Aszinkron m√≥don bet√∂lti a j√°t√©k UI elemeit, p√©ld√°ul a sz√ºnet men√ºt, a j√°t√©kos statisztikai panelj√©t √©s az upgrade shopot.
+    /// A funkci√≥ biztos√≠tja, hogy a sz√ºks√©ges elemek √©s esem√©nyek inicializ√°l√°sa megt√∂rt√©njen a UI bet√∂lt√©se el√µtt.
+    /// Hib√°k eset√©n false √©rt√©ket ad vissza, siker eset√©n true-t.
     /// </summary>
-    /// <returns>Visszaadja a UI betˆltÈsÈnek sikeressÈgÈt: true ha siker¸lt, false ha hiba tˆrtÈnt.</returns>
+    /// <returns>Visszaadja a UI bet√∂lt√©s√©nek sikeress√©g√©t: true ha siker√ºlt, false ha hiba t√∂rt√©nt.</returns>
     public async Task<bool> LoadPlayerUIAsync()
     {
-        // V·rakoz·st adunk, hogy az aszinkron folyamat ne blokkolja a fı sz·lat
+        // V√°rakoz√°st adunk, hogy az aszinkron folyamat ne blokkolja a f√µ sz√°lat
         await Task.Yield();
 
         try
         {
-            // A sz¸net men¸ lÈtrehoz·sa Ès feltˆltÈse
+            // A sz√ºnet men√º l√©trehoz√°sa √©s felt√∂lt√©se
             CreateAndPopulatePauseMenuCanvas();
 
-            // A j·tÈkos statisztikai paneljÈnek lÈtrehoz·sa Ès feltˆltÈse
+            // A j√°t√©kos statisztikai panelj√©nek l√©trehoz√°sa √©s felt√∂lt√©se
             CreateAndPopulatePlayerStatsCanvas();
 
-            // Az upgrade shop lÈtrehoz·sa Ès feltˆltÈse
+            // Az upgrade shop l√©trehoz√°sa √©s felt√∂lt√©se
             CreateAndPopulateUpgradeShopCanvas();
 
-            // EsemÈny rendszer hozz·ad·sa, ha mÈg nem lÈtezne
+            // Esem√©ny rendszer hozz√°ad√°sa, ha m√©g nem l√©tezne
             EnsureEventSystemExists();
 
-            // Megkeress¸k a sz¸net men¸ GameObject-et a hozz· tartozÛ prefab alapj·n
+            // Megkeress√ºk a sz√ºnet men√º GameObject-et a hozz√° tartoz√≥ prefab alapj√°n
             pauseMenu = FindInChildrenIgnoreClone(pauseMenuCanvas.transform, pauseMenuUIPrefab.name);
 
-            // Megkeress¸k a j·tÈkost
+            // Megkeress√ºk a j√°t√©kost
             player = FindObjectOfType<PlayerController>();
             player.OnPlayerDeath += StopPlayerHealthDetection;
             player.OnHealthChanged += UpdateHealthUIText;
 
 
-            // Inicializ·ljuk a TextMeshPro refernecia-elemek szÛt·r·t
+            // Inicializ√°ljuk a TextMeshPro refernecia-elemek sz√≥t√°r√°t
             textMeshProElementReferences.Clear();
             InitializeCanvasTextElementsDictionary(textMeshProElementReferences, playerUICanvas);
 
-            // Inicializ·ljuk a j·tÈkos statisztik·it tartalmazÛ szÛt·rat
+            // Inicializ√°ljuk a j√°t√©kos statisztik√°it tartalmaz√≥ sz√≥t√°rat
             playerVariableValues.Clear();
             InitializePlayerStatNamesDictionary(playerVariableValues, player, gameStateManager);
 
 
-            // A UI szˆvegek be·llÌt·sa a megfelelı ÈrtÈkekkel
+            // A UI sz√∂vegek be√°ll√≠t√°sa a megfelel√µ √©rt√©kekkel
             SetCurrentUITextValues(textMeshProElementReferences, playerVariableValues);
 
             isPauseMenuEnabled = true;
 
-            return true; // A UI sikeresen betˆltıdˆtt
+            return true; // A UI sikeresen bet√∂lt√µd√∂tt
         }
         catch (Exception ex)
         {
-            // Ha hiba tˆrtÈnik, naplÛzzuk a hiba¸zenetet
-            Debug.LogError($"Hiba tˆrtÈnt a j·tÈk UI betˆltÈse kˆzben: {ex.Message}");
-            return false; // Visszaadjuk a hib·t jelzı ÈrtÈket
+            // Ha hiba t√∂rt√©nik, napl√≥zzuk a hiba√ºzenetet
+            Debug.LogError($"Hiba t√∂rt√©nt a j√°t√©k UI bet√∂lt√©se k√∂zben: {ex.Message}");
+            return false; // Visszaadjuk a hib√°t jelz√µ √©rt√©ket
         }
     }
 
 
     /// <summary>
-    /// LÈtrehozza Ès feltˆlti a sz¸net men¸ canvas-t.
-    /// A sz¸net men¸ prefabj·t hozz·adja a canvas-hoz, Ès kezdetben nem aktÌvra ·llÌtja.
+    /// L√©trehozza √©s felt√∂lti a sz√ºnet men√º canvas-t.
+    /// A sz√ºnet men√º prefabj√°t hozz√°adja a canvas-hoz, √©s kezdetben nem akt√≠vra √°ll√≠tja.
     /// </summary>
     private void CreateAndPopulatePauseMenuCanvas()
     {
-        // LÈtrehozza a sz¸net men¸ canvas-t
+        // L√©trehozza a sz√ºnet men√º canvas-t
         pauseMenuCanvas = CreateCanvas("PauseMenuCanvas", 100);
 
-        // Hozz·adja a sz¸net men¸ prefabj·t a canvas-hoz, kezdetben nem aktÌv
+        // Hozz√°adja a sz√ºnet men√º prefabj√°t a canvas-hoz, kezdetben nem akt√≠v
         AddUIPrefabToGameObject(pauseMenuCanvas.gameObject, pauseMenuUIPrefab, false);
     }
 
 
     /// <summary>
-    /// LÈtrehozza Ès feltˆlti a j·tÈkos statisztikai paneljÈt tartalmazÛ canvas-t.
-    /// A j·tÈkos statisztik·kat, a damage statisztik·t Ès a men¸ gombot hozz·adja a canvas-hoz.
+    /// L√©trehozza √©s felt√∂lti a j√°t√©kos statisztikai panelj√©t tartalmaz√≥ canvas-t.
+    /// A j√°t√©kos statisztik√°kat, a damage statisztik√°t √©s a men√º gombot hozz√°adja a canvas-hoz.
     /// </summary>
     private void CreateAndPopulatePlayerStatsCanvas()
     {
-        // LÈtrehozza a j·tÈkos statisztikai panel canvas-t
+        // L√©trehozza a j√°t√©kos statisztikai panel canvas-t
         playerUICanvas = CreateCanvas("GameUICanvas", 10);
 
-        // Hozz·adja a j·tÈkos statisztik·kat tartalmazÛ prefabot
+        // Hozz√°adja a j√°t√©kos statisztik√°kat tartalmaz√≥ prefabot
         AddUIPrefabToGameObject(playerUICanvas.gameObject, playerStatsUIPrefab, true);
 
-        // Hozz·adja a damage statisztik·t tartalmazÛ prefabot, kezdetben nem aktÌv
+        // Hozz√°adja a damage statisztik√°t tartalmaz√≥ prefabot, kezdetben nem akt√≠v
         AddUIPrefabToGameObject(playerUICanvas.gameObject, damageStatsUIPrefab, false);
 
-        // Hozz·adja a men¸ gombot tartalmazÛ prefabot, kezdetben nem aktÌv
+        // Hozz√°adja a men√º gombot tartalmaz√≥ prefabot, kezdetben nem akt√≠v
         AddUIPrefabToGameObject(playerUICanvas.gameObject, menuButtonUIPrefab, false);
     }
 
 
     /// <summary>
-    /// LÈtrehozza Ès feltˆlti az upgrade shop canvas-t.
-    /// Az upgrade shop prefabot hozz·adja a canvas-hoz, kezdetben nem aktÌvra ·llÌtva.
+    /// L√©trehozza √©s felt√∂lti az upgrade shop canvas-t.
+    /// Az upgrade shop prefabot hozz√°adja a canvas-hoz, kezdetben nem akt√≠vra √°ll√≠tva.
     /// </summary>
     private void CreateAndPopulateUpgradeShopCanvas()
     {
-        // LÈtrehozza az upgrade shop canvas-t
+        // L√©trehozza az upgrade shop canvas-t
         upgradeShopUICanvas = CreateCanvas("UpgradeShopUICanvas", 5);
 
-        // Hozz·adja az upgrade shop prefabj·t a canvas-hoz, kezdetben nem aktÌv
+        // Hozz√°adja az upgrade shop prefabj√°t a canvas-hoz, kezdetben nem akt√≠v
         AddUIPrefabToGameObject(upgradeShopUICanvas.gameObject, upgradeShopUIPrefab, false);
     }
 
 
     /// <summary>
-    /// Canvas-t hoz lÈtre vagy keres egy m·r lÈtezıt, amely megfelel a megadott nÈvnek.
-    /// Ha nem tal·lhatÛ, ˙j canvas-t hoz lÈtre a megadott nÈvvel Ès rendezÈsi sorrenddel.
+    /// Canvas-t hoz l√©tre vagy keres egy m√°r l√©tez√µt, amely megfelel a megadott n√©vnek.
+    /// Ha nem tal√°lhat√≥, √∫j canvas-t hoz l√©tre a megadott n√©vvel √©s rendez√©si sorrenddel.
     /// </summary>
-    /// <param name="canvasName">A keresett vagy lÈtrehozandÛ canvas neve.</param>
-    /// <param name="sortingOrder">A canvas rendezÈsi sorrendje, amely meghat·rozza a rajta lÈvı elemek z-indexÈt.</param>
-    /// <returns>Visszaadja a megtal·lt vagy lÈtrehozott Canvas objektumot.</returns>
+    /// <param name="canvasName">A keresett vagy l√©trehozand√≥ canvas neve.</param>
+    /// <param name="sortingOrder">A canvas rendez√©si sorrendje, amely meghat√°rozza a rajta l√©v√µ elemek z-index√©t.</param>
+    /// <returns>Visszaadja a megtal√°lt vagy l√©trehozott Canvas objektumot.</returns>
     Canvas CreateCanvas(string canvasName, int sortingOrder)
     {
-        // Keres¸nk egy lÈtezı canvas-t a megadott nÈvvel
+        // Keres√ºnk egy l√©tez√µ canvas-t a megadott n√©vvel
         Canvas existingCanvas = FindObjectsOfType<Canvas>()
             .FirstOrDefault(canvas => canvas.gameObject.name == canvasName);
 
         if (existingCanvas != null)
         {
-            // Ha megtal·ltuk, log-oljuk Ès visszaadjuk a lÈtezı canvas-t
+            // Ha megtal√°ltuk, log-oljuk √©s visszaadjuk a l√©tez√µ canvas-t
             Debug.Log($"Found existing canvas: {existingCanvas.name}");
-            return existingCanvas; // Visszaadjuk a megtal·lt canvas-t
+            return existingCanvas; // Visszaadjuk a megtal√°lt canvas-t
         }
 
-        // Ha nem tal·ltunk, ˙j canvas-t hozunk lÈtre
-        GameObject gameUICanvas = new GameObject(canvasName); // ⁄j GameObject lÈtrehoz·sa a megadott nÈvvel
-        Canvas gameCanvas = gameUICanvas.AddComponent<Canvas>(); // Canvas komponens hozz·ad·sa
-        gameCanvas.renderMode = RenderMode.ScreenSpaceOverlay; // Be·llÌtjuk a render mÛdot (kÈpernyın jelenjen meg)
-        gameCanvas.sortingOrder = sortingOrder; // Be·llÌtjuk a rendezÈsi sorrendet
+        // Ha nem tal√°ltunk, √∫j canvas-t hozunk l√©tre
+        GameObject gameUICanvas = new GameObject(canvasName); // √öj GameObject l√©trehoz√°sa a megadott n√©vvel
+        Canvas gameCanvas = gameUICanvas.AddComponent<Canvas>(); // Canvas komponens hozz√°ad√°sa
+        gameCanvas.renderMode = RenderMode.ScreenSpaceOverlay; // Be√°ll√≠tjuk a render m√≥dot (k√©perny√µn jelenjen meg)
+        gameCanvas.sortingOrder = sortingOrder; // Be√°ll√≠tjuk a rendez√©si sorrendet
 
-        // Hozz·adunk fontos komponenseket: CanvasScaler Ès GraphicRaycaster
+        // Hozz√°adunk fontos komponenseket: CanvasScaler √©s GraphicRaycaster
         gameUICanvas.AddComponent<CanvasScaler>();
         gameUICanvas.AddComponent<GraphicRaycaster>();
 
-        // Log-oljuk az ˙j canvas lÈtrejˆttÈt
+        // Log-oljuk az √∫j canvas l√©trej√∂tt√©t
         Debug.Log($"Created new canvas: {gameUICanvas.name}");
-        return gameCanvas; // Visszaadjuk az ˙j canvas-t
+        return gameCanvas; // Visszaadjuk az √∫j canvas-t
     }
 
 
     /// <summary>
-    /// Egy UI prefab-t hozz·ad a megadott sz¸lı GameObject-hez. Az ˙j UI objektumot a megadott sz¸lıhˆz rendeli,
-    /// Ès be·llÌtja annak aktivit·s·t.
+    /// Egy UI prefab-t hozz√°ad a megadott sz√ºl√µ GameObject-hez. Az √∫j UI objektumot a megadott sz√ºl√µh√∂z rendeli,
+    /// √©s be√°ll√≠tja annak aktivit√°s√°t.
     /// </summary>
-    /// <param name="parent">A sz¸lı GameObject, amelyhez a UI prefab-t hozz·adjuk.</param>
-    /// <param name="UIPrefab">A hozz·adandÛ UI prefab.</param>
-    /// <param name="isActive">Be·llÌtja, hogy az ˙j UI objektum aktÌv vagy inaktÌv legyen.</param>
+    /// <param name="parent">A sz√ºl√µ GameObject, amelyhez a UI prefab-t hozz√°adjuk.</param>
+    /// <param name="UIPrefab">A hozz√°adand√≥ UI prefab.</param>
+    /// <param name="isActive">Be√°ll√≠tja, hogy az √∫j UI objektum akt√≠v vagy inakt√≠v legyen.</param>
     void AddUIPrefabToGameObject(GameObject parent, GameObject UIPrefab, bool isActive)
     {
-        // Ellenırizz¸k, hogy a sz¸lı GameObject nem null
+        // Ellen√µrizz√ºk, hogy a sz√ºl√µ GameObject nem null
         if (parent == null)
         {
             Debug.LogError("Parent reference is null. Ensure the Canvas exists before adding UI elements.");
-            return; // Ha a sz¸lı null, a metÛdus befejezıdik
+            return; // Ha a sz√ºl√µ null, a met√≥dus befejez√µdik
         }
 
-        // Ellenırizz¸k, hogy a UI prefab nem null
+        // Ellen√µrizz√ºk, hogy a UI prefab nem null
         if (UIPrefab == null)
         {
             Debug.LogError("UIPrefab reference is null. Assign a valid UI prefab.");
-            return; // Ha a UI prefab null, a metÛdus befejezıdik
+            return; // Ha a UI prefab null, a met√≥dus befejez√µdik
         }
 
-        // A prefab pÈld·nyosÌt·sa a sz¸lı GameObject-hez ad·sa
+        // A prefab p√©ld√°nyos√≠t√°sa a sz√ºl√µ GameObject-hez ad√°sa
         GameObject uiInstance = Instantiate(UIPrefab, parent.transform);
 
-        // Az ˙j UI objektumot a sz¸lı objektum legutolsÛ gyermekekÈnt ·llÌtjuk be
+        // Az √∫j UI objektumot a sz√ºl√µ objektum legutols√≥ gyermekek√©nt √°ll√≠tjuk be
         uiInstance.transform.SetAsLastSibling();
 
-        // Be·llÌtjuk az UI objektum aktivit·s·t
+        // Be√°ll√≠tjuk az UI objektum aktivit√°s√°t
         uiInstance.SetActive(isActive);
     }
 
 
     /// <summary>
-    /// Ellenırzi, hogy lÈtezik-e m·r EventSystem az adott jelenetben. Ha nem tal·lhatÛ, lÈtrehoz egy ˙j EventSystem objektumot,
-    /// Ès hozz·adja az InputSystemUIInputModule-ot az input esemÈnyek kezelÈsÈhez.
+    /// Ellen√µrzi, hogy l√©tezik-e m√°r EventSystem az adott jelenetben. Ha nem tal√°lhat√≥, l√©trehoz egy √∫j EventSystem objektumot,
+    /// √©s hozz√°adja az InputSystemUIInputModule-ot az input esem√©nyek kezel√©s√©hez.
     /// </summary>
     void EnsureEventSystemExists()
     {
-        // Ellenırizz¸k, hogy lÈtezik-e m·r EventSystem a jelenetben
+        // Ellen√µrizz√ºk, hogy l√©tezik-e m√°r EventSystem a jelenetben
         if (FindObjectOfType<EventSystem>() == null)
         {
-            // Ha nincs, lÈtrehozunk egy ˙j EventSystem objektumot
+            // Ha nincs, l√©trehozunk egy √∫j EventSystem objektumot
             GameObject eventSystemObj = new GameObject("EventSystem");
-            EventSystem eventSystem = eventSystemObj.AddComponent<EventSystem>(); // Hozz·adjuk az EventSystem komponenst
+            EventSystem eventSystem = eventSystemObj.AddComponent<EventSystem>(); // Hozz√°adjuk az EventSystem komponenst
 
-            // Hozz·adjuk az InputSystemUIInputModule-ot, amely kezeli az input esemÈnyeket
+            // Hozz√°adjuk az InputSystemUIInputModule-ot, amely kezeli az input esem√©nyeket
             eventSystemObj.AddComponent<InputSystemUIInputModule>();
         }
     }
 
 
     /// <summary>
-    /// RekurzÌv mÛdon keres egy gyermeket a hierarchi·ban, amelynek neve az adott `baseName`-el kezdıdik.
-    /// A klÛnokat figyelmen kÌv¸l hagyja (a `Clone` elıtagot tartalmazÛ objektumokat nem tal·lja meg).
+    /// Rekurz√≠v m√≥don keres egy gyermeket a hierarchi√°ban, amelynek neve az adott `baseName`-el kezd√µdik.
+    /// A kl√≥nokat figyelmen k√≠v√ºl hagyja (a `Clone` el√µtagot tartalmaz√≥ objektumokat nem tal√°lja meg).
     /// </summary>
-    /// <param name="parent">Az a sz¸lıobjektum, amelyben keres¸nk.</param>
-    /// <param name="baseName">Az alap nÈv, amellyel a gyermek neve kezdıdik.</param>
-    /// <returns>A keresett objektum, ha megtal·lhatÛ, egyÈbkÈnt null.</returns>
+    /// <param name="parent">Az a sz√ºl√µobjektum, amelyben keres√ºnk.</param>
+    /// <param name="baseName">Az alap n√©v, amellyel a gyermek neve kezd√µdik.</param>
+    /// <returns>A keresett objektum, ha megtal√°lhat√≥, egy√©bk√©nt null.</returns>
     private GameObject FindInChildrenIgnoreClone(Transform parent, string baseName)
     {
-        // VÈgigiter·lunk a sz¸lı ˆsszes gyermekÈn
+        // V√©gigiter√°lunk a sz√ºl√µ √∂sszes gyermek√©n
         foreach (Transform child in parent)
         {
-            // Ha a gyermek neve a baseName-el kezdıdik, akkor visszaadjuk a gyermeket
+            // Ha a gyermek neve a baseName-el kezd√µdik, akkor visszaadjuk a gyermeket
             if (child.name.StartsWith(baseName))
             {
                 return child.gameObject;
             }
 
-            // RekurzÌv keresÈs a gyermekek alatt is
+            // Rekurz√≠v keres√©s a gyermekek alatt is
             GameObject result = FindInChildrenIgnoreClone(child, baseName);
             if (result != null)
             {
@@ -374,69 +371,69 @@ public class UIManager : BasePersistentManager<UIManager>
             }
         }
 
-        // Ha nem tal·lunk semmit, akkor null-t adunk vissza
+        // Ha nem tal√°lunk semmit, akkor null-t adunk vissza
         return null;
     }
 
 
     /// <summary>
-    /// Le·llÌtja a j·tÈkos Èleterı-figyelÈsÈt, Ès elt·volÌtja az ˆsszes esemÈnyfigyelıt.
-    /// A j·tÈkos Èleterı v·ltoz·s·ra vonatkozÛ esemÈnyeket Ès a j·tÈkos hal·l·t figyelı esemÈnyeket tˆrli,
-    /// valamint a pontok v·ltoz·s·ra vonatkozÛ esemÈnyt is elt·volÌtja.
+    /// Le√°ll√≠tja a j√°t√©kos √©leter√µ-figyel√©s√©t, √©s elt√°vol√≠tja az √∂sszes esem√©nyfigyel√µt.
+    /// A j√°t√©kos √©leter√µ v√°ltoz√°s√°ra vonatkoz√≥ esem√©nyeket √©s a j√°t√©kos hal√°l√°t figyel√µ esem√©nyeket t√∂rli,
+    /// valamint a pontok v√°ltoz√°s√°ra vonatkoz√≥ esem√©nyt is elt√°vol√≠tja.
     /// </summary>
     void StopPlayerHealthDetection()
     {
-        // Elt·volÌtja az 'OnHealthChanged' esemÈnyfigyelıt, amely az Èleterı v·ltoz·sra reag·l
+        // Elt√°vol√≠tja az 'OnHealthChanged' esem√©nyfigyel√µt, amely az √©leter√µ v√°ltoz√°sra reag√°l
         player.OnHealthChanged -= UpdateHealthUIText;
 
-        // Elt·volÌtja az 'OnPlayerDeath' esemÈnyfigyelıt, amely a j·tÈkos hal·l·ra reag·l
+        // Elt√°vol√≠tja az 'OnPlayerDeath' esem√©nyfigyel√µt, amely a j√°t√©kos hal√°l√°ra reag√°l
         player.OnPlayerDeath -= StopPlayerHealthDetection;
     }
 
 
     /// <summary>
-    /// FrissÌti a j·tÈkos ÈleterejÈt megjelenÌtı szˆveges elemet.
-    /// A `currentPlayerHP` ÈrtÈket be·llÌtja a "Health" kulcshoz tartozÛ szˆveges elem szˆvegÈhez.
+    /// Friss√≠ti a j√°t√©kos √©leterej√©t megjelen√≠t√µ sz√∂veges elemet.
+    /// A `currentPlayerHP` √©rt√©ket be√°ll√≠tja a "Health" kulcshoz tartoz√≥ sz√∂veges elem sz√∂veg√©hez.
     /// </summary>
-    /// <param name="currentPlayerHP">A j·tÈkos aktu·lis Èletereje, amelyet meg kell jelenÌteni.</param>
+    /// <param name="currentPlayerHP">A j√°t√©kos aktu√°lis √©letereje, amelyet meg kell jelen√≠teni.</param>
     public void UpdateHealthUIText(float currentPlayerHP)
     {
-        // Be·llÌtja a "Health" kulcshoz tartozÛ szˆveges elem szˆvegÈt a j·tÈkos aktu·lis ÈleterejÈre
+        // Be√°ll√≠tja a "Health" kulcshoz tartoz√≥ sz√∂veges elem sz√∂veg√©t a j√°t√©kos aktu√°lis √©leterej√©re
         textMeshProElementReferences["Health"].text = currentPlayerHP.ToString("F0");
     }
 
 
     /// <summary>
-    /// FrissÌti a j·tÈkos pontjait megjelenÌtı szˆveges elemet.
-    /// A `points` ÈrtÈket be·llÌtja a "Points" kulcshoz tartozÛ szˆveges elem szˆvegÈhez.
+    /// Friss√≠ti a j√°t√©kos pontjait megjelen√≠t√µ sz√∂veges elemet.
+    /// A `points` √©rt√©ket be√°ll√≠tja a "Points" kulcshoz tartoz√≥ sz√∂veges elem sz√∂veg√©hez.
     /// </summary>
-    /// <param name="points">A j·tÈkos aktu·lis pontsz·ma, amelyet meg kell jelenÌteni.</param>
+    /// <param name="points">A j√°t√©kos aktu√°lis pontsz√°ma, amelyet meg kell jelen√≠teni.</param>
     void UpdatePointsUIText(int points)
     {
-        // Be·llÌtja a "Points" kulcshoz tartozÛ szˆveges elem szˆvegÈt a j·tÈkos aktu·lis pontsz·m·ra
+        // Be√°ll√≠tja a "Points" kulcshoz tartoz√≥ sz√∂veges elem sz√∂veg√©t a j√°t√©kos aktu√°lis pontsz√°m√°ra
         textMeshProElementReferences["Points"].text = points.ToString("F0");
     }
 
 
     /// <summary>
-    /// Inicializ·lja a szˆveges elemeket a megadott v·szon (Canvas) objektumban, 
-    /// Ès hozz·rendeli ıket a megfelelı `textMeshProElementReferences` szÛt·rhoz 
-    /// a nev¸k alapj·n, ha azok "Value"-val vÈgzıdnek.
+    /// Inicializ√°lja a sz√∂veges elemeket a megadott v√°szon (Canvas) objektumban, 
+    /// √©s hozz√°rendeli √µket a megfelel√µ `textMeshProElementReferences` sz√≥t√°rhoz 
+    /// a nev√ºk alapj√°n, ha azok "Value"-val v√©gz√µdnek.
     /// </summary>
-    /// <param name="textMeshProElementReferences">A szÛt·r, amelyhez a szˆveges elemeket hozz·adjuk tÌpusuk alapj·n.</param>
-    /// <param name="canvas">A v·szon (Canvas) objektum, amelyen bel¸l a szˆveges elemeket keresni kell.</param>
+    /// <param name="textMeshProElementReferences">A sz√≥t√°r, amelyhez a sz√∂veges elemeket hozz√°adjuk t√≠pusuk alapj√°n.</param>
+    /// <param name="canvas">A v√°szon (Canvas) objektum, amelyen bel√ºl a sz√∂veges elemeket keresni kell.</param>
     void InitializeCanvasTextElementsDictionary(Dictionary<string, TextMeshProUGUI> textMeshProElementReferences, Canvas canvas)
     {
-        // Kiv·lasztja az ˆsszes TextMeshProUGUI komponenst a v·szonon, beleÈrtve annak ˆsszes gyermekÈt
+        // Kiv√°lasztja az √∂sszes TextMeshProUGUI komponenst a v√°szonon, bele√©rtve annak √∂sszes gyermek√©t
         TextMeshProUGUI[] textMeshProElements = canvas.GetComponentsInChildren<TextMeshProUGUI>();
 
-        // Iter·lunk a tal·lt elemek kˆzˆtt
+        // Iter√°lunk a tal√°lt elemek k√∂z√∂tt
         foreach (var textMesh in textMeshProElements)
         {
-            // Ha az elem neve "Value"-ra vÈgzıdik, hozz·adjuk a szÛt·rhoz
+            // Ha az elem neve "Value"-ra v√©gz√µdik, hozz√°adjuk a sz√≥t√°rhoz
             if (textMesh.gameObject.name.EndsWith("Value"))
             {
-                // A tÌpus alapj·n (a nevÈbıl) lekÈrdezz¸k a kulcsot Ès hozz·rendelj¸k a szˆveges elemet
+                // A t√≠pus alapj√°n (a nev√©b√µl) lek√©rdezz√ºk a kulcsot √©s hozz√°rendelj√ºk a sz√∂veges elemet
                 textMeshProElementReferences[ExtractValueTypeName(textMesh.gameObject.name)] = textMesh;
             }
         }
@@ -444,58 +441,58 @@ public class UIManager : BasePersistentManager<UIManager>
 
 
     /// <summary>
-    /// Kivonja az ÈrtÈk tÌpus·nak nevÈt a megadott `valueName` alapj·n.
-    /// A `valueName` ÈrtÈkÈt a 'V' karakter mentÈn szÈtv·lasztja, Ès visszaadja az elsı rÈszt.
+    /// Kivonja az √©rt√©k t√≠pus√°nak nev√©t a megadott `valueName` alapj√°n.
+    /// A `valueName` √©rt√©k√©t a 'V' karakter ment√©n sz√©tv√°lasztja, √©s visszaadja az els√µ r√©szt.
     /// </summary>
-    /// <param name="valueName">A feldolgozandÛ ÈrtÈk neve, amely a tÌpus nevÈt tartalmazza.</param>
-    /// <returns>Visszaadja az ÈrtÈk tÌpus·nak nevÈt, amely az elsı rÈsz a 'V' karakter elıtt.</returns>
+    /// <param name="valueName">A feldolgozand√≥ √©rt√©k neve, amely a t√≠pus nev√©t tartalmazza.</param>
+    /// <returns>Visszaadja az √©rt√©k t√≠pus√°nak nev√©t, amely az els√µ r√©sz a 'V' karakter el√µtt.</returns>
     string ExtractValueTypeName(string valueName)
     {
-        // A 'V' karakter mentÈn szÈtv·lasztjuk a `valueName` ÈrtÈket
+        // A 'V' karakter ment√©n sz√©tv√°lasztjuk a `valueName` √©rt√©ket
         string[] parts = valueName.Split(new char[] { 'V' });
 
-        // Visszaadjuk a szÈtv·lasztott elsı rÈszt, amely az ÈrtÈk tÌpus·nak neve
+        // Visszaadjuk a sz√©tv√°lasztott els√µ r√©szt, amely az √©rt√©k t√≠pus√°nak neve
         return parts[0];
     }
 
 
     /// <summary>
-    /// Inicializ·lja a j·tÈkos statisztikai ÈrtÈkeit a j·tÈk ·llapot kezelı Ès a j·tÈkos vezÈrlı alapj·n,
-    /// Ès hozz·adja ıket a `playerVariableValues` szÛt·rhoz.
+    /// Inicializ√°lja a j√°t√©kos statisztikai √©rt√©keit a j√°t√©k √°llapot kezel√µ √©s a j√°t√©kos vez√©rl√µ alapj√°n,
+    /// √©s hozz√°adja √µket a `playerVariableValues` sz√≥t√°rhoz.
     /// </summary>
-    /// <param name="player">A j·tÈkos vezÈrlı objektuma, amely tartalmazza a j·tÈkos aktu·lis statisztik·it.</param>
-    /// <param name="gameStateManager">A j·tÈk ·llapot kezelı objektum, amely tartalmazza a j·tÈkos pontjait.</param>
+    /// <param name="player">A j√°t√©kos vez√©rl√µ objektuma, amely tartalmazza a j√°t√©kos aktu√°lis statisztik√°it.</param>
+    /// <param name="gameStateManager">A j√°t√©k √°llapot kezel√µ objektum, amely tartalmazza a j√°t√©kos pontjait.</param>
     void InitializePlayerStatNamesDictionary(Dictionary<string, string> playerVariableValues, PlayerController player, GameStateManager gameStateManager)
     {
-        // A szÛt·rhoz hozz·adjuk a j·tÈkos k¸lˆnbˆzı statisztikai ÈrtÈkeit
-        playerVariableValues.Add("Points", gameStateManager.PlayerPoints.ToString("F0"));  // J·tÈkos pontjai
-        playerVariableValues.Add("Health", player.CurrentHealth.ToString("F0"));  // J·tÈkos aktu·lis Èletereje
-        playerVariableValues.Add("MovementSpeed", player.CurrentMovementSpeed.ToString("F2"));  // J·tÈkos mozg·si sebessÈge
-        playerVariableValues.Add("Damage", (player.CurrentDMG * (1 / player.CurrentAttackCooldown)).ToString("F2"));  // J·tÈkos sebzÈs (a t·mad·si-visszatˆltıdÈsi idı figyelembevÈtelÈvel)
-        playerVariableValues.Add("BaseDMG", player.BaseDMG.ToString("F2"));  // J·tÈkos alap sebzÈse
-        playerVariableValues.Add("AttackCooldown", player.CurrentAttackCooldown.ToString("F2"));  // J·tÈkos t·mad·s-visszatˆltıdÈsi ideje
-        playerVariableValues.Add("CritChance", player.CurrentCriticalHitChance.ToString("F2"));  // J·tÈkos kritikus tal·lat esÈlye
-        playerVariableValues.Add("PercentageDMG", player.CurrentPercentageBasedDMG.ToString("F2"));  // J·tÈkos sz·zalÈkos alap˙ sebzÈse
+        // A sz√≥t√°rhoz hozz√°adjuk a j√°t√©kos k√ºl√∂nb√∂z√µ statisztikai √©rt√©keit
+        playerVariableValues.Add("Points", gameStateManager.PlayerPoints.ToString("F0"));  // J√°t√©kos pontjai
+        playerVariableValues.Add("Health", player.CurrentHealth.ToString("F0"));  // J√°t√©kos aktu√°lis √©letereje
+        playerVariableValues.Add("MovementSpeed", player.CurrentMovementSpeed.ToString("F2"));  // J√°t√©kos mozg√°si sebess√©ge
+        playerVariableValues.Add("Damage", (player.CurrentDMG * (1 / player.CurrentAttackCooldown)).ToString("F2"));  // J√°t√©kos sebz√©s (a t√°mad√°si-visszat√∂lt√µd√©si id√µ figyelembev√©tel√©vel)
+        playerVariableValues.Add("BaseDMG", player.BaseDMG.ToString("F2"));  // J√°t√©kos alap sebz√©se
+        playerVariableValues.Add("AttackCooldown", player.CurrentAttackCooldown.ToString("F2"));  // J√°t√©kos t√°mad√°s-visszat√∂lt√µd√©si ideje
+        playerVariableValues.Add("CritChance", player.CurrentCriticalHitChance.ToString("F2"));  // J√°t√©kos kritikus tal√°lat es√©lye
+        playerVariableValues.Add("PercentageDMG", player.CurrentPercentageBasedDMG.ToString("F2"));  // J√°t√©kos sz√°zal√©kos alap√∫ sebz√©se
     }
 
 
     /// <summary>
-    /// Be·llÌtja a szˆveges elemek ÈrtÈkeit a `textElements` Ès `variableValues` szÛt·rakban tal·lhatÛ kˆzˆs kulcsok alapj·n.
-    /// A kˆzˆs kulcsokhoz tartozÛ szˆveges elemeket frissÌti a szÛt·rban t·rolt ÈrtÈkekkel.
+    /// Be√°ll√≠tja a sz√∂veges elemek √©rt√©keit a `textElements` √©s `variableValues` sz√≥t√°rakban tal√°lhat√≥ k√∂z√∂s kulcsok alapj√°n.
+    /// A k√∂z√∂s kulcsokhoz tartoz√≥ sz√∂veges elemeket friss√≠ti a sz√≥t√°rban t√°rolt √©rt√©kekkel.
     /// </summary>
     void SetCurrentUITextValues(Dictionary<string, TextMeshProUGUI> textMeshProElementReferences, Dictionary<string, string> playerVariableValues)
     {
-        // Kiv·lasztjuk a kˆzˆs kulcsokat a `textElements` Ès `variableValues` szÛt·rakbÛl
+        // Kiv√°lasztjuk a k√∂z√∂s kulcsokat a `textElements` √©s `variableValues` sz√≥t√°rakb√≥l
         var commonKeys = textMeshProElementReferences.Keys.Intersect(playerVariableValues.Keys);
 
-        // VÈgigiter·lunk a kˆzˆs kulcsokon
+        // V√©gigiter√°lunk a k√∂z√∂s kulcsokon
         foreach (var key in commonKeys)
         {
-            // Megkeress¸k a szˆveges elemet Ès az ÈrtÈket a kulcs alapj·n
+            // Megkeress√ºk a sz√∂veges elemet √©s az √©rt√©ket a kulcs alapj√°n
             var textElement = textMeshProElementReferences[key];
             var value = playerVariableValues[key];
 
-            // Ha mindkettı nem null, akkor frissÌtj¸k a szˆveget a t·rolt ÈrtÈkkel
+            // Ha mindkett√µ nem null, akkor friss√≠tj√ºk a sz√∂veget a t√°rolt √©rt√©kkel
             if (textElement != null && value != null)
             {
                 textElement.text = value;
@@ -505,107 +502,113 @@ public class UIManager : BasePersistentManager<UIManager>
 
 
     /// <summary>
-    /// Az upgrade shop UI betˆltÈsÈÈrt felelıs aszinkron metÛdus. 
-    /// Inicializ·lja a sz¸ksÈges UI elemeket, be·llÌtja a gombokat, 
-    /// Ès feltˆlti a v·s·rl·si lehetısÈgeket.
+    /// Az upgrade shop UI bet√∂lt√©s√©√©rt felel√µs aszinkron met√≥dus. 
+    /// Inicializ√°lja a sz√ºks√©ges UI elemeket, be√°ll√≠tja a gombokat, 
+    /// √©s felt√∂lti a v√°s√°rl√°si lehet√µs√©geket.
     /// </summary>
-    /// <param name="shopUpgrades">A list·ja a j·tÈkos ·ltal elÈrhetı fejlesztÈseknek.</param>
-    /// <returns>True, ha a UI sikeresen betˆltıdˆtt, egyÈbkÈnt false.</returns>
+    /// <param name="shopUpgrades">A list√°ja a j√°t√©kos √°ltal el√©rhet√µ fejleszt√©seknek.</param>
+    /// <returns>True, ha a UI sikeresen bet√∂lt√µd√∂tt, egy√©bk√©nt false.</returns>
     public async Task<bool> LoadUpgradesShopUIAsync(List<PlayerUpgrade> shopUpgrades)
     {
-        // Aszinkron v·rakoz·s, hogy biztosÌtsuk a feladatok folyamatos fut·s·t.
+        // Aszinkron v√°rakoz√°s, hogy biztos√≠tsuk a feladatok folyamatos fut√°s√°t.
         await Task.Yield();
 
         try
         {
-            // UI panelek inicializ·l·sa
+            // UI panelek inicializ√°l√°sa
             InitializePanels();
 
-            // Gombok Ès esemÈnykezelık be·llÌt·sa
+            // Gombok √©s esem√©nykezel√µk be√°ll√≠t√°sa
             SetUpShopUIButtons();
 
-            // Upgrade lehetısÈgek feltˆltÈse a shopban
+            // Upgrade lehet√µs√©gek felt√∂lt√©se a shopban
             PopulateUpgradeOptions(shopUpgrades);
 
-            // VisszatÈrÈs, ha minden sikeresen megtˆrtÈnt
+            // Visszat√©r√©s, ha minden sikeresen megt√∂rt√©nt
             return true;
         }
         catch (Exception ex)
         {
-            // Hiba¸zenet naplÛz·sa, ha valami hiba tˆrtÈnik
-            Debug.LogError($"Hiba tˆrtÈnt az upgrade shop UI betˆltÈse kˆzben: {ex.Message}");
+            // Hiba√ºzenet napl√≥z√°sa, ha valami hiba t√∂rt√©nik
+            Debug.LogError($"Hiba t√∂rt√©nt az upgrade shop UI bet√∂lt√©se k√∂zben: {ex.Message}");
             return false;
         }
     }
 
-
     /// <summary>
-    /// Inicializ·lja Ès aktiv·lja a sz¸ksÈges UI panelek Ès elemeket az upgrade shophoz.
+    /// Inicializ√°lja √©s aktiv√°lja a sz√ºks√©ges UI panelek √©s elemeket az upgrade shophoz.
     /// </summary>
     private void InitializePanels()
     {
+        // Az upgrade shop UI-j√°n bel√ºl megtal√°lja az "UpgradesGridPanel" panelt, √©s elt√°rolja a v√°ltoz√≥ban
         upgradesPanel = FindInChildrenIgnoreClone(upgradeShopUICanvas.transform, "UpgradesGridPanel");
+        // A j√°t√©kos UI-j√°n bel√ºl megtal√°lja a sebz√©s statok panelt √©s elt√°rolja a v√°ltoz√≥ban
         DMGStatsPanel = FindInChildrenIgnoreClone(playerUICanvas.transform, damageStatsUIPrefab.name);
+        // A j√°t√©kos UI-j√°n bel√ºl megtal√°lja a men√º gomb panelt √©s elt√°rolja a v√°ltoz√≥ban
         menuButtonPanel = FindInChildrenIgnoreClone(playerUICanvas.transform, menuButtonUIPrefab.name);
 
-        // Panelek aktiv·l·sa
-        DMGStatsPanel.SetActive(true);
-        upgradeShopPanel = FindInChildrenIgnoreClone(upgradeShopUICanvas.transform, upgradeShopUIPrefab.name);
-        upgradeShopPanel.SetActive(true);
-        menuButtonPanel.SetActive(true);
+        // Panelek aktiv√°l√°sa
+        DMGStatsPanel.SetActive(true); // A sebz√©s statok panel aktiv√°l√°sa
+        upgradeShopPanel = FindInChildrenIgnoreClone(upgradeShopUICanvas.transform, upgradeShopUIPrefab.name); // Az upgrade shop panel keres√©se
+        upgradeShopPanel.SetActive(true); // Az upgrade shop panel aktiv√°l√°sa
+        menuButtonPanel.SetActive(true); // A men√º gomb panel aktiv√°l√°sa
     }
 
-
     /// <summary>
-    /// Be·llÌtja a gombok esemÈnykezelıit az upgrade shophoz.
+    /// Be√°ll√≠tja a gombok esem√©nykezel√µit az upgrade shophoz.
     /// </summary>
     private void SetUpShopUIButtons()
     {
-        // Men¸ gomb esemÈnykezelıjÈnek be·llÌt·sa
+        // Men√º gomb esem√©nykezel√µj√©nek be√°ll√≠t√°sa
         GameObject menuButton = FindInChildrenIgnoreClone(menuButtonPanel.transform, "MenuButton");
         menuButton.GetComponent<Button>().onClick.AddListener(() => SetPauseMenuActive());
 
-        // Skip (·tugr·s) gomb esemÈnykezelıjÈnek be·llÌt·sa
+        // Skip (√°tugr√°s) gomb esem√©nykezel√µj√©nek be√°ll√≠t√°sa
         GameObject skipButton = FindInChildrenIgnoreClone(upgradeShopUICanvas.transform, "SkipUpgradeButton");
         skipButton.GetComponent<Button>().onClick.AddListener(() => OnBuyButtonClicked(null));
     }
 
-
     /// <summary>
-    /// Kezeli a sz¸net men¸ aktiv·l·s·t. Ha a sz¸net men¸ objektum nem null, aktiv·lja azt.
-    /// Ha a sz¸net men¸ objektum null, figyelmeztetÈst Ìr ki a logba.
+    /// Kezeli a sz√ºnet men√º aktiv√°l√°s√°t. Ha a sz√ºnet men√º objektum nem null, aktiv√°lja azt.
+    /// Ha a sz√ºnet men√º objektum null, figyelmeztet√©st √≠r ki a logba.
     /// </summary>
     public void SetPauseMenuActive()
     {
         OnGamePaused?.Invoke(GameState.Paused);
         pauseMenu.SetActive(true);
-        // TODO: event a GameStateManagernek a 'Time.timeScale = 0' be·llÌt·s·hoz
+        // TODO: event a GameStateManagernek a 'Time.timeScale = 0' be√°ll√≠t√°s√°hoz
 
     }
 
-
+    /// <summary>
+    /// A sz√ºnet men√º folytat√°sa gombra kattintva v√©grehajt√≥d√≥ m≈±velet
+    /// </summary>
     public void ResumeGameButtonClicked()
     {
-        // Az aktu·lis GameObject elrejtÈse
+        // Az aktu√°lis GameObject (sz√ºnet men√º) elrejt√©se
         pauseMenu.SetActive(false);
 
+        // Az OnGameResumed esem√©ny megh√≠v√°sa, jelezve, hogy a j√°t√©k folytat√≥dik
         OnGameResumed?.Invoke(GameState.Playing);
     }
 
-
+    /// <summary>
+    /// A visszat√©r√©s a f≈ëmen√ºbe gombra kattintva v√©grehajt√≥d√≥ m≈±velet
+    /// </summary>
     public void ExitToMainMenuButtonClicked()
     {
+        // Az OnBackToMainMenu esem√©ny megh√≠v√°sa, jelezve, hogy visszat√©r√ºnk a f≈ëmen√ºbe
         OnBackToMainMenu?.Invoke(GameState.MainMenu);
     }
 
 
     /// <summary>
-    /// Ez a metÛdus akkor hÌvÛdik meg, amikor a v·s·rl·s gombot megnyomj·k.
-    /// Ha ÈrvÈnyes `id` ÈrtÈket kapunk, akkor megjelenÌti a v·s·rolt elem nevÈt a logban.
-    /// Ha az `id` null, akkor azt jelzi, hogy a v·s·rl·s el lett hagyva.
+    /// Ez a met√≥dus akkor h√≠v√≥dik meg, amikor a v√°s√°rl√°s gombot megnyomj√°k.
+    /// Ha √©rv√©nyes `id` √©rt√©ket kapunk, akkor megjelen√≠ti a v√°s√°rolt elem nev√©t a logban.
+    /// Ha az `id` null, akkor azt jelzi, hogy a v√°s√°rl√°s el lett hagyva.
     /// </summary>
-    /// <param name="id">A v·s·rolt elem azonosÌtÛja, amely alapj·n megtˆrtÈnik a v·s·rl·s nyilv·ntart·sa.</param>
-    public void OnBuyButtonClicked(string id)      // PlayerUpgradeManager hÌv·sa!
+    /// <param name="id">A v√°s√°rolt elem azonos√≠t√≥ja, amely alapj√°n megt√∂rt√©nik a v√°s√°rl√°s nyilv√°ntart√°sa.</param>
+    public void OnBuyButtonClicked(string id)      // PlayerUpgradeManager h√≠v√°sa!
     {
         OnPurchaseOptionChosen?.Invoke(id);
 
@@ -613,240 +616,286 @@ public class UIManager : BasePersistentManager<UIManager>
 
 
     /// <summary>
-    /// Feltˆlti az upgrade lehetısÈgeket a shopban a megadott lista alapj·n.
+    /// Felt√∂lti az upgrade lehet√µs√©geket a shopban a megadott lista alapj√°n.
     /// </summary>
-    /// <param name="shopUpgrades">A j·tÈkos ·ltal v·laszthatÛ fejlesztÈsek list·ja.</param>
+    /// <param name="shopUpgrades">A j√°t√©kos √°ltal v√°laszthat√≥ fejleszt√©sek list√°ja.</param>
     private void PopulateUpgradeOptions(List<PlayerUpgrade> shopUpgrades)
     {
         foreach (var item in shopUpgrades)
         {
-            // V·s·rl·si lehetısÈg lÈtrehoz·sa Ès hozz·ad·sa a list·hoz
+            // V√°s√°rl√°si lehet√µs√©g l√©trehoz√°sa √©s hozz√°ad√°sa a list√°hoz
             purchaseOptions.Add(CreatePurchaseOption(item));
 
-            // Upgrade UI elemek hozz·ad·sa a v·s·rl·si panelhez
+            // Upgrade UI elemek hozz√°ad√°sa a v√°s√°rl√°si panelhez
             AddUIPrefabToGameObject(upgradesPanel, CreateInitializedUpgradeUIPrefab(item), true);
         }
 
-        // EsemÈnykezelık hozz·ad·sa minden upgrade gombhoz
-        List<Button> buttons = upgradesPanel.GetComponentsInChildren<Button>().ToList();
+        // Esem√©nykezel≈ëk hozz√°ad√°sa minden upgrade gombhoz
+        List<Button> buttons = upgradesPanel.GetComponentsInChildren<Button>().ToList(); // √ñsszegy≈±jti az √∂sszes gombot a panelr≈ël
         foreach (var button in buttons)
         {
+            // Hozz√°ad egy esem√©nykezel≈ët a gombhoz, amely aktiv√°l√≥dik a gomb megnyom√°sakor
             button.onClick.AddListener(() => OnBuyButtonClicked(button.GetComponentInParent<UpgradeUIController>().ID));
+
+            // Ha a gombhoz tartoz√≥ upgrade √°ra nagyobb, mint a j√°t√©kos pontjai, akkor a gomb nem lesz interakt√≠v
             if (button.GetComponentInParent<UpgradeUIController>().Price > gameStateManager.PlayerPoints)
             {
-                button.interactable = false;
+                button.interactable = false; // A gomb deaktiv√°l√°sa
             }
         }
     }
 
 
     /// <summary>
-    /// LÈtrehozza a v·s·rl·si lehetısÈget (`PurchaseOption`) a megadott `PlayerUpgrade` objektumbÛl.
-    /// Az ˙j v·s·rl·si lehetısÈg tartalmazza az upgrade nevÈt, leÌr·s·t, szintjeit Ès egyÈb paramÈtereit.
+    /// L√©trehozza a v√°s√°rl√°si lehet√µs√©get (`PurchaseOption`) a megadott `PlayerUpgrade` objektumb√≥l.
+    /// Az √∫j v√°s√°rl√°si lehet√µs√©g tartalmazza az upgrade nev√©t, le√≠r√°s√°t, szintjeit √©s egy√©b param√©tereit.
     /// </summary>
-    /// <param name="playerUpgrade">A PlayerUpgrade objektum, amely meghat·rozza a v·s·rl·si lehetısÈg paramÈtereit.</param>
-    /// <returns>A lÈtrehozott PurchaseOption objektum, amely tartalmazza az upgrade inform·ciÛit.</returns>
+    /// <param name="playerUpgrade">A PlayerUpgrade objektum, amely meghat√°rozza a v√°s√°rl√°si lehet√µs√©g param√©tereit.</param>
+    /// <returns>A l√©trehozott PurchaseOption objektum, amely tartalmazza az upgrade inform√°ci√≥it.</returns>
     PurchaseOption CreatePurchaseOption(PlayerUpgrade playerUpgrade)
     {
-        // LÈtrehozzuk a v·s·rl·si lehetısÈg objektumot
+        // L√©trehozzuk a v√°s√°rl√°si lehet√µs√©g objektumot
         PurchaseOption purchaseOption = new PurchaseOption();
 
-        // A PlayerUpgrade objektum alapj·n kitˆltj¸k a v·s·rl·si lehetısÈg mezıit
-        purchaseOption.ID = playerUpgrade.ID; // A v·s·rl·si lehetısÈg azonosÌtÛja
+        // A PlayerUpgrade objektum alapj√°n kit√∂ltj√ºk a v√°s√°rl√°si lehet√µs√©g mez√µit
+        purchaseOption.ID = playerUpgrade.ID; // A v√°s√°rl√°si lehet√µs√©g azonos√≠t√≥ja
         purchaseOption.Name = playerUpgrade.upgradeName; // Az upgrade neve
         purchaseOption.Icon = playerUpgrade.icon; // Az upgrade ikonja
-        purchaseOption.minLevel = playerUpgrade.minUpgradeLevel; // Minim·lis szint
-        purchaseOption.maxLevel = playerUpgrade.maxUpgradeLevel; // Maxim·lis szint
+        purchaseOption.minLevel = playerUpgrade.minUpgradeLevel; // Minim√°lis szint
+        purchaseOption.maxLevel = playerUpgrade.maxUpgradeLevel; // Maxim√°lis szint
         purchaseOption.currentLevel = playerUpgrade.currentUpgradeLevel; // Jelenlegi szint
-        purchaseOption.Description = playerUpgrade.description; // Az upgrade leÌr·sa
-        purchaseOption.Price = playerUpgrade.GetPrice(); // Az upgrade ·ra, amely a PlayerUpgrade objektumbÛl sz·rmazik
+        purchaseOption.Description = playerUpgrade.description; // Az upgrade le√≠r√°sa
+        purchaseOption.Price = playerUpgrade.GetPrice(); // Az upgrade √°ra, amely a PlayerUpgrade objektumb√≥l sz√°rmazik
 
-        // Visszaadjuk a lÈtrehozott PurchaseOption objektumot
+        // Visszaadjuk a l√©trehozott PurchaseOption objektumot
         return purchaseOption;
     }
 
 
     /// <summary>
-    /// Az adott PlayerUpgrade tÌpus·nak megfelelı UI prefab-ot adja vissza. A prefab tÌpus·t a playerUpgrade paramÈter hat·rozza meg,
-    /// Ès az UI elem szˆvegeit az adott frissÌtÈsi lehetısÈg alapj·n ·llÌtja be.
+    /// Az adott PlayerUpgrade t√≠pus√°nak megfelel√µ UI prefab-ot adja vissza. A prefab t√≠pus√°t a playerUpgrade param√©ter hat√°rozza meg,
+    /// √©s az UI elem sz√∂vegeit az adott friss√≠t√©si lehet√µs√©g alapj√°n √°ll√≠tja be.
     /// </summary>
-    /// <param name="playerUpgrade">A PlayerUpgrade objektum, amely meghat·rozza, hogy milyen tÌpus˙ UI prefab-ot hozunk lÈtre.</param>
-    /// <returns>A megfelelı UI prefab, amely az UpgradeUIController komponenssel Ès a megfelelı szˆvegekkel van konfigur·lva.</returns>
+    /// <param name="playerUpgrade">A PlayerUpgrade objektum, amely meghat√°rozza, hogy milyen t√≠pus√∫ UI prefab-ot hozunk l√©tre.</param>
+    /// <returns>A megfelel√µ UI prefab, amely az UpgradeUIController komponenssel √©s a megfelel√µ sz√∂vegekkel van konfigur√°lva.</returns>
     GameObject CreateInitializedUpgradeUIPrefab(PlayerUpgrade playerUpgrade)
     {
-        // Ha a playerUpgrade null, akkor null ÈrtÈkkel tÈr¸nk vissza
+        // Ha a playerUpgrade null, akkor null √©rt√©kkel t√©r√ºnk vissza
         if (playerUpgrade == null)
         {
             return null;
         }
 
-        // A megfelelı prefab v·ltozÛ deklar·l·sa
+        // A megfelel√µ prefab v√°ltoz√≥ deklar√°l√°sa
         GameObject prefab;
 
-        // Ha a playerUpgrade egy gyÛgyÌt·s tÌpus˙ frissÌtÈs
+        // Ha a playerUpgrade egy gy√≥gy√≠t√°s t√≠pus√∫ friss√≠t√©s
         if (playerUpgrade.isHealing)
         {
-            prefab = healUpgradeUIPrefab; // Hozz·rendelj¸k a gyÛgyÌt·shoz tartozÛ prefabot
-            prefab.GetComponent<UpgradeUIController>().SetUpgradeUITextValues(CreatePurchaseOption(playerUpgrade)); // Be·llÌtjuk a szˆvegeket
+            prefab = healUpgradeUIPrefab; // Hozz√°rendelj√ºk a gy√≥gy√≠t√°shoz tartoz√≥ prefabot
+            prefab.GetComponent<UpgradeUIController>().SetUpgradeUITextValues(CreatePurchaseOption(playerUpgrade)); // Be√°ll√≠tjuk a sz√∂vegeket
             return prefab; // Visszaadjuk a prefab-ot
         }
-        // Ha a playerUpgrade egy ideiglenes m·solat tÌpus˙ frissÌtÈs
+        // Ha a playerUpgrade egy ideiglenes m√°solat t√≠pus√∫ friss√≠t√©s
         else if (playerUpgrade.IsTempCopy)
         {
-            prefab = nextLevelUpgradeUIPrefab; // Hozz·rendelj¸k a kˆvetkezı szinthez tartozÛ prefabot
-            prefab.GetComponent<UpgradeUIController>().SetUpgradeUITextValues(CreatePurchaseOption(playerUpgrade)); // Be·llÌtjuk a szˆvegeket
+            prefab = nextLevelUpgradeUIPrefab; // Hozz√°rendelj√ºk a k√∂vetkez√µ szinthez tartoz√≥ prefabot
+            prefab.GetComponent<UpgradeUIController>().SetUpgradeUITextValues(CreatePurchaseOption(playerUpgrade)); // Be√°ll√≠tjuk a sz√∂vegeket
             return prefab; // Visszaadjuk a prefab-ot
         }
-        // Ha sem egyik, akkor norm·l frissÌtÈst hozunk lÈtre
+        // Ha sem egyik, akkor norm√°l friss√≠t√©st hozunk l√©tre
         else
         {
-            prefab = normalUpgradeUIPrefab; // Hozz·rendelj¸k a norm·l frissÌtÈst
-            prefab.GetComponent<UpgradeUIController>().SetUpgradeUITextValues(CreatePurchaseOption(playerUpgrade)); // Be·llÌtjuk a szˆvegeket
+            prefab = normalUpgradeUIPrefab; // Hozz√°rendelj√ºk a norm√°l friss√≠t√©st
+            prefab.GetComponent<UpgradeUIController>().SetUpgradeUITextValues(CreatePurchaseOption(playerUpgrade)); // Be√°ll√≠tjuk a sz√∂vegeket
             return prefab; // Visszaadjuk a prefab-ot
         }
     }
 
 
     /// <summary>
-    /// 
+    /// Az √∫j j√°t√©k ind√≠t√°sa gombra kattintva v√©grehajt√≥d√≥ m≈±velet
     /// </summary>
     public void StartNewGameButton()
     {
+        // Az OnStartNewGame esem√©ny megh√≠v√°sa, jelezve, hogy √∫j j√°t√©k kezd≈ëdik
         OnStartNewGame?.Invoke(GameState.LoadingNewGame);
     }
 
 
     /// <summary>
-    /// 
+    /// A mentett j√°t√©k bet√∂lt√©se gombra kattintva v√©grehajt√≥d√≥ m≈±velet
     /// </summary>
     public void LoadGameButton()
     {
+        // Az OnLoadGame esem√©ny megh√≠v√°sa, jelezve, hogy egy mentett j√°t√©k bet√∂lt√©se t√∂rt√©nik
         OnLoadGame?.Invoke(GameState.LoadingSavedGame);
     }
 
-
+    /// <summary>
+    /// Az eredm√©nylista men√º megnyit√°sa
+    /// </summary>
     public void OpenScoreboardMenu()
     {
+        // Az eredm√©nylista panel aktiv√°l√°sa, hogy megjelenjen a k√©perny≈ën
         scoreboardPanel.SetActive(true);
     }
 
+    /// <summary>
+    /// Az eredm√©nylista men√º bez√°r√°sa
+    /// </summary>
     public void CloseScoreboardMenu()
     {
+        // Az eredm√©nylista panel deaktiv√°l√°sa, hogy elt≈±nj√∂n a k√©perny≈ër≈ël
         scoreboardPanel.SetActive(false);
     }
 
 
     /// <summary>
-    /// 
+    /// A j√°t√©k kil√©p√©se gombra kattintva v√©grehajt√≥d√≥ m≈±velet
     /// </summary>
     public void QuitGameButton()
     {
+        // Az OnExitGame esem√©ny megh√≠v√°sa, jelezve, hogy a j√°t√©k bez√°r√°sa t√∂rt√©nik
         OnExitGame?.Invoke(GameState.Quitting);
     }
 
 
     /// <summary>
-    /// A jelenet betˆltÈse ut·n vÈgrehajtandÛ m˚veletek. Be·llÌtja a "Load Game" gomb referenci·j·t
-    /// Ès frissÌti annak ·llapot·t.
+    /// A jelenet bet√∂lt√©se ut√°n v√©grehajtand√≥ m√ªveletek. Be√°ll√≠tja a "Load Game" gomb referenci√°j√°t
+    /// √©s friss√≠ti annak √°llapot√°t.
     /// </summary>
-    /// <param name="scene">A betˆltˆtt jelenet inform·ciÛi.</param>
-    /// <param name="mode">A betˆltÈs mÛdja (pl. ˙j jelenet betˆltÈse vagy hozz·ad·s).</param>
+    /// <param name="scene">A bet√∂lt√∂tt jelenet inform√°ci√≥i.</param>
+    /// <param name="mode">A bet√∂lt√©s m√≥dja (pl. √∫j jelenet bet√∂lt√©se vagy hozz√°ad√°s).</param>
     private async void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (IsMainMenuScene())
         {
             await Task.Yield();
-            // Be·llÌtjuk a "Load Game" gomb referenci·j·t
+            // Be√°ll√≠tjuk a "Load Game" gomb referenci√°j√°t
             SetMainMenuButtonReferences();
 
             SetScoreboardData(await saveLoadManager.LoadScoreboardAsync());
 
-            // FrissÌtj¸k a gomb ·llapot·t (aktÌv vagy inaktÌv)
+            // Friss√≠tj√ºk a gomb √°llapot√°t (akt√≠v vagy inakt√≠v)
             UpdateMainMenuButtons();
 
         }
     }
 
-
+    /// <summary>
+    /// Be√°ll√≠tja a f≈ëmen√º gombok hivatkoz√°sait a megfelel≈ë UI elemekhez
+    /// </summary>
     void SetMainMenuButtonReferences()
     {
+        // Ha a jelenlegi jelenet a f≈ëmen√º
         if (IsMainMenuScene())
         {
-            newGameButton = GameObject.Find("NewGameButton").GetComponent<Button>();
-            loadGameButton = GameObject.Find("LoadGameButton").GetComponent<Button>();
-            settingsButton = GameObject.Find("SettingsButton").GetComponent<Button>();
-            scoreboardButton = GameObject.Find("ScoreboardButton").GetComponent<Button>();
-            quitGameButton = GameObject.Find("QuitGameButton").GetComponent<Button>();
+            // A gombok hivatkoz√°sainak be√°ll√≠t√°sa a f≈ëmen√ºben tal√°lhat√≥ gombokhoz
+            newGameButton = GameObject.Find("NewGameButton").GetComponent<Button>(); // √öj j√°t√©k gomb
+            loadGameButton = GameObject.Find("LoadGameButton").GetComponent<Button>(); // Bet√∂lt√©s gomb
+            settingsButton = GameObject.Find("SettingsButton").GetComponent<Button>(); // Be√°ll√≠t√°sok gomb
+            scoreboardButton = GameObject.Find("ScoreboardButton").GetComponent<Button>(); // Eredm√©nylista gomb
+            quitGameButton = GameObject.Find("QuitGameButton").GetComponent<Button>(); // Kil√©p√©s gomb
         }
     }
 
+    /// <summary>
+    /// Friss√≠ti a f≈ëmen√º gombokat, hozz√°adva az esem√©nykezel≈ëket
+    /// </summary>
     void UpdateMainMenuButtons()
     {
-        newGameButton.onClick.AddListener(() => StartNewGameButton());
-        loadGameButton.onClick.AddListener(() => LoadGameButton());
-        UpdateLoadGameButtonAvailability();
-        scoreboardButton.onClick.AddListener(() => OpenScoreboardMenu());
+        // A gombokhoz hozz√°adjuk a megfelel≈ë esem√©nykezel≈ëket
+        newGameButton.onClick.AddListener(() => StartNewGameButton()); // √öj j√°t√©k gomb esem√©nykezel≈ëje
+        loadGameButton.onClick.AddListener(() => LoadGameButton()); // Bet√∂lt√©s gomb esem√©nykezel≈ëje
+        UpdateLoadGameButtonAvailability(); // A Bet√∂lt√©s gomb el√©rhet≈ës√©g√©nek friss√≠t√©se
+
+        scoreboardButton.onClick.AddListener(() => OpenScoreboardMenu()); // Eredm√©nylista gomb esem√©nykezel≈ëje
+                                                                          // A vissza gomb esem√©nykezel≈ëj√©nek hozz√°ad√°sa az eredm√©nylista panelen
         FindInChildrenIgnoreClone(scoreboardPanel.transform, "Back").GetComponent<Button>().onClick.AddListener(() => CloseScoreboardMenu());
-        quitGameButton.onClick.AddListener(() => QuitGameButton());
+
+        quitGameButton.onClick.AddListener(() => QuitGameButton()); // Kil√©p√©s gomb esem√©nykezel≈ëje
     }
 
-
+    /// <summary>
+    /// Be√°ll√≠tja az eredm√©nylista adatokat √©s hozz√°adja a bejegyz√©seket a megfelel≈ë panelhez
+    /// </summary>
+    /// <param name="scoreboardData">Az eredm√©nylista adatait tartalmaz√≥ objektum</param>
     void SetScoreboardData(ScoreboardData scoreboardData)
     {
+        // Kiv√°lasztja az eredm√©nylista panelt a canvas-on bel√ºl
         scoreboardPanel = FindInChildrenIgnoreClone(FindObjectOfType<Canvas>().transform, "ScoreBoard");
+        // Kiv√°lasztja az eredm√©nylista tartalm√°t, ahol az egyes bejegyz√©sek megjelennek
         GameObject scoreboardContentPanel = FindInChildrenIgnoreClone(scoreboardPanel.transform, "Content");
 
+        // V√©gigiter√°l a scoreboardData-ban tal√°lhat√≥ √∂sszes eredm√©ny bejegyz√©sen
         foreach (var data in scoreboardData.scoreboardEntries)
         {
+            // Hozz√°adja az egyes eredm√©nyeket az eredm√©nylista panelhez
             AddScoreEntryToPanel(scoreboardContentPanel, scoreboardEntryPrefab, data);
         }
-
     }
 
+    /// <summary>
+    /// Hozz√°ad egy √∫j eredm√©nybejegyz√©st az eredm√©nylista panelhez.
+    /// </summary>
+    /// <param name="panel">A sz√ºl≈ë panel, amelyhez hozz√°adjuk az √∫j bejegyz√©st</param>
+    /// <param name="scoreEntryPrefab">A UI prefab, amelyet p√©ld√°nyos√≠tunk az √∫j bejegyz√©shez</param>
+    /// <param name="entryData">Az egyes eredm√©ny adatokat tartalmaz√≥ objektum</param>
     void AddScoreEntryToPanel(GameObject panel, GameObject scoreEntryPrefab, ScoreboardEntry entryData)
     {
-        // Ellenırizz¸k, hogy a sz¸lı GameObject nem null
+        // Ellen√µrizz√ºk, hogy a sz√ºl√µ GameObject nem null
         if (panel == null)
         {
             Debug.LogError($"Parent panel is null. This might happen if the UI hierarchy is not properly initialized. Check the Canvas and Content GameObject.");
             return;
         }
 
-        // Ellenırizz¸k, hogy a UI prefab nem null
+        // Ellen√µrizz√ºk, hogy a UI prefab nem null
         if (scoreEntryPrefab == null)
         {
             Debug.LogError("UIPrefab reference is null. Assign a valid UI prefab.");
-            return; // Ha a UI prefab null, a metÛdus befejezıdik
+            return; // Ha a UI prefab null, a met√≥dus befejez√µdik
         }
 
-        // A prefab pÈld·nyosÌt·sa a sz¸lı GameObject-hez ad·sa
+        // A prefab p√©ld√°nyos√≠t√°sa a sz√ºl√µ GameObject-hez ad√°sa
         GameObject uiInstance = Instantiate(scoreEntryPrefab, panel.transform);
 
+        // A p√©ld√°nyos√≠tott UI elemet felt√∂ltj√ºk az eredm√©ny adat√°val
         PopulateScoreEntry(uiInstance, entryData);
 
-        // Az ˙j UI objektumot a sz¸lı objektum legutolsÛ gyermekekÈnt ·llÌtjuk be
+        // Az √∫j UI objektumot a sz√ºl√µ objektum legutols√≥ gyermekek√©nt √°ll√≠tjuk be
         uiInstance.transform.SetAsLastSibling();
     }
 
-
+    /// <summary>
+    /// Felt√∂lti az eredm√©ny bejegyz√©st a megfelel≈ë adatokkal.
+    /// </summary>
+    /// <param name="uiInstance">A p√©ld√°nyos√≠tott UI objektum, amelyet friss√≠t√ºnk</param>
+    /// <param name="entryData">Az eredm√©ny adatokat tartalmaz√≥ objektum</param>
     void PopulateScoreEntry(GameObject uiInstance, ScoreboardEntry entryData)
-    {
+        {
+        // Az adatokat tartalmaz√≥ kulcs-√©rt√©k p√°rok
         Dictionary<string, string> fieldValues = new Dictionary<string, string>()
-    {
-        { "Name", entryData.playerName },
-        { "Points", entryData.playerPoints.ToString() },
-        { "Time", entryData.finalTime },
-        { "Date", entryData.date }
-    };
+        {
+            { "Name", entryData.playerName },  // J√°t√©kos neve
+            { "Points", entryData.playerPoints.ToString() },  // J√°t√©kos pontsz√°ma
+            { "Time", entryData.finalTime },  // J√°t√©k v√©g√©n eltelt id≈ë
+            { "Date", entryData.date }  // Eredm√©ny d√°tuma
+        };
 
+        // V√©gigiter√°lunk a mez≈ëk√∂n √©s friss√≠tj√ºk az UI elemeket
         foreach (var field in fieldValues)
         {
+            // Megkeress√ºk a megfelel≈ë UI elemet a sz√ºl≈ë objektumban
             GameObject fieldObject = FindInChildrenIgnoreClone(uiInstance.transform, field.Key);
             if (fieldObject != null)
             {
+                // Ha megtal√°ltuk, akkor az √∫j √©rt√©ket hozz√°rendelj√ºk
                 TMP_Text textComponent = fieldObject.GetComponent<TMP_Text>();
                 if (textComponent != null)
                 {
+                    // A sz√∂veg friss√≠t√©se az adott mez≈ë √©rt√©k√©vel
                     textComponent.text = field.Value;
                 }
             }
@@ -856,117 +905,153 @@ public class UIManager : BasePersistentManager<UIManager>
 
 
     /// <summary>
-    /// Ellenırzi, hogy az aktu·lis jelenet a "MainMenu" jelenet-e.
+    /// Ellen√µrzi, hogy az aktu√°lis jelenet a "MainMenu" jelenet-e.
     /// </summary>
     /// <returns>
-    /// Visszaadja true-t, ha az aktu·lis jelenet neve "MainMenu", k¸lˆnben false-t.
+    /// Visszaadja true-t, ha az aktu√°lis jelenet neve "MainMenu", k√ºl√∂nben false-t.
     /// </returns>
     private bool IsMainMenuScene()
     {
-        // LekÈrdezz¸k az aktu·lisan betˆltˆtt jelenetet, Ès ˆsszehasonlÌtjuk annak nevÈt a "MainMenu"-val
+        // Lek√©rdezz√ºk az aktu√°lisan bet√∂lt√∂tt jelenetet, √©s √∂sszehasonl√≠tjuk annak nev√©t a "MainMenu"-val
         return SceneManager.GetActiveScene().name == "MainMenu";
     }
 
 
     /// <summary>
-    /// FrissÌti a "Load Game" gomb ·llapot·t attÛl f¸ggıen, hogy lÈtezik-e mentett j·tÈkf·jl.
-    /// Ha lÈtezik mentett f·jl, a gomb aktÌvv· v·lik, k¸lˆnben inaktÌv.
+    /// Friss√≠ti a "Load Game" gomb √°llapot√°t att√≥l f√ºgg√µen, hogy l√©tezik-e mentett j√°t√©kf√°jl.
+    /// Ha l√©tezik mentett f√°jl, a gomb akt√≠vv√° v√°lik, k√ºl√∂nben inakt√≠v.
     /// </summary>
     public void UpdateLoadGameButtonAvailability()
     {
-        // Ellenırizz¸k, hogy a loadGameButton referencia nem null
+        // Ellen√µrizz√ºk, hogy a loadGameButton referencia nem null
         if (loadGameButton != null)
         {
-            // A gomb interakciÛs ·llapot·t be·llÌtjuk a SaveLoadManager SaveFileExists metÛdusa alapj·n
+            // A gomb interakci√≥s √°llapot√°t be√°ll√≠tjuk a SaveLoadManager SaveFileExists met√≥dusa alapj√°n
             loadGameButton.interactable = saveLoadManager.SaveFileExists();
         }
     }
 
-
+    /// <summary>
+    /// A gy≈ëzelem panel megjelen√≠t√©se aszinkron m√≥don.
+    /// </summary>
+    /// <returns>Visszaadja, hogy a m≈±velet sikeresen befejez≈ëd√∂tt-e</returns>
     public async Task<bool> DisplayVictoryPanelAsync()
     {
+        // Aszinkron m≈±velet elind√≠t√°sa
         await Task.Yield();
 
         try
         {
+            // A sz√ºnetmen√º kikapcsol√°sa
             isPauseMenuEnabled = false;
+            // √öj canvas l√©trehoz√°sa a gy≈ëzelem panelhez
             Canvas victoryCanvas = CreateCanvas("Canvas", 10);
+            // Ellen≈ërizz√ºk, hogy az Event System l√©tezik
             EnsureEventSystemExists();
+            // A gy≈ëzelem panel hozz√°ad√°sa az √∫j canvas-ra
             AddUIPrefabToGameObject(victoryCanvas.gameObject, victoryPanelPrefab, true);
+            // A vissza gomb hozz√°ad√°sa a gy≈ëzelem panelhez
             GameObject menuButton = FindInChildrenIgnoreClone(victoryCanvas.transform, "Back");
             TMP_InputField inputField = FindInChildrenIgnoreClone(victoryCanvas.transform, "NameInputField").GetComponent<TMP_InputField>();
+            // A vissza gomb esem√©nykezel≈ëj√©nek hozz√°ad√°sa
             menuButton.GetComponent<Button>().onClick.AddListener(() => CloseVictoryPanel(inputField.text));
 
+            // Ha minden rendben, visszaadjuk, hogy sikeres volt a m≈±velet
             return true;
         }
         catch (Exception ex)
         {
+            // Ha hiba t√∂rt√©nt, ki√≠rjuk a hib√°t
             Debug.LogError($"{ex.Message}");
-            return false;
+            return false; // Hib√°s v√©grehajt√°s eset√©n false-t adunk vissza
         }
     }
 
-
+    /// <summary>
+    /// A veres√©g panel megjelen√≠t√©se aszinkron m√≥don.
+    /// </summary>
+    /// <returns>Visszaadja, hogy a m≈±velet sikeresen befejez≈ëd√∂tt-e</returns>
     public async Task<bool> DisplayDefeatPanelAsync()
     {
+        // Aszinkron m≈±velet elind√≠t√°sa
         await Task.Yield();
 
         try
         {
+            // A sz√ºnetmen√º kikapcsol√°sa
             isPauseMenuEnabled = false;
+            // √öj canvas l√©trehoz√°sa a veres√©g panelhez
             Canvas defeatCanvas = CreateCanvas("Canvas", 10);
+            // Ellen≈ërizz√ºk, hogy az Event System l√©tezik
             EnsureEventSystemExists();
+            // A veres√©g panel hozz√°ad√°sa az √∫j canvas-ra
             AddUIPrefabToGameObject(defeatCanvas.gameObject, defeatPanelPrefab, true);
+            // A vissza gomb hozz√°ad√°sa a veres√©g panelhez
             GameObject menuButton = FindInChildrenIgnoreClone(defeatCanvas.transform, "Back");
+            // A vissza gomb esem√©nykezel≈ëj√©nek hozz√°ad√°sa
             menuButton.GetComponent<Button>().onClick.AddListener(() => ExitToMainMenuButtonClicked());
 
+            // Ha minden rendben, visszaadjuk, hogy sikeres volt a m≈±velet
             return true;
         }
         catch (Exception ex)
         {
+            // Ha hiba t√∂rt√©nt, ki√≠rjuk a hib√°t
             Debug.LogError($"{ex.Message}");
-            return false;
+            return false; // Hib√°s v√©grehajt√°s eset√©n false-t adunk vissza
         }
         
     }
 
+    /// <summary>
+    /// A gy≈ëzelem panel bez√°r√°sa, miut√°n a j√°t√©kos be√≠rta a nev√©t.
+    /// </summary>
+    /// <param name="input">A j√°t√©kos √°ltal be√≠rt n√©v</param>
     public async void CloseVictoryPanel(string input)
     {
+        // Ki√≠rja a konzolra a j√°t√©kos √°ltal be√≠rt nevet
         Debug.Log(input);
+
+        // Be√°ll√≠tja a j√°t√©kos nev√©t a jelenlegi fut√°s adataihoz
         gameStateManager.CurrentRunPlayerName = input;
+
+        // Aszinkron m√≥don friss√≠ti az eredm√©nylist√°t
         bool asyncOperation = await saveLoadManager.UpdateScoreboardDataAsync();
-        
+
+        // Visszat√©r√ºnk a f≈ëmen√ºbe
         OnBackToMainMenu?.Invoke(GameState.MainMenu);
     }
 
 
     /// <summary>
-    /// 
+    /// A szkript aktiv√°l√°sakor regisztr√°lja az esem√©nyt, hogy a jelenet bet√∂lt√©sekor megh√≠v√≥djon az OnSceneLoaded met√≥dus.
     /// </summary>
     private void OnEnable()
     {
+        // Hozz√°adja az OnSceneLoaded esem√©nykezel≈ët, hogy a jelenet bet√∂lt√©sekor megh√≠v√≥djon
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
 
     /// <summary>
-    /// 
+    /// A szkript deaktiv√°l√°sakor elt√°vol√≠tja az esem√©nykezel≈ët a jelenet bet√∂lt√©sekor.
     /// </summary>
     private void OnDisable()
     {
+        // Elt√°vol√≠tja az OnSceneLoaded esem√©nykezel≈ët, hogy ne h√≠v√≥djon meg a jelenet bet√∂lt√©sekor
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
 
     /// <summary>
-    /// 
+    /// A szkript megsemmis√≠t√©sekor elt√°vol√≠tja az esem√©nykezel≈ët a pontok v√°ltoz√°s√°nak figyel√©s√©re.
     /// </summary>
     private void OnDestroy()
     {
+        // Ha a gameStateManager nem null, elt√°vol√≠tja az esem√©nykezel≈ët, amely figyeli a pontok v√°ltoz√°s√°t
         if (gameStateManager != null)
         {
             gameStateManager.OnPointsChanged -= UpdatePointsUIText;
         }
     }
-
 }
