@@ -14,9 +14,9 @@ public class AudioManager : BasePersistentManager<AudioManager>
     private Dictionary<string, AudioClip> soundEffects; // A hangeffekteket tároló dictionary.
     private Dictionary<string, AudioClip> backgroundMusic; // A háttérzenéket tároló dictionary.
 
-    private GameStateManager gameStateManager;
-    private LevelManager levelManager;
-    private GameSceneManager gameSceneManager;
+    private GameStateManager gameStateManager; // GameStateManager referencia
+    private LevelManager levelManager; // LevelManager referencia.
+    private GameSceneManager gameSceneManager; // GameSceneManager referencia
 
     // Mivel a Unity editorban nem lehet dictionary-t szerkeszteni, először custom NamedAudio structokból felépülő listákba vesszük fel a hangeffekteket.
     [Serializable]
@@ -29,8 +29,8 @@ public class AudioManager : BasePersistentManager<AudioManager>
     public NamedAudio[] backgroundMusicInput;
 
     /// <summary>
-    /// Az Initialize feladata lényegében csak annyi, hogy assignolja a megfelelő AudioSource komponenseket a megfelelő változóhoz.
-    /// Illetve beolvassa a listaként megadott audioclipeket a dictionary-kba.
+    /// Az Initialize feladata lényegében csak annyi, hogy assignolja a megfelelő AudioSource komponenseket a megfelelő változóhoz,
+    /// beolvassa a listaként megadott audioclipeket a dictionary-kba, és feliratkozik eventekre.
     /// </summary>
     protected override void Initialize()
     {
@@ -147,6 +147,7 @@ public class AudioManager : BasePersistentManager<AudioManager>
         }
     }
 
+    // visszaadja, hogy a háttérzene pillanatnyilag fut-e.
     public bool IsBackgroundMusicPlaying()
     {
         return BackgroundMusicPlayer.isPlaying;
@@ -330,7 +331,9 @@ public class AudioManager : BasePersistentManager<AudioManager>
     }
 
 
-
+    /// <summary>
+    /// Leiratkozás az eventekről.
+    /// </summary>
     private void OnDestroy()
     {
         if (gameStateManager != null)

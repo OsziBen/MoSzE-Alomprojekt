@@ -105,10 +105,11 @@ public class LevelManager : BasePersistentManager<LevelManager>
     // Lövedékek objectpool-jának prefabja.
     [SerializeField]
     private ObjectPoolForProjectiles objectPoolPrefab;
-    // A karakterbeállításokért felelős kezelő prefabja.
     [SerializeField]
+    // A boss lövedékeinek objectpool prefabja.
     private BossObjectPool bossObjectPoolPrefab;
     [SerializeField]
+    // A karakterbeállításokért felelős kezelő prefabja.
     private CharacterSetupManager characterSetupManagerPrefab;
 
 
@@ -451,6 +452,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
                 throw new Exception("Object instantiation failed.");
             }
 
+            // instanciáljuk a boss objectpoolját.
             asyncOperation = await InstantiateBossObjectPool(bossObjectPoolPrefab);
 
             // SpawnManager adatok előkészítése
@@ -698,28 +700,40 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
     }
 
+    /// <summary>
+    /// Létrehozza a BossObjectPool objektumot a prefab alapján, és hozzárendeli a megfelelő referencia változót.
+    /// </summary>
+    /// <param name="bossObjectPoolPrefab">A boss object pool prefab, amit példányosítani kell.</param>
+    /// <returns>True-t ad vissza, ha a példányosítás sikerült, false-t, ha nem.</returns>
     async Task<bool> InstantiateBossObjectPool(BossObjectPool bossObjectPoolPrefab)
     {
+        // Async működés biztosítása, a Task.Yield()-del átadjuk a vezérlést a következő frame-re
         await Task.Yield();
 
         try
         {
+            // Létrehozzuk az objektumot a prefab alapján
             BossObjectPool bossObjectPoolInstance = Instantiate(bossObjectPoolPrefab);
 
+            // Ha a példányosítás nem sikerült (null az eredmény), hibát dobunk
             if (bossObjectPoolInstance == null)
             {
                 throw new Exception("Failed to instantiate ObjectPool.");
             }
 
+            // A példány szülőjét null-ra állítjuk, így eltávolítjuk az objektumot a hierarchiából
             bossObjectPoolInstance.transform.SetParent(null);
+            // Hozzárendeljük az új példányt a bossObjectPool referencia változóhoz
             bossObjectPool = bossObjectPoolInstance.GetComponent<BossObjectPool>();
 
+            // Sikeres példányosítás esetén true-t adunk vissza
             return true;
         }
         catch (Exception ex)
         {
+            // Ha hiba történt, kiírjuk az üzenetet a hibával együtt
             Debug.LogError($"Error: {ex.Message}");
-            return false;
+            return false; // Hiba esetén false-t adunk vissza
         }
     }
 
