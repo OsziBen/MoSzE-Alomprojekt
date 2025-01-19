@@ -2613,9 +2613,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameStateFileName: savefile.game
-  _useSaveFileEncryption: 0
+  _useSaveFileEncryption: 1
   _scoreboardFileName: scoreboard.game
-  _useScoreboardFileEncryption: 0
+  _useScoreboardFileEncryption: 1
 --- !u!4 &1812771205
 Transform:
   m_ObjectHideFlags: 0
