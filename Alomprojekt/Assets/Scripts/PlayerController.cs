@@ -118,10 +118,10 @@ public class PlayerController : Assets.Scripts.Character
         if (boss != null)
         {
             boss.OnPlayerCollision += ChangeHealth;
+            bossObjectPool.OnProjectileActivated += StartProjectileDetection;
+            bossObjectPool.OnProjectileDeactivated += StopProjectileDetection;
         }
 
-        bossObjectPool.OnProjectileActivated += StartProjectileDetection;
-        bossObjectPool.OnProjectileDeactivated += StopProjectileDetection;
 
         // Események hozzáadása
         launchAction.performed += Attack;
@@ -567,10 +567,11 @@ public class PlayerController : Assets.Scripts.Character
         if (boss != null)
         {
             boss.OnPlayerCollision -= ChangeHealth;
+            bossObjectPool.OnProjectileActivated -= StartProjectileDetection;
+            bossObjectPool.OnProjectileDeactivated -= StopProjectileDetection;
         }
 
-        bossObjectPool.OnProjectileActivated -= StartProjectileDetection;
-        bossObjectPool.OnProjectileDeactivated -= StopProjectileDetection;
+
         
         // A halál eseményt továbbítja a rendszer felé
         OnPlayerDeath?.Invoke();

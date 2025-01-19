@@ -1792,6 +1792,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
+      propertyPath: soundEffectInput.Array.size
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
+      propertyPath: soundEffectInput.Array.data[17].name
+      value: upgrade
+      objectReference: {fileID: 0}
+    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
+      propertyPath: soundEffectInput.Array.data[17].audioclip
+      value: 
+      objectReference: {fileID: 8300000, guid: a98fac2ae568326449e33cbae9847e94, type: 3}
     - target: {fileID: 1546569477961377753, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
       propertyPath: m_Name
       value: AudioManager

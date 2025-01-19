@@ -33,8 +33,6 @@ public class BossController : MonoBehaviour
     private float _movementSpeed;
     [SerializeField]
     private float _damage;
-    [SerializeField]
-    private float _attackCooldown;
 
     [Header("Bodyparts")]
     [SerializeField]
@@ -56,24 +54,33 @@ public class BossController : MonoBehaviour
 
     private Transform player; // A játékos Transformja
     private SpriteRenderer spriteRenderer;
+    [Header("Boss Behaviour Settings")]    
+    
+    [SerializeField]
+    private float offsetDistance;  // This defines how far from the center the projectile should start
+    [SerializeField]
+    private float deviationRadius = 2f; // A célpont eltolásának maximális távolsága
+    [SerializeField]
+    private float targetUpdateInterval = 2f; // Milyen gyakran frissüljön a célpont
+    [SerializeField]
+    private float shotTravelSpeed = 500.0f;
+    [SerializeField]
+    private float intervalStart;
 
+    private float interval;
 
     private Rigidbody2D rb; // A Rigidbody2D komponens
-
-    public float deviationRadius = 2f; // A célpont eltolásának maximális távolsága
-    public float targetUpdateInterval = 2f; // Milyen gyakran frissüljön a célpont
     private Vector2 movementBoundsMin; // A mozgás minimális határai
     private Vector2 movementBoundsMax; // A mozgás maximális határai
     private Vector2 currentTarget; // Az aktuális célpont
     private float targetUpdateTimer;
 
     // Idõ, amit várni kell
-    private float interval;
+
 
     // A következõ kiírás ideje
     private float nextTime;
 
-    public float shotTravelSpeed = 500.0f;
 
 
     /// <summary>
@@ -117,11 +124,6 @@ public class BossController : MonoBehaviour
         set { _damage = value; }
     }
 
-    public float AttackCooldown
-    {
-        get { return _attackCooldown; }
-        set { _attackCooldown = value; }
-    }
 
     /// <summary>
     /// Események
@@ -140,7 +142,7 @@ public class BossController : MonoBehaviour
     {
         CurrentHealth = MaxHealth;
         currentPhase = Phase.Phase1;
-        interval = 1.125f;
+        interval = intervalStart;
 
         OnDeath += Die;
         head.OnBodypartPlayerCollision += DealDamageToPlayer;
@@ -224,7 +226,7 @@ public class BossController : MonoBehaviour
         Vector2 attackDirection = (playerPosition - rb.position).normalized;
 
         // Calculate dynamic offset based on the attack direction
-        float offsetDistance = 6f;  // This defines how far from the center the projectile should start
+        
         Vector2 offset = attackDirection * offsetDistance;  // Offset along the attack direction
 
         // Apply the offset to the starting position
