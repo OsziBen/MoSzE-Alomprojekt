@@ -14,7 +14,7 @@
 A Modern szoftverfejlesztési eszközök (GKNB_INTM006) tantárgy féléves projektfeladatának közös GitHub Repository-ja.
   
 *A játék témája az űrcsata, de kicsit más szemszögből...*\
-A háttértörténet szerint egy hallgató kikapja a projektfeladatot, amiben le kell fejlesztenie egy űrcsatáról szóló játékot. Miközben este otthon fáradtan töpreng ezen, álomba merül, és a játék koncepciója végül az álmában nyilvánul meg. De mint sok más hallgatónak, neki is vannak a projekt sikerességével kapcsolatban kételyei, melyek végül az álmát rémálommá torzítják és végül a saját félelmei ellen kell űrcsatát vívnia.
+A háttértörténet szerint egy hallgató kikapja projektfeladatként, hogy le kell fejlesztenie egy űrcsatáról szóló játékot. Miközben este otthon fáradtan töpreng ezen, álomba merül, és a játék koncepciója végül az álmában nyilvánul meg. De mint sok más hallgatónak, neki is vannak a projekt sikerességével kapcsolatban kételyei, melyek végül az álmát rémálommá torzítják és végül a saját félelmei ellen kell űrcsatát vívnia.
 </div>
 
 ---
@@ -28,12 +28,12 @@ A háttértörténet szerint egy hallgató kikapja a projektfeladatot, amiben le
 
 ### Telepítés/Futtatás
 
-A program **Unity Personal 2022.3.45f1**-ben készült, itt futtatható/buildelhető.\
+A játék **Unity Personal 2022.3.45f1**-ben készült, ebben futtatható/buildelhető.\
 Az előre elkészített futtatható állomány a ```Releases``` szekcióban található meg.
 
 ---
 
 ### Assetek
 
-A sprite-ok és a hangeffektek, az alábbi [linken](https://drive.google.com/drive/folders/1DHKS8r9VeH_RksP4r9xgj3aoy9PINb3Z?usp=drive_link),
-a projekten belül pedig ezen az elérési útvonalon keresztül érhetőek el: ```Alomprojekt\Assets\Sprites\Spriteok```.
+A sprite-ok és a hangeffektek az alábbi [linken](https://drive.google.com/drive/folders/1DHKS8r9VeH_RksP4r9xgj3aoy9PINb3Z?usp=drive_link),
+a projekten belül pedig ezen az útvonalon keresztül érhetőek el: ```Alomprojekt\Assets\Sprites\Spriteok```.
