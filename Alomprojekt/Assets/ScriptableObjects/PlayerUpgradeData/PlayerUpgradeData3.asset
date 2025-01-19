@@ -13,35 +13,23 @@ MonoBehaviour:
   m_Name: PlayerUpgradeData3
   m_EditorClassIdentifier: 
   uniqueID: b167055b-d96a-4ff4-b762-7cba685d6592
-  upgradeName: Test3
-  icon: {fileID: 21300000, guid: fa17b288900b707498a41c711da07927, type: 3}
+  upgradeName: Assasin
+  icon: {fileID: 21300000, guid: e6e2e93a2119b6146908046959e3d35b, type: 3}
   isHealing: 0
-  customDescription: 'Upgrade \name increases \m[0].type by \m[0].baseValue at level
-    \currentUpgradeLevel.
-
-    \m[0].value.  \price
-
-    \minUpgradeLevel - \currentUpgradeLevel
-
-'
-  description: 'Upgrade Test3 increases CriticalHitChance by 0,1 at level 3.
-
-    0,1. 
-    40
-
-    3 - 3
-
-'
-  showOutputInConsole: 0
+  customDescription: "Megn\xF6veli a kritikus tal\xE1lat es\xE9lyedet \\m[0].baseValue
+    \xE9rt\xE9kkel \xE9s a sebz\xE9sedet \\m[1].baseValue \xE9rt\xE9kkel."
+  description: "Megn\xF6veli a kritikus tal\xE1lat es\xE9lyedet 0.2 \xE9rt\xE9kkel
+    \xE9s a sebz\xE9sedet 10 \xE9rt\xE9kkel."
+  showOutputInConsole: 1
   minUpgradeLevel: 3
   maxUpgradeLevel: 4
   currentUpgradeLevel: 3
-  basePrice: 40
-  priceScaleFactor: 1.5
+  basePrice: 100
+  priceScaleFactor: 1.25
   modifiers:
   - type: 4
-    baseValue: 0.1
-    scaleFactor: 1.2
+    baseValue: 0.2
+    scaleFactor: 1.5
   - type: 2
-    baseValue: 25
-    scaleFactor: 1.2
+    baseValue: 10
+    scaleFactor: 1.5

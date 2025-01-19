@@ -13,26 +13,19 @@ MonoBehaviour:
   m_Name: PlayerUpgradeData4
   m_EditorClassIdentifier: 
   uniqueID: 074adc26-ef14-4f99-b017-fa7d928f7a1a
-  upgradeName: Test4
+  upgradeName: Giant Slayer
   icon: {fileID: 21300000, guid: e6e2e93a2119b6146908046959e3d35b, type: 3}
   isHealing: 0
-  customDescription: 'Upgrade \name increases \m[0].type by \m[0].baseValue at level
-    \currentUpgradeLevel.
-
-    \m[0].value.  \price
-
-    \minUpgradeLevel - \currentUpgradeLevel
-
-'
-  description: 'Upgrade Test4 increases PercentageBasedDMG by 0,07 at level 2.
-
-    0,07. 
-    100
-
-    2 - 2
-
-'
-  showOutputInConsole: 0
+  customDescription: "Mostant\xF3l minden 4. t\xE1mad\xE1sod extra sebz\xE9st okoz
+    az alapsebz\xE9sen t\xFAl, ennek m\xE9rt\xE9ke az eltal\xE1lt ellenf\xE9l maxim\xE1lis
+    \xE9leterej\xE9nek \\m[0].baseValue * 100%-val egyenl\u0151. Ha rendelkezel t\xE1mad\xE1si
+    id\u0151 cs\xF6kkent\xE9ssel, akkor megv\xE1ltoztatja annak \xE9rt\xE9k\xE9t
+    \\m[1].baseValue \xE9rt\xE9kkel."
+  description: "Mostant\xF3l minden 4. t\xE1mad\xE1sod extra sebz\xE9st okoz az alapsebz\xE9sen
+    t\xFAl, ennek m\xE9rt\xE9ke az eltal\xE1lt ellenf\xE9l maxim\xE1lis \xE9leterej\xE9nek
+    0.07 * 100%-val egyenl\u0151. Ha rendelkezel t\xE1mad\xE1si id\u0151 cs\xF6kkent\xE9ssel,
+    akkor megv\xE1ltoztatja annak \xE9rt\xE9k\xE9t -0.2 \xE9rt\xE9kkel."
+  showOutputInConsole: 1
   minUpgradeLevel: 2
   maxUpgradeLevel: 4
   currentUpgradeLevel: 2

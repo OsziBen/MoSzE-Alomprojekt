@@ -134,11 +134,11 @@ MonoBehaviour:
   baseCriticalHitChance: 0.05
   basePercentageBasedDMG: 0
   minHealthValue: 5
-  maxHealthValue: 10
-  minMovementSpeedValue: 1
+  maxHealthValue: 100
+  minMovementSpeedValue: 3
   maxMovementSpeedValue: 10
   minDMGValue: 1
-  maxDMGValue: 10
+  maxDMGValue: 50
   minAttackCooldownValue: 0.5
   maxAttackCooldownValue: 5
   _rigidbody2d: {fileID: 0}
