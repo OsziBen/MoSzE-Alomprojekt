@@ -13,28 +13,17 @@ MonoBehaviour:
   m_Name: Healing
   m_EditorClassIdentifier: 
   uniqueID: 2a67e9f9-7c93-4c43-a8c6-7c133744967a
-  upgradeName: Healing
+  upgradeName: "\xC9leter\u0151 felt\xF6lt\xE9s"
   icon: {fileID: 21300000, guid: ac628682552776a4cbf1408ca065c654, type: 3}
   isHealing: 1
-  customDescription: 'Upgrade \name at level \currentUpgradeLevel.
-
-    \price
-
-    \minUpgradeLevel
-    - \currentUpgradeLevel
-
-'
-  description: 'Upgrade Healing at level 1.
-
-    50
-
-    1 - 1
-
-'
-  showOutputInConsole: 0
+  customDescription: "A j\xE1t\xE9kos \xE9leterej\xE9nek felt\xF6lt\xE9se a maxim\xE1lis
+    \xE9rt\xE9kre."
+  description: "A j\xE1t\xE9kos \xE9leterej\xE9nek felt\xF6lt\xE9se a maxim\xE1lis
+    \xE9rt\xE9kre."
+  showOutputInConsole: 1
   minUpgradeLevel: 1
   maxUpgradeLevel: 4
   currentUpgradeLevel: 1
-  basePrice: 50
-  priceScaleFactor: 1.2
+  basePrice: 40
+  priceScaleFactor: 1.4
   modifiers: []

@@ -13,35 +13,23 @@ MonoBehaviour:
   m_Name: PlayerUpgradeData2
   m_EditorClassIdentifier: 
   uniqueID: 63c9d910-24de-4890-9d45-c0231bada0ae
-  upgradeName: Test2
-  icon: {fileID: 21300000, guid: 3f89d9b0a51be5045b92ca55b0798d09, type: 3}
+  upgradeName: Glass Cannon
+  icon: {fileID: 21300000, guid: e6e2e93a2119b6146908046959e3d35b, type: 3}
   isHealing: 0
-  customDescription: 'Upgrade \name increases \m[0].type by \m[0].baseValue at level
-    \currentUpgradeLevel.
-
-    \m[0].value.  \price
-
-    \minUpgradeLevel - \currentUpgradeLevel
-
-'
-  description: 'Upgrade Test2 increases Health by -20 at level 2.
-
-    -20.  75
-
-    2
-    - 2
-
-'
-  showOutputInConsole: 0
+  customDescription: "Megv\xE1ltoztatja a maxim\xE1lis \xE9leter\u0151det \\m[0].baseValue
+    \xE9rt\xE9kkel, viszont megn\xF6veli a sebz\xE9sedet \\m[1].baseValue \xE9rt\xE9kkel."
+  description: "Megv\xE1ltoztatja a maxim\xE1lis \xE9leter\u0151det -5 \xE9rt\xE9kkel,
+    viszont megn\xF6veli a sebz\xE9sedet 8.5 \xE9rt\xE9kkel."
+  showOutputInConsole: 1
   minUpgradeLevel: 2
   maxUpgradeLevel: 3
   currentUpgradeLevel: 2
-  basePrice: 75
+  basePrice: 90
   priceScaleFactor: 1.1
   modifiers:
   - type: 0
-    baseValue: -20
-    scaleFactor: 1.3
+    baseValue: -5
+    scaleFactor: 2
   - type: 2
-    baseValue: 25
-    scaleFactor: 1.4
+    baseValue: 8.5
+    scaleFactor: 2
