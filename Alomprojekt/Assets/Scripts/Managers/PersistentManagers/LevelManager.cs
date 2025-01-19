@@ -83,6 +83,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
     SaveLoadManager saveLoadManager; // Mentés és betöltés kezelője.
 
     ObjectPoolForProjectiles objectPool; // Lövedékekhez tartozó objektumpool.
+    BossObjectPool bossObjectPool; // Boss lövedékeihez tartozó objektumpool.
     PlayerController player; // A játékos vezérlő objektuma.
     BossController boss; // A boss vezérlő objektuma.
 
@@ -105,6 +106,8 @@ public class LevelManager : BasePersistentManager<LevelManager>
     [SerializeField]
     private ObjectPoolForProjectiles objectPoolPrefab;
     // A karakterbeállításokért felelős kezelő prefabja.
+    [SerializeField]
+    private BossObjectPool bossObjectPoolPrefab;
     [SerializeField]
     private CharacterSetupManager characterSetupManagerPrefab;
 
@@ -446,6 +449,8 @@ public class LevelManager : BasePersistentManager<LevelManager>
                 throw new Exception("Object instantiation failed.");
             }
 
+            asyncOperation = await InstantiateBossObjectPool(bossObjectPoolPrefab);
+
             // SpawnManager adatok előkészítése
             List<GameObjectPosition> bossLevelData = new List<GameObjectPosition>();
             bossLevelData.Add(new GameObjectPosition(bossPrefab.gameObject, new Vector2(0f, 0f)));
@@ -691,6 +696,30 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
     }
 
+    async Task<bool> InstantiateBossObjectPool(BossObjectPool bossObjectPoolPrefab)
+    {
+        await Task.Yield();
+
+        try
+        {
+            BossObjectPool bossObjectPoolInstance = Instantiate(bossObjectPoolPrefab);
+
+            if (bossObjectPoolInstance == null)
+            {
+                throw new Exception("Failed to instantiate ObjectPool.");
+            }
+
+            bossObjectPoolInstance.transform.SetParent(null);
+            bossObjectPool = bossObjectPoolInstance.GetComponent<BossObjectPool>();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error: {ex.Message}");
+            return false;
+        }
+    }
 
     /// <summary>
     /// Aszinkron módon feliratkozik a boss szint karaktereihez kapcsolódó eseményekre, például a játékos és a boss halálára.
@@ -949,6 +978,8 @@ public class LevelManager : BasePersistentManager<LevelManager>
             {
                 throw new Exception("Object instantiation failed.");
             }
+
+            asyncOperation = await InstantiateBossObjectPool(bossObjectPoolPrefab);
 
             // SpawnManager: prefabok + pozíciók átadása
             spawnManager = FindObjectOfType<SpawnManager>();

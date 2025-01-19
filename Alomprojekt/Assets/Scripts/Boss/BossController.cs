@@ -4,6 +4,11 @@ using UnityEngine;
 using System;
 using UnityEngine.Pool;
 using Assets.Scripts;
+using TMPro;
+using UnityEngine.UIElements;
+using Codice.Client.BaseCommands;
+using UnityEngine.InputSystem;
+using static PlasticPipe.Server.MonitorStats;
 
 public class BossController : MonoBehaviour
 {
@@ -39,16 +44,45 @@ public class BossController : MonoBehaviour
     [SerializeField]
     private BossBodypartController rightArm;
 
-    [Header("Phases and Movesets")]
-    [SerializeField]
-    private List<string> KIDOLGOZNI;  // + saját adattípus
+    private Phase currentPhase;
+
+    private enum Phase
+    {
+        Phase1, // 75% - 100%
+        Phase2, // 50% - 75%
+        Phase3, // 25% - 50%
+        Phase4  // 0% - 25%
+    }
+
+    private Transform player; // A játékos Transformja
+    private SpriteRenderer spriteRenderer;
+
+
+    private Rigidbody2D rb; // A Rigidbody2D komponens
+
+    public float deviationRadius = 2f; // A célpont eltolásának maximális távolsága
+    public float targetUpdateInterval = 2f; // Milyen gyakran frissüljön a célpont
+    private Vector2 movementBoundsMin; // A mozgás minimális határai
+    private Vector2 movementBoundsMax; // A mozgás maximális határai
+    private Vector2 currentTarget; // Az aktuális célpont
+    private float targetUpdateTimer;
+
+    // Idõ, amit várni kell
+    private float interval;
+
+    // A következõ kiírás ideje
+    private float nextTime;
+
+    public float shotTravelSpeed = 500.0f;
 
 
     /// <summary>
     /// Komponensek
     /// </summary>
-    ObjectPoolForProjectiles objectPool;
+    private ObjectPoolForProjectiles objectPool;
     private List<Projectile> activeProjectiles = new List<Projectile>();
+
+    private BossObjectPool bossObjectPool;
 
     /// <summary>
     /// Getterek és Setterek
@@ -97,10 +131,16 @@ public class BossController : MonoBehaviour
     public event Action<float> OnPlayerCollision;
     public event Action OnBossDeath;
 
+    public event Action OnHealthBelow75;
+    public event Action OnHealthBelow50;
+    public event Action OnHealthBelow25;
+
 
     private void Awake()
     {
         CurrentHealth = MaxHealth;
+        currentPhase = Phase.Phase1;
+        interval = 1.125f;
 
         OnDeath += Die;
         head.OnBodypartPlayerCollision += DealDamageToPlayer;
@@ -111,6 +151,156 @@ public class BossController : MonoBehaviour
         objectPool.OnProjectileActivated += StartProjectileDetection;
         objectPool.OnProjectileDeactivated += StopProjectileDetection;
 
+        bossObjectPool = FindObjectOfType<BossObjectPool>();
+
+        OnHealthBelow75 += HandleHealthBelow75;
+        OnHealthBelow50 += HandleHealthBelow50;
+        OnHealthBelow25 += HandleHealthBelow25;
+
+    }
+
+    private void Start()
+    {
+        player = FindObjectOfType<PlayerController>().transform;
+        rb = GetComponent<Rigidbody2D>(); // Hozzáférés a Rigidbody2D komponenshez
+        spriteRenderer = GameObject.Find("Background").GetComponent<SpriteRenderer>();
+
+        // Kiszámoljuk a játéktér határait
+        Vector2 spriteSize = spriteRenderer.bounds.size;
+        Vector2 position = spriteRenderer.transform.position;
+        Vector2 topLeft = new Vector2(position.x - spriteSize.x / 2, position.y + spriteSize.y / 2);
+        Vector2 bottomRight = new Vector2(position.x + spriteSize.x / 2, position.y - spriteSize.y / 2);
+        movementBoundsMin = new Vector2(topLeft.x + 1.5f, bottomRight.y + 1.5f);
+        movementBoundsMax = new Vector2(bottomRight.x - 1.5f, topLeft.y - 1.5f);
+
+
+        // Kezdeti célpont meghatározása
+        UpdateTarget();
+
+        nextTime = Time.time + interval;
+    }
+
+
+
+    void Update()
+    {
+        if (player != null)
+        {
+            // Célpont frissítése idõszakosan
+            targetUpdateTimer -= Time.deltaTime;
+            if (targetUpdateTimer <= 0)
+            {
+                UpdateTarget();
+                targetUpdateTimer = targetUpdateInterval;
+            }
+
+            // Mozgás az aktuális célpont felé
+            Vector2 newPosition = Vector2.MoveTowards(transform.position, currentTarget, MovementSpeed * Time.deltaTime);
+
+            // Pozíció határokhoz igazítása
+            newPosition = ClampPositionToBounds(newPosition);
+            transform.position = newPosition;
+        }
+
+        if (Time.time >= nextTime)
+        {
+            // Kiírjuk a szöveget
+            Debug.Log("Interval: " + interval);
+            Attack();
+
+            // Beállítjuk a következõ idõpontot
+            nextTime = Time.time + interval;
+        }
+    }
+
+    void Attack()
+    {
+        if (rb == null) return; // Early exit if the rigidbody is null
+
+        // Get the player position (ensure you have a reference to the player)
+        Vector2 playerPosition = player.position;
+
+        // Calculate direction towards the player
+        Vector2 attackDirection = (playerPosition - rb.position).normalized;
+
+        // Calculate dynamic offset based on the attack direction
+        float offsetDistance = 6f;  // This defines how far from the center the projectile should start
+        Vector2 offset = attackDirection * offsetDistance;  // Offset along the attack direction
+
+        // Apply the offset to the starting position
+        Vector2 startPosition = rb.position + offset;
+
+        // Get projectile from pool
+        GameObject projectileObject = GetBossProjectileFromPool();
+        if (projectileObject == null) return; // Early exit if no projectile available
+
+        LaunchProjectile(projectileObject, startPosition, attackDirection);
+    }
+
+    private GameObject GetBossProjectileFromPool()
+    {
+        // Retrieve a projectile from the pool (ensure that other parameters are correctly passed)
+        return bossObjectPool.GetBossProjectile(rb.position, Quaternion.identity, Damage);
+    }
+
+    private void LaunchProjectile(GameObject projectileObject, Vector2 startPosition, Vector2 attackDirection)
+    {
+        // Get the projectile component, set its position and launch it
+        EnemyProjetile projectile = projectileObject.GetComponent<EnemyProjetile>();
+        projectile.transform.position = startPosition; // Set the new start position
+        projectile.Launch(attackDirection, shotTravelSpeed);
+    }
+
+
+    void UpdateTarget()
+    {
+        // Véletlenszerû eltolás generálása a játékos körül
+        Vector2 randomOffset = UnityEngine.Random.insideUnitCircle * deviationRadius;
+        currentTarget = (Vector2)player.position + randomOffset;
+
+        // Biztosítjuk, hogy a célpont is a határokon belül legyen
+        currentTarget = ClampPositionToBounds(currentTarget);
+    }
+
+    Vector2 ClampPositionToBounds(Vector2 position)
+    {
+        // Biztosítjuk, hogy a pozíció a megadott határokon belül maradjon
+        float clampedX = Mathf.Clamp(position.x, movementBoundsMin.x, movementBoundsMax.x);
+        float clampedY = Mathf.Clamp(position.y, movementBoundsMin.y, movementBoundsMax.y);
+        return new Vector2(clampedX, clampedY);
+    }
+
+
+    void ChangePhase(Phase newPhase)
+    {
+        if (currentPhase != newPhase)
+        {
+            currentPhase = newPhase;
+            Debug.Log("Phase changed to: " + currentPhase);
+            interval -= 0.125f;
+        }
+    }
+
+    // TODO: ezek váltják a phase-t
+    void HandleHealthBelow75()
+    {
+        Debug.Log("Health dropped below 75%!");
+        OnHealthBelow75 -= HandleHealthBelow75; // Leiratkozás az eseményrõl
+        ChangePhase(Phase.Phase2);
+    }
+
+    void HandleHealthBelow50()
+    {
+        Debug.Log("Health dropped below 50%!");
+        OnHealthBelow50 -= HandleHealthBelow50; // Leiratkozás az eseményrõl
+        ChangePhase(Phase.Phase3);
+    }
+
+    void HandleHealthBelow25()
+    {
+        Debug.Log("Health dropped below 25%!");
+        OnHealthBelow25 -= HandleHealthBelow25; // Leiratkozás az eseményrõl
+        ChangePhase(Phase.Phase4);
     }
 
 
@@ -140,10 +330,7 @@ public class BossController : MonoBehaviour
 
     void HandleEnemyHit(float damageAmount)
     {
-        ChangeHealth(damageAmount);   //damageAmount!
-                            //OnBehaviourChange?.Invoke(this);
-
-
+        ChangeHealth(damageAmount);
     }
 
     void DealDamageToPlayer()
@@ -152,7 +339,7 @@ public class BossController : MonoBehaviour
     }
 
 
-    void OnTriggerEnter2D(Collider2D trigger)
+    private void OnTriggerStay2D(Collider2D trigger)
     {
         if (trigger.gameObject.TryGetComponent<PlayerController>(out var player))
         {
@@ -165,7 +352,7 @@ public class BossController : MonoBehaviour
 
     private void OnValidate()
     {
-        ValidateUniqueID();
+        //ValidateUniqueID();
     }
 
 
@@ -181,6 +368,22 @@ public class BossController : MonoBehaviour
     {
         CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, MaxHealth);
         OnHealthChanged?.Invoke(CurrentHealth);
+
+        float healthPercentage = (CurrentHealth / MaxHealth) * 100;
+        if (healthPercentage <= 75 && OnHealthBelow75 != null)
+        {
+            OnHealthBelow75.Invoke();
+        }
+
+        if (healthPercentage <= 50 && OnHealthBelow50 != null)
+        {
+            OnHealthBelow50.Invoke();
+        }
+
+        if (healthPercentage <= 25 && OnHealthBelow25 != null)
+        {
+            OnHealthBelow25.Invoke();
+        }
 
         Debug.Log(CurrentHealth + " / " + MaxHealth);
         if (CurrentHealth == 0f)
@@ -201,6 +404,9 @@ public class BossController : MonoBehaviour
     protected virtual void OnDestroy()
     {
         OnDeath -= Die;
+        OnHealthBelow75 -= HandleHealthBelow75;
+        OnHealthBelow50 -= HandleHealthBelow50;
+        OnHealthBelow25 -= HandleHealthBelow25;
 
         if (objectPool != null)
         {

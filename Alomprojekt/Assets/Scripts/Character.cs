@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -184,7 +184,7 @@ namespace Assets.Scripts
         /// </summary>
         private void OnValidate()
         {
-            ValidateUniqueID(); // Ellenőrzi, hogy a prefab ID érvényes és egyedi
+            //ValidateUniqueID();
         }
 
         /// <summary>

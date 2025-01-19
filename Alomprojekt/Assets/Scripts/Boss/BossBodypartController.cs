@@ -9,7 +9,7 @@ public abstract class BossBodypartController : MonoBehaviour
     // TODO: eventek
     public event Action OnBodypartPlayerCollision;
 
-    void OnTriggerEnter2D(Collider2D trigger)
+    void OnTriggerStay2D(Collider2D trigger)
     {
         if (trigger.gameObject.TryGetComponent<PlayerController>(out var player))
         {
