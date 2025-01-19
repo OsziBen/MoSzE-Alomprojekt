@@ -410,7 +410,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     asyncOperation = await ResetCurrentLevel(); // Az aktuális szint visszaállítása
 
                     // mentés törlése új játék esetén
-                    //asyncOperation = await saveLoadManager.DeleteSaveFile();
+                    asyncOperation = await saveLoadManager.DeleteSaveFile();
 
                     // Animált bevezető betöltése
                     Time.timeScale = 1;
@@ -510,16 +510,16 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     {
                         audioManager.ResumeBGM();                        
                     }
-                    //Cursor.visible = false;  // Elrejti a kurzort
-                    //Cursor.lockState = CursorLockMode.Locked;  // A kurzort középre zárja
+                    Cursor.visible = false;  // Elrejti a kurzort
+                    Cursor.lockState = CursorLockMode.Locked;  // A kurzort középre zárja
                     break;
 
                 case GameState.Paused:
                     Time.timeScale = 0; // A játék megállítása, időzítő leállítása
                     timer.StopTimer();
                     audioManager.PauseBGM();
-                    //Cursor.visible = true;  // Megjeleníti a kurzort
-                    //Cursor.lockState = CursorLockMode.None;  // Unlockolja a kurzort
+                    Cursor.visible = true;  // Megjeleníti a kurzort
+                    Cursor.lockState = CursorLockMode.None;  // Unlockolja a kurzort
                     break;
 
                 case GameState.GameOver:
