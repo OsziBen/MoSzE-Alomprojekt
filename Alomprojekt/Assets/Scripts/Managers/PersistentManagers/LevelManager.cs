@@ -74,6 +74,7 @@ public class LevelManager : BasePersistentManager<LevelManager>
     SaveLoadManager saveLoadManager;
 
     ObjectPoolForProjectiles objectPool;
+    BossObjectPool bossObjectPool;
     PlayerController player;
     BossController boss;
 
@@ -90,6 +91,8 @@ public class LevelManager : BasePersistentManager<LevelManager>
     [Header("Component Prefabs")]
     [SerializeField]
     private ObjectPoolForProjectiles objectPoolPrefab;
+    [SerializeField]
+    private BossObjectPool bossObjectPoolPrefab;
     [SerializeField]
     private CharacterSetupManager characterSetupManagerPrefab;
 
@@ -367,6 +370,8 @@ public class LevelManager : BasePersistentManager<LevelManager>
                 throw new Exception("Object instantiation failed.");
             }
 
+            asyncOperation = await InstantiateBossObjectPool(bossObjectPoolPrefab);
+
             // SpawnManager adatok előkészítése
             List<GameObjectPosition> bossLevelData = new List<GameObjectPosition>();
             bossLevelData.Add(new GameObjectPosition(bossPrefab.gameObject, new Vector2(0f, 0f)));
@@ -595,6 +600,32 @@ public class LevelManager : BasePersistentManager<LevelManager>
     }
 
 
+    async Task<bool> InstantiateBossObjectPool(BossObjectPool bossObjectPoolPrefab)
+    {
+        await Task.Yield();
+
+        try
+        {
+            BossObjectPool bossObjectPoolInstance = Instantiate(bossObjectPoolPrefab);
+
+            if (bossObjectPoolInstance == null)
+            {
+                throw new Exception("Failed to instantiate ObjectPool.");
+            }
+
+            bossObjectPoolInstance.transform.SetParent(null);
+            bossObjectPool = bossObjectPoolInstance.GetComponent<BossObjectPool>();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"Error: {ex.Message}");
+            return false;
+        }
+    }
+
+
     async Task<bool> SubscribeForBossLevelCharacterEvents()
     {
         await Task.Yield();
@@ -780,6 +811,8 @@ public class LevelManager : BasePersistentManager<LevelManager>
             {
                 throw new Exception("Object instantiation failed.");
             }
+
+            asyncOperation = await InstantiateBossObjectPool(bossObjectPoolPrefab);
 
             // SpawnManager: prefabok + pozíciók átadása
             spawnManager = FindObjectOfType<SpawnManager>();

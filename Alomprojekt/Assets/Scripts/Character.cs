@@ -183,7 +183,7 @@ namespace Assets.Scripts
         /// </summary>
         private void OnValidate()
         {
-            ValidateUniqueID();
+            //ValidateUniqueID();
         }
 
 

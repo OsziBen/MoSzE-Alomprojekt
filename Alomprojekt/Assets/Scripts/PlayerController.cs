@@ -36,6 +36,10 @@ public class PlayerController : Assets.Scripts.Character
 
     BossController boss;
 
+    BossObjectPool bossObjectPool;
+    private List<EnemyProjetile> activeProjectiles = new List<EnemyProjetile>();    // Az aktívan megfigyelt lövedékek (Projectile) listája
+
+
     /// <summary>
     /// Komponenesek
     /// </summary>
@@ -65,6 +69,7 @@ public class PlayerController : Assets.Scripts.Character
         characterSetupManager = FindObjectOfType<CharacterSetupManager>();
         spriteRenderer = GameObject.Find("Background").GetComponent<SpriteRenderer>();
         objectPool = FindObjectOfType<ObjectPoolForProjectiles>();
+        bossObjectPool = FindObjectOfType<BossObjectPool>();
 
         // Mozgási határok beállítása
         Vector2 spriteSize = spriteRenderer.bounds.size;
@@ -102,7 +107,9 @@ public class PlayerController : Assets.Scripts.Character
         {
             boss.OnPlayerCollision += ChangeHealth;
         }
-        
+
+        bossObjectPool.OnProjectileActivated += StartProjectileDetection;
+        bossObjectPool.OnProjectileDeactivated += StopProjectileDetection;
 
         // Események hozzáadása
         launchAction.performed += Attack;
@@ -427,6 +434,39 @@ public class PlayerController : Assets.Scripts.Character
         remainingAttackCooldown = CurrentAttackCooldown;
     }
 
+    void StartProjectileDetection(GameObject projectile)
+    {
+        EnemyProjetile proj = projectile.GetComponent<EnemyProjetile>();
+        // Avoid adding the same projectile twice
+        if (!activeProjectiles.Contains(proj))
+        {
+            proj.OnPlayerHit += HandlePlayerHit;
+            activeProjectiles.Add(proj);
+
+            Debug.Log($"Projectile detected: {proj}");
+        }
+    }
+
+
+    /// <summary>
+    /// Leállítja a lövedék figyelését, amikor az visszakerül az objektumpoolba.
+    /// Eltávolítja a lövedéket az aktív lövedékek listájából, és leiratkozik az 'OnEnemyHit' eseményről.
+    /// </summary>
+    /// <param name="projectile">A lövedék, amelyet már nem kell figyelni.</param>
+    void StopProjectileDetection(GameObject projectile)
+    {
+        EnemyProjetile proj = projectile.GetComponent<EnemyProjetile>();
+        proj.OnPlayerHit -= HandlePlayerHit;
+
+        activeProjectiles.Remove(proj);
+        Debug.Log($"Projectile returned: {proj}");
+    }
+
+    void HandlePlayerHit(float damageAmount)
+    {
+        ChangeHealth(damageAmount);
+    }
+
 
     /// <summary>
     /// A játékos halálát kezeli, és az eseményt továbbítja, majd törli a játékos GameObject-jét.
@@ -441,6 +481,9 @@ public class PlayerController : Assets.Scripts.Character
         {
             boss.OnPlayerCollision -= ChangeHealth;     // lehet máshol lesz...
         }
+
+        bossObjectPool.OnProjectileActivated -= StartProjectileDetection;
+        bossObjectPool.OnProjectileDeactivated -= StopProjectileDetection;
 
         OnPlayerDeath?.Invoke();
         Destroy(gameObject);
