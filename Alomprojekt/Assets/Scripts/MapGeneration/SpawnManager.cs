@@ -35,7 +35,7 @@ public class SpawnManager : BaseTransientManager<SpawnManager>
         {
             CollectSpawners(); // Begyűjtjük a pálya spawnereit.
 
-            SpawnEntities(spawnManagerData.EnemySpawnData, spawnManagerData.PlayerPrefab, spawnManagerData.ObstaclePrefabs, spawnManagerData.ActiveObstacleSpawners, 2); // A megadott paraméterek alapján végrehajtjuk a spawnokat.
+            SpawnEntities(spawnManagerData.EnemySpawnData, spawnManagerData.PlayerPrefab, spawnManagerData.ObstaclePrefabs, spawnManagerData.ActiveObstacleSpawners, spawnManagerData.ActiveJokerSpawners); // A megadott paraméterek alapján végrehajtjuk a spawnokat.
             Cleanup(); // Kitöröljük a spawnereket, mivel már nincs szükség rájuk.
 
             OnLevelGenerationFinished?.Invoke(); // Event a sikeres generálásról

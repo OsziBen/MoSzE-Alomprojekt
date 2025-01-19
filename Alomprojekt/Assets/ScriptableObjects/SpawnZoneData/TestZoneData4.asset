@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnZoneInfos:
   - zoneType: 0
-    activeZoneCount: 5
+    activeZoneCount: 3
   - zoneType: 1
-    activeZoneCount: 3
+    activeZoneCount: 2
   - zoneType: 2
-    activeZoneCount: 3
+    activeZoneCount: 2
