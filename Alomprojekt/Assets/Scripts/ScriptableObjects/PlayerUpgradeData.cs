@@ -95,6 +95,10 @@ public class PlayerUpgradeData : ScriptableObject
         ValidateUniqueID();
         UpdateDescription();
     }
+
+    /// <summary>
+    /// Egyedi ID validálása.
+    /// </summary>
     private void ValidateUniqueID()
     {
         if (string.IsNullOrEmpty(uniqueID))
