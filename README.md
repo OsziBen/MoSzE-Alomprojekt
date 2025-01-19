@@ -26,7 +26,7 @@ A háttértörténet szerint egy hallgató kikapja a projektfeladatot, amiben le
 
 ## Telepítés/Futtatás
 
-A program **Unity Personal 2022.3.45f1**-ben készült, és ezért itt futtatható/buildelhető.
+A program **Unity Personal 2022.3.45f1**-ben készült, és ezért itt futtatható/buildelhető.\
 Az előre elkészített, futtatható állomány a ```Releases``` szekcióban található meg.
 
 ## Assetek
