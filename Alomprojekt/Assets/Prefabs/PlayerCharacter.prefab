@@ -141,7 +141,7 @@ MonoBehaviour:
   maxDMGValue: 10
   minAttackCooldownValue: 0.5
   maxAttackCooldownValue: 5
-  LevelSpritePairs: []
+  _rigidbody2d: {fileID: 0}
   timeInvincible: 2
   shotTravelSpeed: 300
   MoveAction:

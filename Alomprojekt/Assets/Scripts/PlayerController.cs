@@ -61,7 +61,7 @@ public class PlayerController : Assets.Scripts.Character
     {
         base.Awake();
         // Komponensek inicializálása
-        rigidbody2d = GetComponent<Rigidbody2D>();
+        //rigidbody2d = GetComponent<Rigidbody2D>();
         characterSetupManager = FindObjectOfType<CharacterSetupManager>();
         spriteRenderer = GameObject.Find("Background").GetComponent<SpriteRenderer>();
         objectPool = FindObjectOfType<ObjectPoolForProjectiles>();

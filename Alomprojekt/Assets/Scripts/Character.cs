@@ -81,7 +81,8 @@ namespace Assets.Scripts
         /// <summary>
         /// Komponenesek
         /// </summary>
-        protected Rigidbody2D rigidbody2d;  // Karakterhez kapcsolódó Rigidbody2D komponens
+        [SerializeField]
+        protected Rigidbody2D _rigidbody2d;  // Karakterhez kapcsolódó Rigidbody2D komponens
 
 
         /// <summary>
@@ -141,6 +142,11 @@ namespace Assets.Scripts
             set { _currentPercentageBasedDMG = value; }
         }
 
+        public Rigidbody2D rigidbody2d
+        {
+            get { return _rigidbody2d; }
+            protected set { _rigidbody2d = value; }
+        }
 
 
         /// <summary>
@@ -159,7 +165,6 @@ namespace Assets.Scripts
             //levelSpriteDictionary = SpriteListToDictionary(LevelSpritePairs);
 
             /*
-            rigidbody2d = GetComponent<Rigidbody2D>();
             CurrentHealth = maxHealth + additionalHealth;
             CurrentMovementSpeed = baseMovementSpeed + additionalMovementSpeed;
             CurrentDMG = baseDMG + addtionalDMG;
@@ -167,6 +172,7 @@ namespace Assets.Scripts
             CurrentCriticalHitChance = baseCriticalHitChance + additionalCriticalHitChance;
             CurrentPercentageBasedDMG = basePercentageBasedDMG + additionalPercentageBasedDMG;
             */
+            rigidbody2d = GetComponent<Rigidbody2D>();
             // event subscriptions
             OnDeath += Die;
         }
