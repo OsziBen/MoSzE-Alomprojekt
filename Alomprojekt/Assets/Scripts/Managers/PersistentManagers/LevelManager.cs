@@ -21,27 +21,36 @@ public class LevelManager : BasePersistentManager<LevelManager>
     /// </summary>
     public class SpawnManagerData
     {
+        // Egy lista, amely az ellenségek spawnolásával kapcsolatos adatokat tárolja.
         private List<EnemyData.EnemySpawnInfo> _enemySpawnData;
 
+        // Az ellenségek spawnolási adataihoz tartozó getter és setter.
+        // Ha a setter értéke null, akkor egy új üres lista jön létre.
         public List<EnemyData.EnemySpawnInfo> EnemySpawnData
         {
             get => _enemySpawnData;
             set => _enemySpawnData = value ?? new List<EnemyData.EnemySpawnInfo>();
         }
 
+        // A játékos prefabjának tárolása.
         public PlayerController PlayerPrefab { get; set; }
+        // Az obstacle-ök prefabjainak listája.
         public List<StaticObstacleController> ObstaclePrefabs { get; set; }
+        // Az aktív obstaclespawnerek száma.
         public int ActiveObstacleSpawners { get; set; }
+        // Az aktív jokerspawnerek száma.
         public int ActiveJokerSpawners { get; set; }
     }
 
-
-
     public class GameObjectPosition
     {
+        // A játékobjektum, amelynek pozícióját tároljuk.
         public GameObject gameObject;
+
+        // A játékobjektum 2D-s pozíciója.
         public Vector2 position;
 
+        // Konstruktor, amely beállítja a játékobjektumot és annak pozícióját.
         public GameObjectPosition(GameObject gameObject, Vector2 position)
         {
             this.gameObject = gameObject;
@@ -49,47 +58,53 @@ public class LevelManager : BasePersistentManager<LevelManager>
         }
     }
 
-    List<LevelData> allLevels = new List<LevelData>();
+    List<LevelData> allLevels = new List<LevelData>(); // Az összes pálya adatait tároló lista.
 
     //LevelData currentLevel;
 
     //List<EnemyData.EnemySpawnInfo> spawnManagerData = new List<EnemyData.EnemySpawnInfo>();
 
-    private bool isLoadSuccessful;
+    private bool isLoadSuccessful; // Jelzi, hogy a betöltés sikeres volt-e.
 
-    System.Random rand = new System.Random();
+    System.Random rand = new System.Random(); // System random használata.
 
-    // szint vége ellenőrzés
+    // A szint vége ellenőrzéséhez szükséges listák az ellenségekről és obstacle-ökről..
     List<EnemyController> enemies;
     List<ObstacleController> obstacles;
 
     /// <summary>
     /// Komponensek
     /// </summary>
-    GameStateManager gameStateManager;
-    GameSceneManager gameSceneManager;
-    SpawnManager spawnManager;
-    CharacterSetupManager characterSetupManager;
-    UIManager uiManager;
-    SaveLoadManager saveLoadManager;
+    GameStateManager gameStateManager; // A játék állapotának kezelője.
+    GameSceneManager gameSceneManager; // A játék jeleneteinek kezelője.
+    SpawnManager spawnManager; // Az objektumok spawnolásáért felelős kezelő.
+    CharacterSetupManager characterSetupManager; // A karakterek beállításáért felelős kezelő.
+    UIManager uiManager; // A felhasználói felület kezelője.
+    SaveLoadManager saveLoadManager; // Mentés és betöltés kezelője.
 
-    ObjectPoolForProjectiles objectPool;
-    PlayerController player;
-    BossController boss;
+    ObjectPoolForProjectiles objectPool; // Lövedékekhez tartozó objektumpool.
+    PlayerController player; // A játékos vezérlő objektuma.
+    BossController boss; // A boss vezérlő objektuma.
 
     [Header("Character Prefabs")]
+    // A játékos prefabja, amely a Unity Inspectorban állítható be.
     [SerializeField]
     private PlayerController playerPrefab;
+    // A boss prefabja.
     [SerializeField]
     private BossController bossPrefab;
     [Header("Obstacle Prefabs")]
+    // A statikus obstacle prefabjainak listája.
     [SerializeField]
     private List<StaticObstacleController> staticObstaclePrefabs;
     [SerializeField]
+    // A dinamikus obstacle prefabjainak listája.
     private DynamicObstacleController dynamicObstaclePrefab;
     [Header("Component Prefabs")]
+    // Lövedékek objectpool-jának prefabja.
     [SerializeField]
     private ObjectPoolForProjectiles objectPoolPrefab;
+    // A karakterbeállításokért felelős kezelő prefabja.
     [SerializeField]
     private CharacterSetupManager characterSetupManagerPrefab;
 
@@ -97,51 +112,70 @@ public class LevelManager : BasePersistentManager<LevelManager>
     /// <summary>
     /// Események
     /// </summary>
+    // Esemény, amely akkor hívódik meg, ha egy szint teljesül.
     public event Action<bool, float> OnLevelCompleted; // true: success; false: failure // player HP %: 0 or ]0;100]
+    // Esemény, amely akkor hívódik meg, amikor pontokat adunk a játékosnak.
     public event Action<int> OnPointsAdded;
+    // Esemény, amely akkor hívódik meg, amikor a játék véget ér. True-siker, false-bukás.
     public event Action<bool> OnGameFinished;
 
     /// <summary>
-    /// 
+    /// Az osztály inicializálását végző függvény.
     /// </summary>
     protected override async void Initialize()
     {
+        // Az ősosztály Initialize metódusának meghívása.
         base.Initialize();
+
+        // A GameStateManager komponens keresése a jelenetben.
         gameStateManager = FindObjectOfType<GameStateManager>();
+
+        // A GameSceneManager komponens keresése a jelenetben.
         gameSceneManager = FindObjectOfType<GameSceneManager>();
 
+        // Az UIManager (felhasználói felület kezelő) keresése a jelenetben.
         uiManager = FindObjectOfType<UIManager>();
+
+        // A SaveLoadManager (mentés és betöltés kezelő) keresése a jelenetben.
         saveLoadManager = FindObjectOfType<SaveLoadManager>();
 
+        // Feliratkozás a SaveLoadManager mentési eseményére.
         saveLoadManager.OnSaveRequested += Save;
 
+        // Az összes szint adatainak betöltése aszinkron módon.
         isLoadSuccessful = await LoadAllLevelDataAsync();
+
+        // Ha az adatok betöltése nem sikerült, hibát írunk a konzolra.
         if (!isLoadSuccessful)
         {
-            Debug.LogError("ADATHIBA");
+            Debug.LogError("ADATHIBA"); // Hibajelzés, ha az adatok sérültek vagy hiányosak.
         }
     }
 
 
     /// <summary>
-    /// 
+    /// Az aktuális játékállás mentése.
     /// </summary>
-    /// <param name="saveData"></param>
+    /// <param name="saveData">Az adatszerkezet, amelyben a mentés tárolódik.</param>
     void Save(SaveData saveData)
     {
+        // Az összes ellenség adatainak hozzáadása a mentéshez.
         foreach (var enemy in enemies)
         {
             saveData.spawnerSaveData.prefabsData.Add(GetPrefabSaveData(enemy.gameObject));
         }
 
+        // Ha van boss a pályán, annak adatait is mentjük.
         if (boss != null)
         {
-            Debug.Log("VAN BOSS A PÁLYÁN!");
-            saveData.spawnerSaveData.prefabsData.Add(GetPrefabSaveData(boss.gameObject));            
+            Debug.Log("VAN BOSS A PÁLYÁN!"); // Konzolüzenet a boss jelenlétéről.
+            saveData.spawnerSaveData.prefabsData.Add(GetPrefabSaveData(boss.gameObject));
         }
 
+        // A játékos adatainak mentése.
         saveData.spawnerSaveData.prefabsData.Add(GetPrefabSaveData(player.gameObject));
 
+        // Az akadályok összegyűjtése és mentése.
         obstacles = new List<ObstacleController>(FindObjectsOfType<ObstacleController>());
         foreach (var obstacle in obstacles)
         {
@@ -151,64 +185,80 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
 
     /// <summary>
-    /// 
+    /// Egy adott játékobjektum mentéséhez szükséges adatokat ad vissza.
     /// </summary>
-    /// <param name="gameObject"></param>
-    /// <returns></returns>
+    /// <param name="gameObject">A játékobjektum, amelynek adatait menteni szeretnénk.</param>
+    /// <returns>A játékobjektumhoz tartozó mentési adatok.</returns>
     PrefabSaveData GetPrefabSaveData(GameObject gameObject)
     {
+        // Létrehoz egy új PrefabSaveData objektumot, amelybe az adatokat mentjük.
         PrefabSaveData prefabSaveData = new PrefabSaveData();
 
+        // Ha a játékobjektum tartalmaz EnemyController komponenst:
         if (gameObject.TryGetComponent<EnemyController>(out EnemyController ec))
         {
+            // Beállítja az ellenség azonosítóját és pozícióját a mentési adatokban.
             prefabSaveData.prefabID = ec.ID;
             prefabSaveData.prefabPosition = (Vector2)ec.transform.position;
         }
+        // Ha a játékobjektum tartalmaz PlayerController komponenst:
         else if (gameObject.TryGetComponent<PlayerController>(out PlayerController pc))
         {
+            // Beállítja a játékos azonosítóját és pozícióját.
             prefabSaveData.prefabID = pc.ID;
             prefabSaveData.prefabPosition = (Vector2)pc.transform.position;
         }
+        // Ha a játékobjektum tartalmaz ObstacleController komponenst:
         else if (gameObject.TryGetComponent<ObstacleController>(out ObstacleController oc))
         {
+            // Beállítja az obstacle azonosítóját és pozícióját.
             prefabSaveData.prefabID = oc.ID;
             prefabSaveData.prefabPosition = (Vector2)oc.transform.position;
         }
+        // Ha a játékobjektum tartalmaz BossController komponenst:
         else if (gameObject.TryGetComponent<BossController>(out BossController bc))
         {
+            // Beállítja a boss azonosítóját és pozícióját.
             prefabSaveData.prefabID = bc.ID;
             prefabSaveData.prefabPosition = (Vector2)bc.transform.position;
         }
 
+        // Visszatér a kitöltött PrefabSaveData objektummal.
         return prefabSaveData;
     }
 
 
     /// <summary>
-    /// 
+    /// Akkor hívódik meg, amikor az objektum megsemmisül.
     /// </summary>
     private void OnDestroy()
     {
+        // Ellenőrzi, hogy a SaveLoadManager létezik-e.
         if (saveLoadManager != null)
         {
+            // Leiratkozik a mentési eseményről.
             saveLoadManager.OnSaveRequested -= Save;
         }
     }
 
 
     /// <summary>
-    /// 
+    /// Kinyeri a jelenlegi szint adatai alapján az ellenségek spawnolására vonatkozó adatokat.
     /// </summary>
-    /// <param name="level"></param>
-    /// <returns></returns>
+    /// <param name="currentLevel">A jelenlegi szint adatai.</param>
+    /// <returns>Az ellenségek spawnolására vonatkozó információkat tartalmazó lista.</returns>
     List<EnemyData.EnemySpawnInfo> GetEnemySpawnDataFromCurrentLevelData(LevelData currentLevel)
     {
+        // Létrehoz egy listát az ellenségek spawnolási adatainak tárolására.
         List<EnemyData.EnemySpawnInfo> enemySpawnData = new List<EnemyData.EnemySpawnInfo>();
 
+        // Kinyeri a szint ellenségzónáiból az aktív zónák számát.
         int activeEnemyZoneCount = currentLevel.zoneData.spawnZoneInfos.Find(x => x.zoneType == ZoneType.Enemy).activeZoneCount;
 
-        List<EnemyData.EnemySpawnInfo> allEnemyInfos = currentLevel.enemyData.enemyInfos;  // List of all possible enemy data
+        // Kinyeri az összes lehetséges ellenség adatát a szint adataiból.
+        List<EnemyData.EnemySpawnInfo> allEnemyInfos = currentLevel.enemyData.enemyInfos;
 
+        // Az aktív zónák számának megfelelő számú ellenség kiválasztása.
         for (int i = 0; i < activeEnemyZoneCount; i++)
         {
             // Véletlenszerű index kiválasztása a lehetséges ellenségek listájából
@@ -218,73 +268,98 @@ public class LevelManager : BasePersistentManager<LevelManager>
             enemySpawnData.Add(allEnemyInfos[randomIndex]);
         }
 
+        // Visszaadja a kitöltött ellenség spawnolási adatokat.
         return enemySpawnData;
     }
 
-
+    /// <summary>
+    /// Lekéri a SpawnManager számára szükséges adatokat a megadott szint alapján.
+    /// </summary>
+    /// <param name="level">A kívánt szint száma.</param>
+    /// <returns>A SpawnManager számára szükséges adatokat tartalmazó objektum.</returns>
     SpawnManagerData GetSpawnManagerDataByLevel(int level)
     {
+        // Létrehoz egy új SpawnManagerData objektumot az adatok tárolására.
         SpawnManagerData spawnManagerData = new SpawnManagerData();
+        // Kiválasztja a megadott szinthez tartozó LevelData-t az összes szint közül.
         LevelData currentLevel = allLevels.Find(x => x.levelNumber == level);
 
+        // Beállítja az ellenségek spawnolására vonatkozó adatokat.
         spawnManagerData.EnemySpawnData = GetEnemySpawnDataFromCurrentLevelData(currentLevel);
+        // Beállítja a játékos prefabját.
         spawnManagerData.PlayerPrefab = playerPrefab;
+        // Beállítja a statikus obstacleök prefabjait.
         spawnManagerData.ObstaclePrefabs = staticObstaclePrefabs;
+        // Beállítja az aktív obstaclespawner-ek számát.
         spawnManagerData.ActiveObstacleSpawners = currentLevel.zoneData.spawnZoneInfos.Find(x => x.zoneType == ZoneType.Obstacle).activeZoneCount;
+        // Beállítja az aktív jokerspawner-ek számát.
         spawnManagerData.ActiveJokerSpawners = currentLevel.zoneData.spawnZoneInfos.Find(x => x.zoneType == ZoneType.Joker).activeZoneCount;
 
+        // Kiírja az ellenség spawnolási adatainak számát a konzolra.
         Debug.Log(spawnManagerData.EnemySpawnData.Count);
 
+        // Visszatér a kitöltött SpawnManagerData objektummal.
         return spawnManagerData;
     }
 
 
     /// <summary>
-    /// 
+    /// A mentett adatokból kinyeri a SpawnManager számára szükséges objektumokat és azok pozícióit.
     /// </summary>
-    /// <param name="saveData"></param>
-    /// <returns></returns>
+    /// <param name="saveData">A mentési adatokat tartalmazó objektum.</param>
+    /// <returns>Az objektumokat és pozícióikat tartalmazó lista.</returns>
     List<GameObjectPosition> GetSpawnManagerLoadDataFromSaveData(SaveData saveData)
     {
+        // Létrehoz egy listát az objektumok és pozícióik tárolására.
         List<GameObjectPosition> gameObjectPositions = new List<GameObjectPosition>();
+        // Kinyeri a mentési adatokban szereplő szintet, és megtalálja annak LevelData-ját.
         LevelData currentLevel = allLevels.Find(x => x.levelNumber == gameStateManager.GameLevelToInt(gameStateManager.LevelNameToGameLevel(saveData.gameData.gameLevel)));
 
+        // Végigmegy a mentett prefabok adatain, és visszaállítja azokat.
         foreach (var prefabData in saveData.spawnerSaveData.prefabsData)
         {
+            // Megkeresi a prefabhoz tartozó GameObject-et a jelenlegi szint adatai alapján.
             GameObject go = GetPrefabGameObject(currentLevel, prefabData.prefabID);
+            // Ha az objektum létezik, hozzáadja a listához annak pozíciójával együtt.
             if (go != null)
             {
                 gameObjectPositions.Add(new GameObjectPosition(go, prefabData.prefabPosition));
             }
         }
 
+        // Visszaadja a listát az objektumokkal és azok pozícióival.
         return gameObjectPositions;
     }
 
-
+    /// <summary>
+    /// Lekéri a megfelelő prefab GameObject-et a megadott szint és prefab ID alapján.
+    /// </summary>
+    /// <param name="currentLevel">A jelenlegi szint adatai.</param>
+    /// <param name="prefabID">Az objektumhoz tartozó azonosító.</param>
+    /// <returns>A megfelelő prefab GameObject-je, vagy null, ha nem található.</returns>
     private GameObject GetPrefabGameObject(LevelData currentLevel, string prefabID)
     {
-        // Handle PLAYER
+        // Játékos prefab kezelése
         if (prefabID == playerPrefab.ID)
         {
             return playerPrefab.gameObject;
         }
 
-        // Handle OBSTACLE
+        // StaticObstacle prefab kezelése
         var obstaclePrefab = staticObstaclePrefabs.Find(x => x.ID == prefabID);
         if (obstaclePrefab != null)
         {
             return obstaclePrefab.gameObject;
         }
 
-        // Handle ENEMY
+        // Ellenség prefab kezelése
         var enemyPrefab = currentLevel.enemyData.enemyInfos.Find(x => x.enemyPrefab.ID == prefabID);
         if (enemyPrefab != null)
         {
             return enemyPrefab.enemyPrefab.gameObject;
         }
 
-        // Return null if no matching prefab was found
+        // Ha nincs egyezés, visszatér null-lal
         return null;
     }
 
@@ -345,9 +420,13 @@ public class LevelManager : BasePersistentManager<LevelManager>
         Debug.Log($"Level {levelData.levelNumber} loaded.");
     }
 
-
+    /// <summary>
+    /// Aszinkron módon betölti a boss szintet, inicializálja a szükséges komponenseket és beállítja a játékos és ellenségek értékeit.
+    /// </summary>
+    /// <returns>True, ha a szint sikeresen betöltődött, false, ha hiba történt.</returns>
     public async Task<bool> LoadBossLevelAsync()
     {
+        // Aszinkron művelet elindítása.
         await Task.Yield();
         bool asyncOperation;
 
@@ -409,18 +488,19 @@ public class LevelManager : BasePersistentManager<LevelManager>
                 throw new Exception("ObjectPool setup failed.");
             }
 
-            // UIManager        
+            // UIManager - játékos UI-jának betöltése.     
             asyncOperation = await uiManager.LoadPlayerUIAsync();
             if (!asyncOperation)
             {
                 throw new Exception("UI setup failed.");
             }
-            
 
+            // Ha minden sikeresen végrehajtódott, visszatérünk true értékkel.
             return true;
         }
         catch (Exception ex)
         {
+            // Ha hiba történt, kiírjuk az hibaüzenetet a konzolra.
             Debug.LogError($"{ex.Message}");
             return false;
         }
@@ -428,10 +508,10 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
 
     /// <summary>
-    /// 
+    /// Aszinkron módon betölti a megadott számú új szintet, inicializálja a szükséges komponenseket és beállítja a játékos és ellenségek értékeit.
     /// </summary>
-    /// <param name="levelNumber"></param>
-    /// <returns></returns>
+    /// <param name="levelNumber">A betöltendő szint száma.</param>
+    /// <returns>True, ha az új szint sikeresen betöltődött, false, ha hiba történt.</returns>
     public async Task<bool> LoadNewLevelAsync(int levelNumber)
     {
         bool asyncOperation;
@@ -504,17 +584,19 @@ public class LevelManager : BasePersistentManager<LevelManager>
                 throw new Exception("ObjectPool setup failed.");
             }
 
-            // UIManager        
+            // UIManager - játékos UI-jának betöltése.   
             asyncOperation = await uiManager.LoadPlayerUIAsync();
             if (!asyncOperation)
             {
                 throw new Exception("UI setup failed.");
             }
 
+            // Ha minden sikeresen végrehajtódott, visszatérünk true értékkel.
             return true;
         }
         catch (Exception ex)
         {
+            // Ha hiba történt, kiírjuk a hibaüzenetet a konzolra.
             Debug.LogError($"Error: {ex.Message}");
             return false;
         }
@@ -523,27 +605,33 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
 
     /// <summary>
-    /// 
+    /// Beállítja az ObjectPool-t a játékos aktuális állapota alapján, és engedélyezi vagy letiltja a jelölést.
     /// </summary>
-    /// <param name="objectPool"></param>
-    /// <returns></returns>
+    /// <param name="objectPool">Az ObjectPool példány, amelyet be kell állítani.</param>
+    /// <returns>True, ha a beállítás sikeres, false, ha hiba történt.</returns>
     async Task<bool> SetObjectPool(ObjectPoolForProjectiles objectPool)
     {
+        // Aszinkron műveletek folytatása
         await Task.Yield();
 
         try
         {
+            // Ellenőrizzük, hogy a player referencia létezik-e.
             if (player == null)
             {
                 throw new Exception("Player reference is missing!");
             }
+            // Az ObjectPool marking engedélyezése vagy letiltása a játékos aktuális támadási statja alapján.
             objectPool.EnableMarking(player.CurrentPercentageBasedDMG > 0f);
+            // A jelölés állapotának kiírása a konzolra.
             Debug.Log("OBJ_POOL: " + objectPool.IsMarkingEnabled);
 
+            // Ha minden sikeresen végrehajtódott, visszatérünk true értékkel.
             return true;
         }
         catch (Exception ex)
         {
+            // Ha hiba történt, kiírjuk a hibaüzenetet a konzolra.
             Debug.LogError($"Error: {ex.Message}");
             return false;
         }
@@ -551,43 +639,52 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
 
     /// <summary>
-    /// 
+    /// Aszinkron módon létrehozza a szükséges ideiglenes szint elemeket, például az ObjectPool és a CharacterSetupManager példányokat.
     /// </summary>
-    /// <param name="objectPoolPrefab"></param>
-    /// <param name="setupManagerPrefab"></param>
-    /// <returns></returns>
+    /// <param name="objectPoolPrefab">Az ObjectPool prefab, amelyet instanciálni kell.</param>
+    /// <param name="setupManagerPrefab">A CharacterSetupManager prefab, amelyet instanciálni kell.</param>
+    /// <returns>True, ha az instanciálás sikeres, false, ha hiba történt.</returns>
     async Task<bool> InstantiateTransientLevelElementsAsync(ObjectPoolForProjectiles objectPoolPrefab, CharacterSetupManager setupManagerPrefab)
     {
+        // Aszinkron műveletek folytatása
         await Task.Yield();
 
         try
         {
-            // ObjectPool
+            // ObjectPool példányosítása
             ObjectPoolForProjectiles objectPoolInstance = Instantiate(objectPoolPrefab);
 
+            // Ellenőrizzük, hogy az ObjectPool példányosítása sikeres volt-e.
             if (objectPoolInstance == null)
             {
                 throw new Exception("Failed to instantiate ObjectPool.");
             }
 
+            // Az új objektum szülőjének eltávolítása.
             objectPoolInstance.transform.SetParent(null);
+            // Az ObjectPool példány lekérése.
             objectPool = objectPoolInstance.GetComponent<ObjectPoolForProjectiles>();
 
-            // CharacterSetupManager
+            // CharacterSetupManager példányosítása
             CharacterSetupManager characterSetupInstance = Instantiate(characterSetupManagerPrefab);
 
+            // Ellenőrizzük, hogy a CharacterSetupManager példányosítása sikeres volt-e.
             if (characterSetupInstance == null)
             {
                 throw new Exception("Failed to instantiate CharacterSetupManager.");
             }
 
+            // Az új objektum szülőjének eltávolítása.
             characterSetupInstance.transform.SetParent(null);
+            // A CharacterSetupManager példány lekérése.
             characterSetupManager = characterSetupInstance.GetComponent<CharacterSetupManager>();
 
+            // Ha minden sikeresen végrehajtódott, visszatérünk true értékkel.
             return true;
         }
         catch (Exception ex)
         {
+            // Ha hiba történt, kiírjuk a hibaüzenetet a konzolra.
             Debug.LogError($"Error: {ex.Message}");
             return false;
         }
@@ -595,22 +692,31 @@ public class LevelManager : BasePersistentManager<LevelManager>
     }
 
 
+    /// <summary>
+    /// Aszinkron módon feliratkozik a boss szint karaktereihez kapcsolódó eseményekre, például a játékos és a boss halálára.
+    /// </summary>
+    /// <returns>True, ha a feliratkozás sikeres, false, ha hiba történt.</returns>
     async Task<bool> SubscribeForBossLevelCharacterEvents()
     {
+        // Aszinkron műveletek folytatása
         await Task.Yield();
 
         try
         {
+            // Játékos és főellenség keresése a jelenetben
             player = FindObjectOfType<PlayerController>();
             boss = FindObjectOfType<BossController>();
-            
+
+            // Eseményekre való feliratkozás
             player.OnPlayerDeath += PlayerKilled;
             boss.OnBossDeath += BossKilled;
 
+            // Ha minden sikeresen megtörtént, visszatérünk true értékkel.
             return true;
         }
         catch (Exception ex)
         {
+            // Ha hiba történt, kiírjuk a hibaüzenetet a konzolra.
             Debug.LogError($"{ex.Message}");
             return false;
         }
@@ -618,24 +724,28 @@ public class LevelManager : BasePersistentManager<LevelManager>
 
 
     /// <summary>
-    /// 
+    /// Aszinkron módon feliratkozik a normál szint karaktereihez kapcsolódó eseményekre, beleértve a játékos és az ellenségek halálát.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>True, ha a feliratkozás sikeres, false, ha hiba történt.</returns>
     async Task<bool> SubscribeForNormalLevelCharacterEvents()
     {
+        // Aszinkron műveletek folytatása
         await Task.Yield();
 
         try
         {
+            // Az összes ellenség és a játékos keresése a jelenetben
             enemies = new List<EnemyController>(FindObjectsOfType<EnemyController>());
             player = FindObjectOfType<PlayerController>();
 
+            // Ha nem találjuk a játékost, akkor hibaüzenetet írunk ki és false-t adunk vissza.
             if (player == null)
             {
                 Debug.LogError("Nem található PlayerController. A játékos eseményekre való feliratkozás nem sikerült.");
                 return false;
             }
 
+            // Ha nem találunk ellenségeket, akkor figyelmeztetést írunk ki és false-t adunk vissza.
             if (enemies == null || enemies.Count == 0)
             {
                 Debug.LogWarning("Nem találhatók EnemyController objektumok. Az ellenség eseményekre való feliratkozás nem sikerült.");
@@ -643,21 +753,25 @@ public class LevelManager : BasePersistentManager<LevelManager>
             }
             else
             {
+                // Ha ellenségeket találtunk, feliratkozunk az ő halálukra.
                 foreach (var enemy in enemies)
                 {
                     enemy.OnEnemyDeath += EnemyKilled;
                 }
             }
 
+            // A játékos halálára is feliratkozunk
             player.OnPlayerDeath += PlayerKilled;
 
+            // Ha minden rendben van, visszatérünk true értékkel
             return true;
         }
         catch (Exception ex)
         {
+            // Ha hiba történik, kiírjuk a hibát és leiratkozunk az eseményekről
             Debug.LogError($"Hiba történt a {nameof(SubscribeForNormalLevelCharacterEvents)} metódusban: {ex.Message}");
 
-            // Leiratkozás hibák esetén
+            // Leiratkozás minden eseményről, ha hiba történt
             if (enemies != null)
             {
                 foreach (var enemy in enemies)
@@ -671,99 +785,154 @@ public class LevelManager : BasePersistentManager<LevelManager>
                 player.OnPlayerDeath -= PlayerKilled;
             }
 
+            // Ha hiba történt, false-t adunk vissza
             return false;
         }
     }
 
 
+    /// <summary>
+    /// Eseménykezelő, amely akkor hívódik meg, amikor a boss meghal.
+    /// Ez a metódus leiratkozik a játékos és az ellenség halálára vonatkozó eseményekről,
+    /// és jelzi a játék befejezését a `OnGameFinished` eseményen keresztül.
+    /// </summary>
     void BossKilled()
     {
+        // Leiratkozunk a főellenség halálára vonatkozó eseményről
         boss.OnBossDeath -= BossKilled;
+        // Leiratkozunk a játékos halálára vonatkozó eseményről
         player.OnPlayerDeath -= PlayerKilled;
-        
+
+        // A játék befejezésének jelzése (success)
         OnGameFinished?.Invoke(true);
     }
 
 
     /// <summary>
-    /// 
+    /// Eseménykezelő, amely akkor hívódik meg, amikor a játékos meghal.
+    /// Ha vannak még ellenségek, akkor a szint befejeződését kezeli, ha pedig nincs ellenség,
+    /// akkor a játék befejeződését jelezve véget vet a játéknak.
     /// </summary>
     void PlayerKilled()
     {
+        // Leiratkozunk a játékos halálára vonatkozó eseményről
         player.OnPlayerDeath -= PlayerKilled;
 
+        // Ha vannak ellenségek a pályán (ellenkező esetben a boss szinten vagyunk)
         if (enemies != null)        // ha vannak/maradtak enemy-k akkor normál pálya, amúgy Boss
         {
+            // Leiratkozunk az ellenségek halálára vonatkozó eseményekről
             foreach (var enemy in enemies)
             {
                 enemy.OnEnemyDeath -= EnemyKilled;
             }
-        
+
+            // Jelzünk, hogy a szint befejeződött (nem sikerült: false) és a játékos HP-ja 0%
             OnLevelCompleted?.Invoke(false, 0f);
         }
         else
         {
+            // Ha nincs több ellenség, akkor a játék befejeződik
             OnGameFinished?.Invoke(false);
         }
-
     }
 
+
+    /// <summary>
+    /// Eseménykezelő, amely akkor hívódik meg, amikor egy ellenség meghal.
+    /// Hozzáadja az ellenség által szerzett pontokat, eltávolítja az ellenséget a listából,
+    /// és ha már nincs több ellenség, akkor a szint befejeződik és jelzi a játékos életének arányát.
+    /// </summary>
+    /// <param name="enemy">Az elpusztított ellenség vezérlője.</param>
     void EnemyKilled(EnemyController enemy)
     {
+        // Leiratkozunk az ellenség halálára vonatkozó eseményről
         enemy.OnEnemyDeath -= EnemyKilled;
+        // Addoljuk az ellenség pontjait
         OnPointsAdded?.Invoke(enemy.CurrentPointValue);
+        // Eltávolítjuk az ellenséget az ellenségek listájából
         enemies.Remove(enemy);
+
+        // Ha már nincs több ellenség
         if (enemies.Count == 0)
         {
+            // Leiratkozunk a játékos halálára vonatkozó eseményről
             player.OnPlayerDeath -= PlayerKilled;
+            // Kiszámítjuk a játékos életének jelenlegi százalékos arányát
             float playerHealthPercentage = player.CurrentHealth / player.MaxHealth;
+            // Meghívjuk a szint befejeződését jelző eseményt
             OnLevelCompleted?.Invoke(true, playerHealthPercentage);
         }
     }
 
-
+    /// <summary>
+    /// Betölti a játékos által mentett szintet aszerint, hogy az aktuális szint egy boss harc vagy egy normál szint.
+    /// A mentett adatokat használja a megfelelő szint betöltéséhez.
+    /// </summary>
+    /// <param name="saveData">A mentett adatok, amelyek tartalmazzák a játék aktuális állapotát és szintjét.</param>
+    /// <returns>Visszatérési érték: `true`, ha a szint betöltése sikeres volt, `false`, ha hiba történt.</returns>
     public async Task<bool> LoadSavedLevelAsync(SaveData saveData)
     {
         try
         {
+            // Ha a mentett szint egy boss harc, akkor a Boss szint betöltése
             if (saveData.gameData.gameLevel == GameLevel.BossBattle.ToString())
             {
-                await LoadSavedBossLevelAsync(saveData);
+                await LoadSavedBossLevelAsync(saveData); // Async metódus a boss szint betöltéséhez
             }
             else
             {
-                await LoadNormalLevelAsync(saveData);
+                await LoadNormalLevelAsync(saveData); // Async metódus a normál szint betöltéséhez
             }
 
+            // Ha minden rendben, true-val tér vissza
             return true;
         }
         catch (Exception ex)
         {
+            // Ha hiba történik, akkor azt logoljuk
             Debug.LogError($"Error during loading saved level! {ex.Message}");
-            return false;
+            return false;  // Hibás betöltés esetén false-t ad vissza
         }
     }
 
+
+    /// <summary>
+    /// A mentett adatok alapján létrehozza a boss harc szinthez szükséges spawn pozíciókat.
+    /// A mentett adatok között található prefab ID-k alapján meghatározza, hogy hol kell megjeleníteni a boss-t és a játékost.
+    /// </summary>
+    /// <param name="saveData">A mentett adatok, amelyek tartalmazzák a prefabokat és azok pozícióit.</param>
+    /// <returns>Visszatérési érték: Egy lista a spawn pozíciókat tartalmazó `GameObjectPosition` objektumokkal.</returns>
     List<GameObjectPosition> GetBossLevelSpawnData(SaveData saveData)
     {
+        // Lista, amely a boss szinthez szükséges spawn adatokat fogja tartalmazni
         List<GameObjectPosition> bossLevelSpawnData = new List<GameObjectPosition>();
+        // Iterálunk a mentett prefab adatain
         foreach (var prefab in saveData.spawnerSaveData.prefabsData)
         {
+            // Ha a prefab a boss prefabja, akkor a boss pozícióját (0, 0) beállítjuk
             if (prefab.prefabID == bossPrefab.ID)
             {
                 bossLevelSpawnData.Add(new GameObjectPosition(bossPrefab.gameObject, new Vector2(0f, 0f)));
             }
-
+            // Ha a prefab a játékos prefabja, akkor a játékos pozícióját (0, -10) beállítjuk
             if (prefab.prefabID == playerPrefab.ID)
             {
                 bossLevelSpawnData.Add(new GameObjectPosition(playerPrefab.gameObject, new Vector2(0f, -10f)));
             }
         }
 
+        // Visszatér a létrehozott spawn adatokat tartalmazó listával
         return bossLevelSpawnData;
     }
 
 
+    /// <summary>
+    /// Betölti a mentett adatokat és inicializálja a boss harc szintet.
+    /// A mentett adatokat felhasználva beállítja a megfelelő pályát, objektumokat, karaktereket és eseményeket.
+    /// </summary>
+    /// <param name="saveData">A mentett adatok, amelyek tartalmazzák a szint és objektumok adatait.</param>
+    /// <returns>Visszatérési érték: `true`, ha a betöltés sikeres volt, `false`, ha hiba történt.</returns>
     async Task<bool> LoadSavedBossLevelAsync(SaveData saveData)
     {
         bool asyncOperation;
@@ -813,16 +982,25 @@ public class LevelManager : BasePersistentManager<LevelManager>
                 throw new Exception("UI setup failed.");
             }
 
+            // Ha minden lépés sikeres volt, akkor visszatérünk `true` értékkel
             return true;
         }
         catch (Exception ex)
         {
+            // Hibák esetén logoljuk a hibát és visszatérünk `false` értékkel
             Debug.LogError($"{ex.Message}");
             return false;
         }
 
     }
 
+
+    /// <summary>
+    /// Betölti a normál szintet a mentett adatok alapján, beállítja az objektumokat, karaktereket és eseményeket.
+    /// </summary>
+    /// <param name="saveData">A mentett adatok, amelyek tartalmazzák a szint és objektumok adatait.</param>
+    /// <returns>Visszatérési érték: `true`, ha a betöltés sikeres volt, `false`, ha hiba történt.</returns>
+    /// <exception cref="Exception">Hibát dob, ha bármelyik lépés nem sikerül.</exception>
     async Task<bool> LoadNormalLevelAsync(SaveData saveData)
     {
         bool asyncOperation;
@@ -870,7 +1048,8 @@ public class LevelManager : BasePersistentManager<LevelManager>
         {
             throw new Exception("UI setup failed.");
         }
-        
+
+        // Ha minden lépés sikeres volt, akkor visszatérünk `true` értékkel
         return true;
     }
 
