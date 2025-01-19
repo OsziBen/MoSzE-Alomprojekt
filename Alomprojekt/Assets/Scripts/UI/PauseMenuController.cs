@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,18 +8,18 @@ using static GameStateManager;
 public class PauseMenuController : MonoBehaviour
 {
     /// <summary>
-    /// V·ltozÛk
+    /// V√°ltoz√≥k
     /// </summary>
     [Header("Panels")]
     [SerializeField]
-    private GameObject mainPanel; // A fıpanel (alapÈrtelmezett megjelenÌtÈs).
+    private GameObject mainPanel; // A f√µpanel (alap√©rtelmezett megjelen√≠t√©s).
     [SerializeField]
-    private GameObject hintPanel; // A tippablak (segÌtsÈg megjelenÌtÈsÈre).
+    private GameObject hintPanel; // A tippablak (seg√≠ts√©g megjelen√≠t√©s√©re).
     [Header("Buttons")]
     [SerializeField]
-    private Button resumeGameButton;
+    private Button resumeGameButton; // J√°t√©k folytat√°sa gomb.
     [SerializeField]
-    private Button exitToMainMenuButton;
+    private Button exitToMainMenuButton; // Kil√©p√©s a f≈ëmen√ºbe gomb.
 
 
     /// <summary>
@@ -30,34 +30,37 @@ public class PauseMenuController : MonoBehaviour
 
     private void Start()
     {
-        uiManager = FindAnyObjectByType<UIManager>();
-        resumeGameButton.onClick.AddListener(() => uiManager.ResumeGameButtonClicked());
+        // A UIManager oszt√°ly p√©ld√°ny√°nak keres√©se a jelenetben, hogy hozz√°f√©rhess√ºnk a kezel≈ëfunkci√≥ihoz.
+        uiManager = FindAnyObjectByType<UIManager>(); 
+        // A "resumeGameButton" gombhoz egy esem√©nyfigyel≈ët adunk, amely megh√≠vja a UIManager megfelel≈ë met√≥dus√°t, ha a gombra kattintanak.
+        resumeGameButton.onClick.AddListener(() => uiManager.ResumeGameButtonClicked()); 
+        // A "exitToMainMenuButton" gombhoz egy esem√©nyfigyel≈ët adunk, amely megh√≠vja a UIManager megfelel≈ë met√≥dus√°t, ha a gombra kattintanak.
         exitToMainMenuButton.onClick.AddListener(() => uiManager.ExitToMainMenuButtonClicked());
     }
 
 
     /// <summary>
-    /// Akkor hÌvÛdik meg, amikor a Tippablak megnyit·s·t jelˆlı gombra kattintanak.
-    /// Elrejti a fıpanelt, Ès megjelenÌti a tippablakot.
+    /// Akkor h√≠v√≥dik meg, amikor a Tippablak megnyit√°s√°t jel√∂l√µ gombra kattintanak.
+    /// Elrejti a f√µpanelt, √©s megjelen√≠ti a tippablakot.
     /// </summary>
     public void OnHintPanelOpenButtonClicked()
     {
-        // A fıpanel elrejtÈse
+        // A f√µpanel elrejt√©se
         mainPanel.SetActive(false);
-        // A tippablak megjelenÌtÈse
+        // A tippablak megjelen√≠t√©se
         hintPanel.SetActive(true);
     }
 
 
     /// <summary>
-    /// Akkor hÌvÛdik meg, amikor a Tippablak bez·r·s·t jelˆlı gombra kattintanak.
-    /// Elrejti a tippablakot, Ès visszahozza a fıpanelt.
+    /// Akkor h√≠v√≥dik meg, amikor a Tippablak bez√°r√°s√°t jel√∂l√µ gombra kattintanak.
+    /// Elrejti a tippablakot, √©s visszahozza a f√µpanelt.
     /// </summary>
     public void OnHintPanelCloseButtonClicked()
     {
-        // A tippablak elrejtÈse
+        // A tippablak elrejt√©se
         hintPanel.SetActive(false);
-        // A fıpanel megjelenÌtÈse
+        // A f√µpanel megjelen√≠t√©se
         mainPanel.SetActive(true);
     }
 
