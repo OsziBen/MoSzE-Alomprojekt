@@ -510,16 +510,14 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
                     {
                         audioManager.ResumeBGM();                        
                     }
-                    Cursor.visible = false;  // Elrejti a kurzort
-                    Cursor.lockState = CursorLockMode.Locked;  // A kurzort középre zárja
+
                     break;
 
                 case GameState.Paused:
                     Time.timeScale = 0; // A játék megállítása, időzítő leállítása
                     timer.StopTimer();
                     audioManager.PauseBGM();
-                    Cursor.visible = true;  // Megjeleníti a kurzort
-                    Cursor.lockState = CursorLockMode.None;  // Unlockolja a kurzort
+
                     break;
 
                 case GameState.GameOver:
@@ -559,8 +557,7 @@ public class GameStateManager : BasePersistentManager<GameStateManager>
 
                 case GameState.PlayerUpgrade:
                     // Fejlesztések képernyője: kurzor láthatóvá tétele és időzítő leállítása
-                    Cursor.visible = true;
-                    Cursor.lockState = CursorLockMode.None;
+
                     Time.timeScale = 0;
                     timer.StopTimer();
 
