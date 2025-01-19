@@ -337,7 +337,11 @@ public class PlayerUpgradeManager : BasePersistentManager<PlayerUpgradeManager>
         foreach (var playerUpgrade in unpurchasedPlayerUpgrades)
         {
             // Ha a játék jelenlegi szintje elérte a fejlesztés minimális szintjét, akkor érvényes a fejlesztés.
-            if (currentGamelevel >= playerUpgrade.minUpgradeLevel)
+            if (currentGamelevel == 4 && currentGamelevel == playerUpgrade.maxUpgradeLevel)
+            {
+                validPlayerUpgrades.Add(new PlayerUpgrade(playerUpgrade));
+            }
+            if (currentGamelevel < 4 && currentGamelevel >= playerUpgrade.minUpgradeLevel)
             {
                 // A fejlesztés másolatának hozzáadása a valid fejlesztések listájához.
                 validPlayerUpgrades.Add(new PlayerUpgrade(playerUpgrade));
