@@ -151,7 +151,7 @@ public class EnemyController : Assets.Scripts.Character
     /// <summary>
     /// 
     /// </summary>
-    private void Update()
+    private void FixedUpdate()
     {
         currentBehaviour.ExecuteBehaviour(this);
 
