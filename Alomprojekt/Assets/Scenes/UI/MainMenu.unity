@@ -1797,13 +1797,41 @@ PrefabInstance:
       value: 17
       objectReference: {fileID: 0}
     - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
+      propertyPath: backgroundMusicInput.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
       propertyPath: soundEffectInput.Array.data[17].name
-      value: upgrade
+      value: intro
+      objectReference: {fileID: 0}
+    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
+      propertyPath: backgroundMusicInput.Array.data[6].name
+      value: intro
+      objectReference: {fileID: 0}
+    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
+      propertyPath: backgroundMusicInput.Array.data[7].name
+      value: victory
+      objectReference: {fileID: 0}
+    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
+      propertyPath: backgroundMusicInput.Array.data[8].name
+      value: defeat
       objectReference: {fileID: 0}
     - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
       propertyPath: soundEffectInput.Array.data[17].audioclip
       value: 
-      objectReference: {fileID: 8300000, guid: a98fac2ae568326449e33cbae9847e94, type: 3}
+      objectReference: {fileID: 8300000, guid: cd9e28087661d6c4ea36359894170a5a, type: 3}
+    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
+      propertyPath: backgroundMusicInput.Array.data[6].audioclip
+      value: 
+      objectReference: {fileID: 8300000, guid: cd9e28087661d6c4ea36359894170a5a, type: 3}
+    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
+      propertyPath: backgroundMusicInput.Array.data[7].audioclip
+      value: 
+      objectReference: {fileID: 8300000, guid: 59878014cc0dfd746825180442e16111, type: 3}
+    - target: {fileID: -4607859391264378985, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
+      propertyPath: backgroundMusicInput.Array.data[8].audioclip
+      value: 
+      objectReference: {fileID: 8300000, guid: 6c54f6f3e45f4e54088871891d03339c, type: 3}
     - target: {fileID: 1546569477961377753, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
       propertyPath: m_Name
       value: AudioManager
@@ -1847,6 +1875,14 @@ PrefabInstance:
     - target: {fileID: 6272555157327034956, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8955627984996440965, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
+      propertyPath: m_Volume
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 9050705619280124721, guid: 50f6c5e4c7f15564a8002ab120f34852, type: 3}
+      propertyPath: m_Volume
+      value: 0.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
