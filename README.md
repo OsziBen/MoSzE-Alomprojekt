@@ -15,6 +15,8 @@ A Modern szoftverfejlesztési eszközök (GKNB_INTM006) tantárgy féléves proj
   
 *A játék témája az űrcsata, de kicsit más szemszögből...*\
 A háttértörténet szerint egy hallgató kikapja projektfeladatként, hogy le kell fejlesztenie egy űrcsatáról szóló játékot. Miközben este otthon fáradtan töpreng ezen, álomba merül, és a játék koncepciója végül az álmában nyilvánul meg. De mint sok más hallgatónak, neki is vannak a projekt sikerességével kapcsolatban kételyei, melyek végül az álmát rémálommá torzítják és végül a saját félelmei ellen kell űrcsatát vívnia.
+
+[Gameplay videó](https://youtu.be/zsFay6sATk4)
 </div>
 
 ---
